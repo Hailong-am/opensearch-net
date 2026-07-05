@@ -3,6 +3,41 @@
 Companion to `docs/MIGRATION_CHECKLIST.md`. This document quantifies exactly what
 remains after Phase 1 (bridge layer, already committed as `79dc73162`).
 
+## opensearch-net 2.0 TFM Changes
+
+The 2.0 major version drops EOL frameworks:
+
+| Removed | Reason |
+|---|---|
+| .NET Framework < 4.7.2 | EOL, security concerns |
+| .NET 5 | EOL since Nov 2022 |
+| .NET 6 | EOL since Nov 2024 |
+| `netstandard2.1` | Superseded by net8.0 target |
+
+**Revised TFM matrix for 2.0:**
+
+| Library | 1.x TFMs | 2.0 TFMs |
+|---|---|---|
+| OpenSearch.Net | netstandard2.0; netstandard2.1; net6.0; net8.0; net10.0 | **netstandard2.0; net8.0; net10.0** |
+| OpenSearch.Client | netstandard2.0; netstandard2.1 | **netstandard2.0; net8.0** |
+
+**What this unlocks for STJ:**
+
+- `net8.0` target provides full `IJsonTypeInfoResolver.Modifiers`, source generators,
+  `JsonDerivedType`, `Utf8JsonReader.CopyString`, and all modern STJ APIs
+- `netstandard2.0` retained for .NET Framework 4.7.2+ consumers -- gets STJ 8.x via
+  NuGet (most features work except source generators and some perf-only APIs)
+- Conditional compile `#if NET8_0_OR_GREATER` enables the efficient modifier path on
+  modern runtimes; netstandard2.0 falls back to reflection-based `JsonConverter<T>`
+- No more `#if NET6_0` or `#if NETSTANDARD2_1` polyfill paths needed
+
+**Impact on Phase 3 (propertyMapper):** Strategy A (`IJsonTypeInfoResolver.Modifiers`)
+is now viable with conditional compile -- net8.0 uses modifiers for zero-reflection
+property mapping; netstandard2.0 uses `JsonConverterFactory` fallback. This was
+previously blocked because OpenSearch.Client only targeted netstandard2.0/2.1.
+
+---
+
 ## Current State (Phase 1 -- DONE)
 
 | Item | Value |
@@ -62,9 +97,9 @@ follow-ups once the bridge is the only code path.
 
 | Item | Description | Estimated effort |
 |---|---|---|
-| Replace `PooledBufferWriter` polyfill | Once netstandard2.0 support is dropped (or `Microsoft.Bcl.Memory` is adopted), delete the ~50-line polyfill and use `ArrayBufferWriter<T>` unconditionally | 1 file, -50 lines |
-| `DynamicObjectResolverShim` -> real `JsonTypeInfoResolver.Modifiers` | Current shim uses `JsonSerializer.Serialize<T>(value, options)` generically. A proper implementation would use STJ's `IJsonTypeInfoResolver` with modifiers to replicate `propertyMapper` semantics (attribute-driven property renaming/ignoring) with less indirection and better performance | 1 file rewrite, ~150-200 lines, requires net7.0+ (blocked on TFM decision below) |
-| Drop `netstandard2.0` TFM | Unlocks `JsonTypeInfoResolver`, native `ArrayBufferWriter`, range operators, and other APIs used awkwardly via `#if NETSTANDARD2_0` polyfills today. This is a breaking change for consumers still on .NET Framework 4.6.1-4.7.x | Requires community RFC / major version bump -- NOT a code change estimate, a policy decision |
+| Replace `PooledBufferWriter` polyfill | Since netstandard2.0 is retained in 2.0 (for .NET Framework 4.7.2+), polyfill stays until a future 3.0 drops netstandard2.0. Alternatively, adopt `Microsoft.Bcl.Memory` NuGet to get `ArrayBufferWriter<T>` on netstandard2.0 | 1 file, -50 lines (if Bcl.Memory adopted) |
+| `DynamicObjectResolverShim` -> real `JsonTypeInfoResolver.Modifiers` | Current shim uses `JsonSerializer.Serialize<T>(value, options)` generically. With net8.0 as a first-class target in 2.0, use `IJsonTypeInfoResolver` with modifiers to replicate `propertyMapper` semantics. Conditional compile: net8.0 uses modifiers (zero-reflection), netstandard2.0 falls back to `JsonConverterFactory` | 1 file rewrite, ~150-200 lines. **No longer blocked** -- net8.0 target available in 2.0 |
+| Drop `netstandard2.0` TFM (future 3.0) | Unlocks `JsonTypeInfoResolver` unconditionally, native `ArrayBufferWriter`, range operators, and other APIs used awkwardly via `#if NETSTANDARD2_0` polyfills today. This is a breaking change for consumers still on .NET Framework 4.7.2 | Requires community RFC / major version bump (3.0) -- NOT a code change estimate, a policy decision |
 | Migrate 168 cross-project `IJsonFormatter<T>` implementations to `JsonConverter<T>` | The bridge lets these stay as-is indefinitely. This step is the "real" interface migration -- rewriting each formatter's `Serialize`/`Deserialize` body to use `Utf8JsonWriter`/`Utf8JsonReader` natively instead of through the bridge shim. Can be done module-by-module (see breakdown below), each is an independent PR | See table below |
 | Migrate 202 `OpenSearch.Net`-internal `IJsonFormatter<T>` implementations | Same as above but for low-level client internals (already excluded from Phase 1/2 since they're wrapped by the bridge, but true modernization removes the wrapper) | Bundled with Phase 2 deletion -- these live in the deleted `Utf8Json/Formatters/` |
 | Source-generator support (`[JsonSerializable]`) for AOT/trimming | Add `JsonSerializerContext` partial classes so consumers can trim/AOT-compile. Currently `DynamicObjectResolverShim` uses reflection-based `JsonSerializer.Serialize<T>` which blocks trimming | New partial class per major domain type cluster, ~20-30 files |
