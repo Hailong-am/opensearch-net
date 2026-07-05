@@ -1,4 +1,9 @@
-// SPDX-License-Identifier: Apache-2.0
+/* SPDX-License-Identifier: Apache-2.0
+*
+* The OpenSearch Contributors require contributions made to
+* this file be licensed under the Apache-2.0 license or a
+* compatible open source license.
+*/
 //
 // Bridge shim for DynamicObjectResolver when USE_STJ_BRIDGE is active.
 // Replaces IL-emitted POCO formatters with STJ JsonSerializer-backed formatters.

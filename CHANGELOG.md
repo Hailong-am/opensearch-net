@@ -13,6 +13,7 @@ Inspired from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Added conditions to the Microsoft.CSharp, System.Buffers & System.Diagnostics.DiagnosticSource dependencies so that they are not included on net 6+ as the newer framework's natively provides those dependencies. ([#930](https://github.com/opensearch-project/opensearch-net/pull/930))
 - Added support for Hybrid query ([#917](https://github.com/opensearch-project/opensearch-net/pull/917))
 - Added support for `MaxDistance` and `MinScore` to `KnnQuery` ([#917](https://github.com/opensearch-project/opensearch-net/pull/917))
+- Added an opt-in `System.Text.Json`-backed bridge layer (behind the `USE_STJ_BRIDGE` compile constant) that replaces the vendored Utf8Json `JsonWriter`/`JsonReader` implementation while preserving existing `IJsonFormatter<T>` method signatures, as a first step of migrating off the vendored Utf8Json fork ([#983](https://github.com/opensearch-project/opensearch-net/pull/983))
 
 ### Removed
 - Removed support for the `net461` target ([#256](https://github.com/opensearch-project/opensearch-net/pull/256))
