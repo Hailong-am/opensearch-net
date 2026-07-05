@@ -77,7 +77,11 @@ namespace OpenSearch.Net.Utf8Json.Resolvers
 		// configure
 		public static readonly IJsonFormatterResolver Instance = new DefaultStandardResolver();
 
+		#if !USE_STJ_BRIDGE
 		private static readonly IJsonFormatter<object> FallbackFormatter = new DynamicObjectTypeFallbackFormatter(InnerResolver.Instance);
+		#else
+		private static readonly IJsonFormatter<object> FallbackFormatter = null;
+		#endif
 
 		private DefaultStandardResolver()
 		{
@@ -103,7 +107,11 @@ namespace OpenSearch.Net.Utf8Json.Resolvers
 			public static readonly IJsonFormatterResolver Instance = new InnerResolver();
 
 			private static readonly IJsonFormatterResolver[] Resolvers =
+#if !USE_STJ_BRIDGE
 				StandardResolverHelper.CompositeResolverBase.Concat(new[] { DynamicObjectResolver.Default }).ToArray();
+#else
+				StandardResolverHelper.CompositeResolverBase.ToArray();
+#endif
 
 			private InnerResolver()
 			{

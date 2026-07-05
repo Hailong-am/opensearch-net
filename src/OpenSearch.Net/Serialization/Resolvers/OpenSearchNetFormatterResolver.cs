@@ -43,7 +43,11 @@ namespace OpenSearch.Net
 		public OpenSearchNetFormatterResolver()
 		{
 			_innerFormatterResolver = new InnerResolver();
+			#if !USE_STJ_BRIDGE
 			_fallbackFormatter = new DynamicObjectTypeFallbackFormatter(_innerFormatterResolver);
+			#else
+			_fallbackFormatter = null;
+			#endif
 		}
 
 		public static OpenSearchNetFormatterResolver Instance { get; } = new OpenSearchNetFormatterResolver();
@@ -69,7 +73,11 @@ namespace OpenSearch.Net
 
 			internal InnerResolver() =>
 				_finalFormatter =
+#if !USE_STJ_BRIDGE
 					DynamicObjectResolver.Create(null, new Lazy<Func<string, string>>(() => StringMutator.Original), true);
+#else
+					null; // Bridge mode: DynamicObjectResolver not available, POCO types use STJ JsonSerializer
+#endif
 
 			public IJsonFormatter<T> GetFormatter<T>() =>
 				(IJsonFormatter<T>)_formatters.GetOrAdd(typeof(T), type =>
