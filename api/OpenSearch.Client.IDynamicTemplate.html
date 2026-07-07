@@ -9,7 +9,7 @@
       <meta name="viewport" content="width=device-width">
       <meta name="title" content="Interface IDynamicTemplate | OpenSearch.Net ">
     
-    <meta name="description" content="A Dynamic template that defines custom mappings to be applied to dynamically added fields based on:  - the datatype detected by OpenSearch, with .  - the name of the field, with  and  or .  - the full dotted path to the field, with  and .">
+    <meta name="description" content="A Dynamic template that defines custom mappings to be applied to dynamically added fields based on:   the datatype detected by OpenSearch, with .    the name of the field, with  and  or .    the full dotted path to the field, with  and .">
       <link rel="shortcut icon" href="../favicon.ico">
       <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
@@ -84,11 +84,17 @@
   <div class="markdown level0 summary"><p>A Dynamic template that defines custom mappings to be applied
 to dynamically added fields based on:</p>
 <p></p>
-- the datatype detected by OpenSearch, with <a class="xref" href="OpenSearch.Client.IDynamicTemplate.html#OpenSearch_Client_IDynamicTemplate_MatchMappingType">MatchMappingType</a>.
+<ul>
+<li>the datatype detected by OpenSearch, with <a class="xref" href="OpenSearch.Client.IDynamicTemplate.html#OpenSearch_Client_IDynamicTemplate_MatchMappingType">MatchMappingType</a>.</li>
+</ul>
 <p></p>
-- the name of the field, with <a class="xref" href="OpenSearch.Client.IDynamicTemplate.html#OpenSearch_Client_IDynamicTemplate_Match">Match</a> and <a class="xref" href="OpenSearch.Client.IDynamicTemplate.html#OpenSearch_Client_IDynamicTemplate_Unmatch">Unmatch</a> or <a class="xref" href="OpenSearch.Client.IDynamicTemplate.html#OpenSearch_Client_IDynamicTemplate_MatchPattern">MatchPattern</a>.
+<ul>
+<li>the name of the field, with <a class="xref" href="OpenSearch.Client.IDynamicTemplate.html#OpenSearch_Client_IDynamicTemplate_Match">Match</a> and <a class="xref" href="OpenSearch.Client.IDynamicTemplate.html#OpenSearch_Client_IDynamicTemplate_Unmatch">Unmatch</a> or <a class="xref" href="OpenSearch.Client.IDynamicTemplate.html#OpenSearch_Client_IDynamicTemplate_MatchPattern">MatchPattern</a>.</li>
+</ul>
 <p></p>
-- the full dotted path to the field, with <a class="xref" href="OpenSearch.Client.IDynamicTemplate.html#OpenSearch_Client_IDynamicTemplate_PathMatch">PathMatch</a> and <a class="xref" href="OpenSearch.Client.IDynamicTemplate.html#OpenSearch_Client_IDynamicTemplate_PathUnmatch">PathUnmatch</a>.
+<ul>
+<li>the full dotted path to the field, with <a class="xref" href="OpenSearch.Client.IDynamicTemplate.html#OpenSearch_Client_IDynamicTemplate_PathMatch">PathMatch</a> and <a class="xref" href="OpenSearch.Client.IDynamicTemplate.html#OpenSearch_Client_IDynamicTemplate_PathUnmatch">PathUnmatch</a>.</li>
+</ul>
 </div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="OpenSearch.html">OpenSearch</a>.<a class="xref" href="OpenSearch.Client.html">Client</a></h6>
@@ -104,7 +110,7 @@ to dynamically added fields based on:</p>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IDynamicTemplate_Mapping.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IDynamicTemplate.Mapping%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/opensearch-project/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/DynamicTemplate/DynamicTemplate.cs/#L54">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/DynamicTemplate/DynamicTemplate.cs/#L54">View Source</a>
   </span>
   <a id="OpenSearch_Client_IDynamicTemplate_Mapping_" data-uid="OpenSearch.Client.IDynamicTemplate.Mapping*"></a>
   <h4 id="OpenSearch_Client_IDynamicTemplate_Mapping" data-uid="OpenSearch.Client.IDynamicTemplate.Mapping">Mapping</h4>
@@ -136,7 +142,7 @@ IProperty Mapping { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IDynamicTemplate_Match.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IDynamicTemplate.Match%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/opensearch-project/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/DynamicTemplate/DynamicTemplate.cs/#L60">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/DynamicTemplate/DynamicTemplate.cs/#L60">View Source</a>
   </span>
   <a id="OpenSearch_Client_IDynamicTemplate_Match_" data-uid="OpenSearch.Client.IDynamicTemplate.Match*"></a>
   <h4 id="OpenSearch_Client_IDynamicTemplate_Match" data-uid="OpenSearch.Client.IDynamicTemplate.Match">Match</h4>
@@ -168,7 +174,7 @@ string Match { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IDynamicTemplate_MatchMappingType.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IDynamicTemplate.MatchMappingType%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/opensearch-project/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/DynamicTemplate/DynamicTemplate.cs/#L69">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/DynamicTemplate/DynamicTemplate.cs/#L69">View Source</a>
   </span>
   <a id="OpenSearch_Client_IDynamicTemplate_MatchMappingType_" data-uid="OpenSearch.Client.IDynamicTemplate.MatchMappingType*"></a>
   <h4 id="OpenSearch_Client_IDynamicTemplate_MatchMappingType" data-uid="OpenSearch.Client.IDynamicTemplate.MatchMappingType">MatchMappingType</h4>
@@ -203,7 +209,7 @@ string MatchMappingType { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IDynamicTemplate_MatchPattern.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IDynamicTemplate.MatchPattern%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/opensearch-project/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/DynamicTemplate/DynamicTemplate.cs/#L76">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/DynamicTemplate/DynamicTemplate.cs/#L76">View Source</a>
   </span>
   <a id="OpenSearch_Client_IDynamicTemplate_MatchPattern_" data-uid="OpenSearch.Client.IDynamicTemplate.MatchPattern*"></a>
   <h4 id="OpenSearch_Client_IDynamicTemplate_MatchPattern" data-uid="OpenSearch.Client.IDynamicTemplate.MatchPattern">MatchPattern</h4>
@@ -236,7 +242,7 @@ MatchType? MatchPattern { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IDynamicTemplate_PathMatch.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IDynamicTemplate.PathMatch%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/opensearch-project/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/DynamicTemplate/DynamicTemplate.cs/#L83">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/DynamicTemplate/DynamicTemplate.cs/#L83">View Source</a>
   </span>
   <a id="OpenSearch_Client_IDynamicTemplate_PathMatch_" data-uid="OpenSearch.Client.IDynamicTemplate.PathMatch*"></a>
   <h4 id="OpenSearch_Client_IDynamicTemplate_PathMatch" data-uid="OpenSearch.Client.IDynamicTemplate.PathMatch">PathMatch</h4>
@@ -269,7 +275,7 @@ string PathMatch { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IDynamicTemplate_PathUnmatch.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IDynamicTemplate.PathUnmatch%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/opensearch-project/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/DynamicTemplate/DynamicTemplate.cs/#L89">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/DynamicTemplate/DynamicTemplate.cs/#L89">View Source</a>
   </span>
   <a id="OpenSearch_Client_IDynamicTemplate_PathUnmatch_" data-uid="OpenSearch.Client.IDynamicTemplate.PathUnmatch*"></a>
   <h4 id="OpenSearch_Client_IDynamicTemplate_PathUnmatch" data-uid="OpenSearch.Client.IDynamicTemplate.PathUnmatch">PathUnmatch</h4>
@@ -301,7 +307,7 @@ string PathUnmatch { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IDynamicTemplate_Unmatch.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IDynamicTemplate.Unmatch%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/opensearch-project/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/DynamicTemplate/DynamicTemplate.cs/#L95">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/DynamicTemplate/DynamicTemplate.cs/#L95">View Source</a>
   </span>
   <a id="OpenSearch_Client_IDynamicTemplate_Unmatch_" data-uid="OpenSearch.Client.IDynamicTemplate.Unmatch*"></a>
   <h4 id="OpenSearch_Client_IDynamicTemplate_Unmatch" data-uid="OpenSearch.Client.IDynamicTemplate.Unmatch">Unmatch</h4>
@@ -344,7 +350,7 @@ string Unmatch { get; set; }</code></pre>
                     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IDynamicTemplate.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IDynamicTemplate%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/opensearch-project/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/DynamicTemplate/DynamicTemplate.cs/#L47" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/DynamicTemplate/DynamicTemplate.cs/#L47" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
