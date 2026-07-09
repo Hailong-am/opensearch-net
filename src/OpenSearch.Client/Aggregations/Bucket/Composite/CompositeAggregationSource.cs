@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net;
 using OpenSearch.Net.Extensions;
 
@@ -40,6 +41,7 @@ namespace OpenSearch.Client
 	/// A values source for <see cref="ICompositeAggregation" />
 	/// </summary>
 	[InterfaceDataContract]
+	[JsonConverter(typeof(CompositeAggregationSourceConverter))]
 	public interface ICompositeAggregationSource
 	{
 		/// <summary>

@@ -34,6 +34,7 @@ using OpenSearch.Net.Extensions;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[System.Text.Json.Serialization.JsonConverter(typeof(GeoShapeConverter))]
 	public interface IGeoShape
 	{
 		/// <summary>

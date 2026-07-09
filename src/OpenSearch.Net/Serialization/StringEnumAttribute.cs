@@ -41,7 +41,7 @@ namespace OpenSearch.Net
 	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Enum)]
 	public class StringEnumAttribute : JsonConverterAttribute
 	{
-		private static readonly EnumMemberConverterFactory Factory = new EnumMemberConverterFactory();
+		private static readonly EnumMemberConverterFactory Factory = new EnumMemberConverterFactory(useVerbatimName: true);
 
 		public override JsonConverter CreateConverter(Type typeToConvert) =>
 			Factory.CanConvert(typeToConvert)

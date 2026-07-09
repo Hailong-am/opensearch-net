@@ -56,6 +56,8 @@ namespace OpenSearch.Client
 	/// <inheritdoc cref="IHistogramCompositeAggregationSource" />
 	public class HistogramCompositeAggregationSource : CompositeAggregationSourceBase, IHistogramCompositeAggregationSource
 	{
+		internal HistogramCompositeAggregationSource() { }
+
 		public HistogramCompositeAggregationSource(string name) : base(name) { }
 
 		/// <inheritdoc />

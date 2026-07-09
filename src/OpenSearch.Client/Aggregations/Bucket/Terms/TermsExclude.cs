@@ -27,12 +27,14 @@
 */
 
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// Filters which terms to exclude from the response
 	/// </summary>
+	[JsonConverter(typeof(TermsExcludeConverter))]
 	public class TermsExclude
 	{
 		/// <summary>

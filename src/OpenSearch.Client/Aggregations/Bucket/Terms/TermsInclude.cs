@@ -28,12 +28,14 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// Filters which terms to include in the response
 	/// </summary>
+	[JsonConverter(typeof(TermsIncludeConverter))]
 	public class TermsInclude
 	{
 		/// <summary>

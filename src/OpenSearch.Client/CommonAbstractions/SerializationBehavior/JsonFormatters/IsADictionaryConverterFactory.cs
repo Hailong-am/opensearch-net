@@ -114,10 +114,18 @@ namespace OpenSearch.Client
 
 			if (key is PropertyName propertyName)
 			{
-				if (propertyName.Property != null
-					&& _settings.PropertyMappings.TryGetValue(propertyName.Property, out var mapping)
-					&& mapping.Ignore)
-					return null;
+				if (propertyName.Property != null)
+				{
+					// Honor an explicit ignore from DefaultMappingFor<T> property mappings.
+					if (_settings.PropertyMappings.TryGetValue(propertyName.Property, out var mapping) && mapping.Ignore)
+						return null;
+
+					// Honor ignore from OSC property attributes ([PropertyName(Ignore=true)],
+					// serializer-specific [Ignore]/[JsonIgnore]) via the property mapping provider.
+					var providerMapping = _settings.PropertyMappingProvider?.CreatePropertyMapping(propertyName.Property);
+					if (providerMapping != null && providerMapping.Ignore)
+						return null;
+				}
 
 				return _settings.Inferrer.PropertyName(propertyName) ?? string.Empty;
 			}

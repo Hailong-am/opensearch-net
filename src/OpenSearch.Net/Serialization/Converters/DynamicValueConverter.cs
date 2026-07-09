@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -141,15 +142,26 @@ namespace OpenSearch.Net
 					break;
 
 				case float f:
-					writer.WriteNumberValue(f);
+					if (!float.IsNaN(f) && !float.IsInfinity(f)
+						&& Math.Floor((double)f) == f && Math.Abs(f) < 1e7)
+						writer.WriteRawValue(f.ToString("0.0", CultureInfo.InvariantCulture), skipInputValidation: true);
+					else
+						writer.WriteNumberValue(f);
 					break;
 
 				case double d:
-					writer.WriteNumberValue(d);
+					if (!double.IsNaN(d) && !double.IsInfinity(d)
+						&& Math.Floor(d) == d && Math.Abs(d) < 1e16)
+						writer.WriteRawValue(d.ToString("0.0", CultureInfo.InvariantCulture), skipInputValidation: true);
+					else
+						writer.WriteNumberValue(d);
 					break;
 
 				case decimal dec:
-					writer.WriteNumberValue(dec);
+					if (decimal.Truncate(dec) == dec)
+						writer.WriteRawValue(dec.ToString("0.0", CultureInfo.InvariantCulture), skipInputValidation: true);
+					else
+						writer.WriteNumberValue(dec);
 					break;
 
 				case short sh:

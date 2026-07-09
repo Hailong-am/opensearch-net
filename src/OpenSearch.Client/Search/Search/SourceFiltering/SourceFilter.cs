@@ -33,6 +33,7 @@ namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
 	[ReadAs(typeof(SourceFilter))]
+	[System.Text.Json.Serialization.JsonConverter(typeof(SourceFilterConverter))]
 	public interface ISourceFilter
 	{
 		[DataMember(Name = "excludes")]

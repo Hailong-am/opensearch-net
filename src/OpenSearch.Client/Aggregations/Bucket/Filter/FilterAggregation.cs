@@ -28,11 +28,12 @@
 
 using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
-	[ReadAs(typeof(FilterAggregation))]
+	[JsonConverter(typeof(FilterAggregationConverter))]
 	public interface IFilterAggregation : IBucketAggregation
 	{
 		[DataMember(Name ="filter")]

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using OpenSearch.Net;
 
 namespace OpenSearch.Client
@@ -36,7 +37,10 @@ namespace OpenSearch.Client
 	/// </remarks>
 	internal sealed class SourceConverterFactory : JsonConverterFactory
 	{
-		private static readonly ConcurrentDictionary<Type, JsonConverter> ConverterCache = new();
+		// Instance-level cache: SourceConverter<T> captures this factory's settings (and therefore its
+		// SourceSerializer). A static cache would leak the first client's settings to every other client,
+		// e.g. a client configured with a custom source serializer would reuse the default serializer.
+		private readonly ConcurrentDictionary<Type, JsonConverter> _converterCache = new();
 
 		private readonly IConnectionSettingsValues _settings;
 
@@ -83,15 +87,30 @@ namespace OpenSearch.Client
 				 assemblyName.StartsWith("OpenSearch.Client", StringComparison.Ordinal)))
 				return false;
 
-			// Generic collection types (IList<T>, IEnumerable<T>, etc.) whose element types
-			// are from OpenSearch assemblies are NOT user document types — they are domain
-			// collections that STJ's built-in collection handling should process, with element
-			// converters resolved from the options. Without this check, SourceConverter claims
-			// them and delegates to JsonNet, which can't handle OpenSearch interfaces/types.
+			// Custom (user-assembly) implementations of an OpenSearch domain contract interface
+			// (e.g. a plugin IProperty) are domain types, not source documents. They must be handled
+			// by the high-level contract machinery, not delegated to the source serializer.
+			foreach (var iface in typeToConvert.GetInterfaces())
+			{
+				var ifaceAssembly = iface.Assembly.GetName().Name;
+				if (ifaceAssembly != null &&
+					(ifaceAssembly.StartsWith("OpenSearch.Net", StringComparison.Ordinal) ||
+					 ifaceAssembly.StartsWith("OpenSearch.Client", StringComparison.Ordinal)) &&
+					Attribute.IsDefined(iface, typeof(InterfaceDataContractAttribute)))
+					return false;
+			}
+
+			// Generic collection types (IList<T>, IDictionary<K,V>, etc.) whose element types
+			// are NOT user document types are handled by STJ's built-in collection handling,
+			// with element converters resolved from the options. This covers both OpenSearch
+			// domain collections (e.g. IList<IProperty>) and dynamic collections keyed/valued by
+			// simple framework types such as Dictionary<string, object> (e.g. script params).
+			// Delegating the latter to the SourceSerializer would drop the registered element
+			// converters (e.g. the fractional-number converter that emits 1.0 rather than 1).
 			if (typeToConvert.IsGenericType)
 			{
 				var args = typeToConvert.GetGenericArguments();
-				if (args.Length > 0 && AllOpenSearchTypes(args))
+				if (args.Length > 0 && AllNonUserTypes(args) && IsStjConstructible(typeToConvert))
 					return false;
 			}
 
@@ -99,28 +118,82 @@ namespace OpenSearch.Client
 			return true;
 		}
 
-		private static bool AllOpenSearchTypes(Type[] types)
+		/// <summary>
+		/// Whether STJ can construct <paramref name="type"/> on deserialize. Interfaces and arrays
+		/// map to STJ's default concrete collection; concrete types need a public parameterless
+		/// constructor. Types that are not STJ-constructible (e.g. <c>ReadOnlyDictionary&lt;,&gt;</c>)
+		/// must still be delegated to the source serializer so round-tripping keeps working.
+		/// </summary>
+		private static bool IsStjConstructible(Type type)
+		{
+			if (type.IsInterface || type.IsArray)
+				return true;
+			return type.GetConstructor(Type.EmptyTypes) != null;
+		}
+
+		private static bool AllNonUserTypes(Type[] types)
 		{
 			foreach (var t in types)
 			{
-				var name = t.Assembly.GetName().Name;
-				if (name == null)
-					return false;
-				if (!name.StartsWith("OpenSearch.Net", StringComparison.Ordinal)
-					&& !name.StartsWith("OpenSearch.Client", StringComparison.Ordinal))
+				if (!IsNonUserType(t))
 					return false;
 			}
 			return true;
 		}
 
+		private static bool IsNonUserType(Type t)
+		{
+			// System.Object and simple BCL types are handled natively by STJ (with the
+			// registered ObjectConverter / fractional-number converters for object values).
+			if (t == typeof(object) || t == typeof(string) || t.IsPrimitive || t == typeof(decimal)
+				|| t == typeof(DateTime) || t == typeof(DateTimeOffset) || t == typeof(Guid))
+				return true;
+
+			var underlying = Nullable.GetUnderlyingType(t);
+			if (underlying != null)
+				return IsNonUserType(underlying);
+
+			// Unwrap nested generic collections (e.g. IList<ISuggestContextQuery> nested inside a
+			// IDictionary<string, IList<...>>) so a domain collection of domain types is still
+			// recognised as a non-user type and handled by STJ's built-in collection processing.
+			if (t.IsGenericType)
+			{
+				var innerArgs = t.GetGenericArguments();
+				if (innerArgs.Length > 0 && AllNonUserTypes(innerArgs))
+					return true;
+			}
+
+			// Types from the OpenSearch framework assemblies are domain types, not user documents.
+			var name = t.Assembly.GetName().Name;
+			return name != null
+				&& (name.StartsWith("OpenSearch.Net", StringComparison.Ordinal)
+					|| name.StartsWith("OpenSearch.Client", StringComparison.Ordinal));
+		}
+
 		/// <inheritdoc />
 		public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
 		{
-			return ConverterCache.GetOrAdd(typeToConvert, type =>
+			return _converterCache.GetOrAdd(typeToConvert, type =>
 			{
 				var converterType = typeof(SourceConverter<>).MakeGenericType(type);
 				return (JsonConverter)Activator.CreateInstance(converterType, _settings);
 			});
+		}
+
+		/// <summary>
+		/// Creates a <see cref="SourceConverter{T}"/> for <paramref name="typeToConvert"/> that delegates
+		/// to the SourceSerializer, bypassing the <see cref="CanConvert"/> exclusions. Used to pin a
+		/// source converter onto contract properties marked <see cref="SourceSerializationAttribute"/>
+		/// (e.g. an <see cref="object"/>-typed embedded document payload).
+		/// </summary>
+		internal JsonConverter CreateSourceConverter(Type typeToConvert, JsonSerializerOptions options)
+		{
+			// Do NOT use the shared static ConverterCache here: that cache is keyed only by type,
+			// but each SourceConverter<T> is bound to this factory's settings (and its SourceSerializer).
+			// This path is the sole creator of SourceConverter<object>, so caching it statically would
+			// leak one settings instance's converter into other settings instances.
+			var converterType = typeof(SourceConverter<>).MakeGenericType(typeToConvert);
+			return (JsonConverter)Activator.CreateInstance(converterType, _settings);
 		}
 	}
 
@@ -143,8 +216,14 @@ namespace OpenSearch.Client
 			if (_settings.SourceSerializer is IInternalSerializer s
 				&& s.TryGetJsonSerializerOptions(out var sourceOptions))
 			{
+				// When the source serializer IS the high-level serializer (no distinct source
+				// serializer configured), delegating back to the same options would re-enter this
+				// converter and recurse infinitely. Use a clone of those options with the
+				// SourceConverterFactory removed so the document is still (de)serialized with the
+				// full set of domain converters (enums, JoinField, Field, etc.), just without the
+				// source catch-all.
 				if (ReferenceEquals(sourceOptions, options))
-					return JsonSerializer.Deserialize<T>(ref reader, SourceConverterHelper.GetRecursionSafeOptions(options, typeof(T)));
+					return JsonSerializer.Deserialize<T>(ref reader, SourceConverterHelper.GetDefaultSourceOptions(_settings));
 				return JsonSerializer.Deserialize<T>(ref reader, sourceOptions);
 			}
 
@@ -168,7 +247,7 @@ namespace OpenSearch.Client
 				&& s.TryGetJsonSerializerOptions(out var sourceOptions))
 			{
 				if (ReferenceEquals(sourceOptions, options))
-					JsonSerializer.Serialize(writer, value, SourceConverterHelper.GetRecursionSafeOptions(options, typeof(T)));
+					JsonSerializer.Serialize(writer, value, SourceConverterHelper.GetDefaultSourceOptions(_settings));
 				else
 					JsonSerializer.Serialize(writer, value, sourceOptions);
 				return;
@@ -190,64 +269,111 @@ namespace OpenSearch.Client
 			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
 		};
 
-		// Cache of recursion-safe options keyed by the originating domain options instance. These
-		// preserve every domain converter (JoinField, RelationName, enums, etc.) so that OpenSearch
-		// domain types embedded in a user document still serialize correctly, but strip the
-		// document-delegating factories (SourceConverterFactory / ProxyRequestConverterFactory) so a
-		// value handled here does not recurse straight back into this converter.
-		private static readonly System.Collections.Concurrent.ConcurrentDictionary<JsonSerializerOptions, JsonSerializerOptions>
-			RecursionSafeOptionsCache = new();
+		// Cache of "self source" options (a clone of the high-level options without the
+		// SourceConverterFactory), keyed by the original options instance. Used when the source
+		// serializer is the high-level serializer itself, to avoid infinite recursion while still
+		// applying the full domain converter set to an embedded OpenSearch payload.
+		private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<JsonSerializerOptions, JsonSerializerOptions>
+			SelfSourceOptionsCache = new();
 
-		internal static JsonSerializerOptions GetRecursionSafeOptions(JsonSerializerOptions domainOptions, Type targetType = null)
-		{
-			if (domainOptions == null)
-				return DefaultOptions;
-
-			// For plain BCL types (e.g. Dictionary<string, object> used to read index settings) use the
-			// stripped Web-default options so untyped `object` values round-trip as JsonElement, exactly
-			// as before the domain-aware recursion guard was introduced. Only OpenSearch domain document
-			// types need the domain converters (JoinField, RelationName, enums) preserved.
-			if (targetType != null && IsBclType(targetType))
-				return DefaultOptions;
-
-			return RecursionSafeOptionsCache.GetOrAdd(domainOptions, static source =>
+		internal static JsonSerializerOptions GetSelfSourceOptions(JsonSerializerOptions options) =>
+			SelfSourceOptionsCache.GetValue(options, static o =>
 			{
-				var copy = new JsonSerializerOptions(source);
-				for (var i = copy.Converters.Count - 1; i >= 0; i--)
+				var clone = new JsonSerializerOptions(o);
+				for (var i = clone.Converters.Count - 1; i >= 0; i--)
 				{
-					var converter = copy.Converters[i];
-					if (converter is SourceConverterFactory || converter is ProxyRequestConverterFactory)
-						copy.Converters.RemoveAt(i);
+					if (clone.Converters[i] is SourceConverterFactory)
+						clone.Converters.RemoveAt(i);
 				}
-				return copy;
+				return clone;
 			});
-		}
+		// Per-settings options used by the built-in high-level source serializer to (de)serialize user
+		// document types. These honor OpenSearch.Client property-name inference (PropertyName/Text(Name)
+		// attributes, DataMember, DefaultMappingFor, DefaultFieldNameInferrer) via a settings-aware
+		// contract modifier, but do NOT register SourceConverterFactory (which would recurse) — they are
+		// the terminal serializer for POCO graphs.
+		private static readonly System.Collections.Concurrent.ConcurrentDictionary<IConnectionSettingsValues, JsonSerializerOptions>
+			SourceOptionsCache = new();
 
-		/// <summary>
-		/// True if the type (and, for a generic type, all of its type arguments) lives in a System.*
-		/// assembly — i.e. it is a plain BCL type such as <c>Dictionary&lt;string, object&gt;</c> rather
-		/// than an OpenSearch domain document type.
-		/// </summary>
-		private static bool IsBclType(Type type)
-		{
-			var name = type.Assembly.GetName().Name;
-			var isSystem = name != null
-				&& (name.StartsWith("System", StringComparison.Ordinal)
-					|| name.Equals("mscorlib", StringComparison.Ordinal)
-					|| name.Equals("netstandard", StringComparison.Ordinal));
-			if (!isSystem)
-				return false;
-
-			if (type.IsGenericType)
+		internal static JsonSerializerOptions GetDefaultSourceOptions(IConnectionSettingsValues settings) =>
+			SourceOptionsCache.GetOrAdd(settings, static s =>
 			{
-				foreach (var arg in type.GetGenericArguments())
+				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
 				{
-					if (!IsBclType(arg))
-						return false;
-				}
-			}
+					DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+					PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+					TypeInfoResolver = new DefaultJsonTypeInfoResolver
+					{
+						Modifiers =
+						{
+							DataMemberPropertyNameModifier.Modify,
+							new SourcePropertyNameModifier(s).Modify
+						}
+					}
+				};
+				// OpenSearch.Client value types that can appear as fields on user documents and need
+				// settings-aware serialization even on the terminal source path.
+				options.Converters.Add(new JoinFieldConverter(s));
+				return options;
+			});
+	}
 
-			return true;
+	/// <summary>
+	/// A <see cref="DefaultJsonTypeInfoResolver"/> modifier that resolves JSON property names for user
+	/// document types using the OpenSearch.Client <see cref="Inferrer"/>, so that the built-in source
+	/// serializer honors <c>[PropertyName]</c>/<c>[Text(Name=...)]</c> attributes,
+	/// <c>DefaultMappingFor&lt;T&gt;</c> property mappings, and the <c>DefaultFieldNameInferrer</c>.
+    /// Only applied to non-OpenSearch (user) types; framework types keep their existing contracts.
+	/// </summary>
+	internal sealed class SourcePropertyNameModifier
+	{
+		private readonly IConnectionSettingsValues _settings;
+
+		public SourcePropertyNameModifier(IConnectionSettingsValues settings) => _settings = settings;
+
+		public void Modify(System.Text.Json.Serialization.Metadata.JsonTypeInfo typeInfo)
+		{
+			if (typeInfo.Kind != System.Text.Json.Serialization.Metadata.JsonTypeInfoKind.Object)
+				return;
+
+			var assemblyName = typeInfo.Type.Assembly.GetName().Name;
+			if (assemblyName != null &&
+				(assemblyName.StartsWith("OpenSearch.Net", StringComparison.Ordinal) ||
+				 assemblyName.StartsWith("OpenSearch.Client", StringComparison.Ordinal)))
+				return;
+
+			for (var i = typeInfo.Properties.Count - 1; i >= 0; i--)
+			{
+				var property = typeInfo.Properties[i];
+				if (property.AttributeProvider is not System.Reflection.PropertyInfo propInfo)
+					continue;
+
+				// Mirror the Utf8Json resolver's GetMapping precedence:
+				//   PropertyMappings (DefaultMappingFor) > OSC property attribute > source PropertyMappingProvider.
+				if (!_settings.PropertyMappings.TryGetValue(propInfo, out var propertyMapping))
+					propertyMapping = OpenSearchPropertyAttributeBase.From(propInfo);
+
+				var serializerMapping = _settings.PropertyMappingProvider?.CreatePropertyMapping(propInfo);
+
+				var overrideIgnore = propertyMapping?.Ignore ?? serializerMapping?.Ignore;
+				if (overrideIgnore == true)
+				{
+					typeInfo.Properties.RemoveAt(i);
+					continue;
+				}
+
+				var nameOverride = propertyMapping?.Name ?? serializerMapping?.Name;
+				if (!string.IsNullOrEmpty(nameOverride))
+				{
+					property.Name = nameOverride;
+					continue;
+				}
+
+				// No explicit override: apply the DefaultFieldNameInferrer to the CLR member name.
+				var inferred = _settings.DefaultFieldNameInferrer(propInfo.Name);
+				if (!string.IsNullOrEmpty(inferred))
+					property.Name = inferred;
+			}
 		}
 	}
 }

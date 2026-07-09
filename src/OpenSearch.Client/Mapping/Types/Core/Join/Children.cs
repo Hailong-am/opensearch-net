@@ -31,6 +31,7 @@ using System.Collections.Generic;
 
 namespace OpenSearch.Client
 {
+	[System.Text.Json.Serialization.JsonConverter(typeof(ChildrenConverter))]
 	public class Children : List<RelationName>
 	{
 		public Children() { }

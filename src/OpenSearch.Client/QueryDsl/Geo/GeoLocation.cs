@@ -142,6 +142,7 @@ namespace OpenSearch.Client
 	/// Represents a Latitude/Longitude and optional Z value as a 2 or 3 dimensional point
 	/// that gets serialized as new [] { lon, lat, [z] }
 	/// </summary>
+	[System.Text.Json.Serialization.JsonConverter(typeof(GeoCoordinateConverter))]
 	public class GeoCoordinate : GeoLocation
 	{
 		/// <summary>

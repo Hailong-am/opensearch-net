@@ -28,11 +28,14 @@
 
 
 
+using System.Text.Json.Serialization;
+
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// Marker interface for alias operation
 	/// </summary>
+	[JsonConverter(typeof(AliasActionConverter))]
 	public interface IAliasAction { }
 
 }

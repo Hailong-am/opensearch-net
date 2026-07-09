@@ -89,19 +89,16 @@ namespace OpenSearch.Client
 				return;
 			}
 
+			// Note: Inferrer.Field already bakes any boost into the resolved name (e.g. "field^2.0"),
+			// so boost is never emitted as a separate object property. Only the presence of a format
+			// triggers the object form, matching the historical (Utf8Json) FieldFormatter behavior.
 			var fieldName = _settings.Inferrer.Field(value);
 
-			if (value.Boost.HasValue || !string.IsNullOrEmpty(value.Format))
+			if (!string.IsNullOrEmpty(value.Format))
 			{
 				writer.WriteStartObject();
 				writer.WriteString("field", fieldName);
-
-				if (value.Boost.HasValue)
-					writer.WriteNumber("boost", value.Boost.Value);
-
-				if (!string.IsNullOrEmpty(value.Format))
-					writer.WriteString("format", value.Format);
-
+				writer.WriteString("format", value.Format);
 				writer.WriteEndObject();
 			}
 			else

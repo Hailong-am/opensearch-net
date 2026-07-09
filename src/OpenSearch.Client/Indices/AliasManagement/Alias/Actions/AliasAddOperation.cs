@@ -28,6 +28,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
@@ -64,6 +65,7 @@ namespace OpenSearch.Client
 		/// The indices to which to add the alias
 		/// </summary>
 		[DataMember(Name = "indices")]
+		[JsonConverter(typeof(IndicesArrayConverter))]
 		public Indices Indices { get; set; }
 
 		/// <inheritdoc cref="IAlias.IndexRouting"/>

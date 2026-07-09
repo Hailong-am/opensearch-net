@@ -64,6 +64,8 @@ namespace OpenSearch.Client
 		private static readonly JsonEncodedText ScrollIdProp = JsonEncodedText.Encode("_scroll_id");
 		private static readonly JsonEncodedText ClustersProp = JsonEncodedText.Encode("_clusters");
 		private static readonly JsonEncodedText NumReducePhasesProp = JsonEncodedText.Encode("num_reduce_phases");
+		private static readonly JsonEncodedText ErrorProp = JsonEncodedText.Encode("error");
+		private static readonly JsonEncodedText StatusProp = JsonEncodedText.Encode("status");
 
 		public override SearchResponse<TDocument> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -136,6 +138,16 @@ namespace OpenSearch.Client
 				{
 					reader.Read();
 					response.NumberOfReducePhases = reader.GetInt64();
+				}
+				else if (reader.ValueTextEquals(ErrorProp.EncodedUtf8Bytes))
+				{
+					reader.Read();
+					response.Error = JsonSerializer.Deserialize<OpenSearch.Net.Error>(ref reader, options);
+				}
+				else if (reader.ValueTextEquals(StatusProp.EncodedUtf8Bytes))
+				{
+					reader.Read();
+					response.StatusCode = reader.TokenType == JsonTokenType.Null ? null : reader.GetInt32();
 				}
 				else
 				{

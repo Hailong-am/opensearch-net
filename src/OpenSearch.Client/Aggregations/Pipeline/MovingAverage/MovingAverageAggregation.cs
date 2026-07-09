@@ -28,11 +28,12 @@
 
 using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
-	[ReadAs(typeof(MovingAverageAggregation))]
+	[JsonConverter(typeof(MovingAverageAggregationConverter))]
 	public interface IMovingAverageAggregation : IPipelineAggregation
 	{
 		[DataMember(Name ="minimize")]

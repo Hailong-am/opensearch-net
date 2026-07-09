@@ -27,10 +27,12 @@
 */
 
 using System;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
 	[MapsApi("indices.put_settings.json")]
+	[JsonConverter(typeof(UpdateIndexSettingsRequestConverter))]
 	public partial interface IUpdateIndexSettingsRequest
 	{
 		IDynamicIndexSettings IndexSettings { get; set; }

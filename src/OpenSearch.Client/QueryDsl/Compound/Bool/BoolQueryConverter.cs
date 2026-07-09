@@ -116,7 +116,7 @@ namespace OpenSearch.Client
 			if (value.Boost.HasValue)
 			{
 				writer.WritePropertyName(BoostProp);
-				writer.WriteNumberValue(value.Boost.Value);
+				JsonSerializer.Serialize(writer, value.Boost.Value, options);
 			}
 
 			if (value.ShouldSerializeMust())

@@ -26,6 +26,10 @@ namespace OpenSearch.Client
 	/// </summary>
 	internal sealed class RangeQueryConverter : JsonConverter<IRangeQuery>
 	{
+		private readonly IConnectionSettingsValues _settings;
+
+		public RangeQueryConverter(IConnectionSettingsValues settings) => _settings = settings;
+
 		public override IRangeQuery Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			if (reader.TokenType == JsonTokenType.Null)
@@ -128,7 +132,8 @@ namespace OpenSearch.Client
 
 			// The range query is wrapped in a field name object:
 			// { "field_name": { "gte": ..., "lte": ..., ... } }
-			var fieldName = (value as IFieldNameQuery)?.Field?.ToString();
+			var field = (value as IFieldNameQuery)?.Field;
+			var fieldName = field == null ? null : _settings.Inferrer.Field(field);
 			if (string.IsNullOrEmpty(fieldName))
 			{
 				writer.WriteNullValue();
@@ -166,7 +171,7 @@ namespace OpenSearch.Client
 		{
 			writer.WriteStartObject();
 
-			WriteQueryMeta(writer, value);
+			WriteQueryMeta(writer, value, options);
 
 			if (value.GreaterThan != null)
 			{
@@ -211,27 +216,27 @@ namespace OpenSearch.Client
 		{
 			writer.WriteStartObject();
 
-			WriteQueryMeta(writer, value);
+			WriteQueryMeta(writer, value, options);
 
 			if (value.GreaterThan.HasValue)
 			{
 				writer.WritePropertyName("gt");
-				writer.WriteNumberValue(value.GreaterThan.Value);
+				JsonSerializer.Serialize(writer, value.GreaterThan.Value, options);
 			}
 			if (value.GreaterThanOrEqualTo.HasValue)
 			{
 				writer.WritePropertyName("gte");
-				writer.WriteNumberValue(value.GreaterThanOrEqualTo.Value);
+				JsonSerializer.Serialize(writer, value.GreaterThanOrEqualTo.Value, options);
 			}
 			if (value.LessThan.HasValue)
 			{
 				writer.WritePropertyName("lt");
-				writer.WriteNumberValue(value.LessThan.Value);
+				JsonSerializer.Serialize(writer, value.LessThan.Value, options);
 			}
 			if (value.LessThanOrEqualTo.HasValue)
 			{
 				writer.WritePropertyName("lte");
-				writer.WriteNumberValue(value.LessThanOrEqualTo.Value);
+				JsonSerializer.Serialize(writer, value.LessThanOrEqualTo.Value, options);
 			}
 			if (value.Relation.HasValue)
 			{
@@ -246,7 +251,7 @@ namespace OpenSearch.Client
 		{
 			writer.WriteStartObject();
 
-			WriteQueryMeta(writer, value);
+			WriteQueryMeta(writer, value, options);
 
 			if (value.GreaterThan.HasValue)
 			{
@@ -281,7 +286,7 @@ namespace OpenSearch.Client
 		{
 			writer.WriteStartObject();
 
-			WriteQueryMeta(writer, value);
+			WriteQueryMeta(writer, value, options);
 
 			if (!string.IsNullOrEmpty(value.GreaterThan))
 			{
@@ -307,7 +312,7 @@ namespace OpenSearch.Client
 			writer.WriteEndObject();
 		}
 
-		private static void WriteQueryMeta(Utf8JsonWriter writer, IQuery value)
+		private static void WriteQueryMeta(Utf8JsonWriter writer, IQuery value, JsonSerializerOptions options)
 		{
 			if (!string.IsNullOrEmpty(value.Name))
 			{
@@ -317,7 +322,7 @@ namespace OpenSearch.Client
 			if (value.Boost.HasValue)
 			{
 				writer.WritePropertyName("boost");
-				writer.WriteNumberValue(value.Boost.Value);
+				JsonSerializer.Serialize(writer, value.Boost.Value, options);
 			}
 		}
 

@@ -31,8 +31,10 @@ using System.Collections.Generic;
 
 namespace OpenSearch.Client
 {
+	[System.Text.Json.Serialization.JsonConverter(typeof(DynamicTemplatesConverter))]
 	public interface IDynamicTemplateContainer : IIsADictionary<string, IDynamicTemplate> { }
 
+	[System.Text.Json.Serialization.JsonConverter(typeof(DynamicTemplatesConverter))]
 	public class DynamicTemplateContainer : IsADictionaryBase<string, IDynamicTemplate>, IDynamicTemplateContainer
 	{
 		public DynamicTemplateContainer() { }

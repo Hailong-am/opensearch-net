@@ -13,6 +13,12 @@ namespace OpenSearch.Client
 {
 	internal sealed class PropertyNameConverter : JsonConverter<PropertyName>
 	{
+		private readonly IConnectionSettingsValues _settings;
+
+		public PropertyNameConverter() { }
+
+		public PropertyNameConverter(IConnectionSettingsValues settings) => _settings = settings;
+
 		public override PropertyName Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			if (reader.TokenType == JsonTokenType.Null)
@@ -30,7 +36,7 @@ namespace OpenSearch.Client
 				return;
 			}
 
-			writer.WriteStringValue(value.Name);
+			writer.WriteStringValue(Resolve(value));
 		}
 
 		public override PropertyName ReadAsPropertyName(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -47,7 +53,12 @@ namespace OpenSearch.Client
 				return;
 			}
 
-			writer.WritePropertyName(value.Name);
+			writer.WritePropertyName(Resolve(value) ?? string.Empty);
 		}
+
+		// Resolve the wire name via the Inferrer (honors expressions, suffixes, property mappings and
+		// the DefaultFieldNameInferrer). Falls back to the literal name when no settings are available.
+		private string Resolve(PropertyName value) =>
+			_settings != null ? _settings.Inferrer.PropertyName(value) : value.Name;
 	}
 }

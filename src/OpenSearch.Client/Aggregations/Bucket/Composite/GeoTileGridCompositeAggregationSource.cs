@@ -46,6 +46,8 @@ namespace OpenSearch.Client
 	/// <inheritdoc cref="IGeoTileGridCompositeAggregationSource" />
 	public class GeoTileGridCompositeAggregationSource : CompositeAggregationSourceBase, IGeoTileGridCompositeAggregationSource
 	{
+		internal GeoTileGridCompositeAggregationSource() { }
+
 		public GeoTileGridCompositeAggregationSource(string name) : base(name) { }
 
 		/// <inheritdoc />

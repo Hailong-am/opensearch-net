@@ -29,6 +29,10 @@ namespace OpenSearch.Client
 		private static readonly JsonEncodedText BoostProp = JsonEncodedText.Encode("boost");
 		private static readonly JsonEncodedText NameProp = JsonEncodedText.Encode("_name");
 
+		private readonly IConnectionSettingsValues _settings;
+
+		public TermsQueryConverter(IConnectionSettingsValues settings) => _settings = settings;
+
 		public override ITermsQuery Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			if (reader.TokenType == JsonTokenType.Null)
@@ -94,12 +98,11 @@ namespace OpenSearch.Client
 				writer.WriteNumberValue(value.Boost.Value);
 			}
 
-			// Write the field name (resolved via the settings-aware Field converter) and its value
-			// (terms array or lookup object).
-			if (value.Field != null)
+			// Write the field name and its value (terms array or lookup object)
+			var field = value.Field == null ? null : _settings.Inferrer.Field(value.Field);
+			if (!string.IsNullOrEmpty(field))
 			{
-				var fieldConverter = (JsonConverter<Field>)options.GetConverter(typeof(Field));
-				fieldConverter.WriteAsPropertyName(writer, value.Field, options);
+				writer.WritePropertyName(field);
 
 				if (value.IsVerbatim)
 				{
@@ -204,13 +207,27 @@ namespace OpenSearch.Client
 		{
 			writer.WriteStartArray();
 			foreach (var term in terms)
-			{
-				if (term == null)
-					writer.WriteNullValue();
-				else
-					JsonSerializer.Serialize(writer, term, term.GetType(), options);
-			}
+				WriteTerm(writer, term, options);
 			writer.WriteEndArray();
+		}
+
+		private static void WriteTerm(Utf8JsonWriter writer, object term, JsonSerializerOptions options)
+		{
+			switch (term)
+			{
+				case null:
+					writer.WriteNullValue();
+					break;
+				// Terms buffered during deserialization (e.g. nested arrays in a list-of-list terms
+				// query) are stored as JsonElement; write them verbatim rather than routing through
+				// the (source) serializer, which would emit the JsonElement's public shape.
+				case JsonElement element:
+					element.WriteTo(writer);
+					break;
+				default:
+					JsonSerializer.Serialize(writer, term, term.GetType(), options);
+					break;
+			}
 		}
 	}
 }

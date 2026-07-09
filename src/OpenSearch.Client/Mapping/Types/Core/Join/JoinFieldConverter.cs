@@ -25,12 +25,16 @@ namespace OpenSearch.Client
 			new JoinFieldConverter(_settings);
 	}
 
+	/// <summary>
+	/// Serializes <see cref="JoinField"/> as either a bare parent relation name string, or a
+	/// <c>{ "name": ..., "parent": ... }</c> object for a child relation. Replaces the Utf8Json
+	/// <c>JoinFieldFormatter</c>.
+	/// </summary>
 	internal sealed class JoinFieldConverter : JsonConverter<JoinField>
 	{
 		private readonly IConnectionSettingsValues _settings;
 
-		public JoinFieldConverter(IConnectionSettingsValues settings) =>
-			_settings = settings ?? throw new ArgumentNullException(nameof(settings));
+		public JoinFieldConverter(IConnectionSettingsValues settings) => _settings = settings;
 
 		public override JoinField Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -43,8 +47,15 @@ namespace OpenSearch.Client
 				return new JoinField(new JoinField.Parent(parent));
 			}
 
+			if (reader.TokenType != JsonTokenType.StartObject)
+			{
+				reader.Skip();
+				return null;
+			}
+
 			Id parentId = null;
 			string name = null;
+
 			while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
 			{
 				if (reader.TokenType != JsonTokenType.PropertyName)
@@ -52,13 +63,17 @@ namespace OpenSearch.Client
 
 				var propertyName = reader.GetString();
 				reader.Read();
+
 				switch (propertyName)
 				{
 					case "parent":
-						parentId = reader.TokenType == JsonTokenType.Null ? null : reader.GetString();
+						parentId = JsonSerializer.Deserialize<Id>(ref reader, options);
 						break;
 					case "name":
-						name = reader.TokenType == JsonTokenType.Null ? null : reader.GetString();
+						name = reader.GetString();
+						break;
+					default:
+						reader.Skip();
 						break;
 				}
 			}
@@ -79,13 +94,9 @@ namespace OpenSearch.Client
 			switch (value.Tag)
 			{
 				case 0:
-				{
-					var relationName = _settings.Inferrer.RelationName(value.ParentOption.Name);
-					writer.WriteStringValue(relationName);
+					writer.WriteStringValue(_settings.Inferrer.RelationName(value.ParentOption.Name));
 					break;
-				}
 				case 1:
-				{
 					var child = value.ChildOption;
 					writer.WriteStartObject();
 					writer.WritePropertyName("name");
@@ -95,7 +106,6 @@ namespace OpenSearch.Client
 					writer.WriteStringValue(id);
 					writer.WriteEndObject();
 					break;
-				}
 			}
 		}
 	}

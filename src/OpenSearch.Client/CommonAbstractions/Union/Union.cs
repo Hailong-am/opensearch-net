@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// </summary>
 	/// <typeparam name="TFirst">The first type</typeparam>
 	/// <typeparam name="TSecond">The second type</typeparam>
+	[System.Text.Json.Serialization.JsonConverter(typeof(UnionConverterFactory))]
 	public class Union<TFirst, TSecond>
 	{
 		internal readonly int Tag;

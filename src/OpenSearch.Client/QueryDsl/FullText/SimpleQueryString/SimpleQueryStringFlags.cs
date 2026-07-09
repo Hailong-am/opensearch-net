@@ -30,10 +30,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using OpenSearch.Net;
 
 namespace OpenSearch.Client
 {
 	[Flags]
+	[StringEnum]
 	public enum SimpleQueryStringFlags
 	{
 		[EnumMember(Value = "NONE")]

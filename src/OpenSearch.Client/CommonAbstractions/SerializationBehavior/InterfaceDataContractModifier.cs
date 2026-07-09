@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 
 namespace OpenSearch.Client
@@ -64,13 +65,19 @@ namespace OpenSearch.Client
 			// Build the contract from the interface [DataMember] properties.
 			var seen = new HashSet<string>(StringComparer.Ordinal);
 			var rebuilt = new List<JsonPropertyInfo>();
+			// CLR member names that the contract interfaces declare as [IgnoreDataMember] — their concrete
+			// counterparts must never be emitted even if the concrete property carries its own annotation.
+			var ignoredMemberNames = new HashSet<string>(StringComparer.Ordinal);
 
 			foreach (var iface in contractInterfaces)
 			{
 				foreach (var ifaceProp in iface.GetProperties(BindingFlags.Public | BindingFlags.Instance))
 				{
 					if (ifaceProp.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
+					{
+						ignoredMemberNames.Add(ifaceProp.Name);
 						continue;
+					}
 
 					var dataMember = ifaceProp.GetCustomAttribute<DataMemberAttribute>();
 					if (dataMember == null)
@@ -83,6 +90,38 @@ namespace OpenSearch.Client
 						continue;
 
 					var jsonProp = typeInfo.CreateJsonPropertyInfo(ifaceProp.PropertyType, jsonName);
+
+					// Properties marked [SourceSerialization] carry an embedded user-document payload
+					// (typically typed as object) that must be (de)serialized by the SourceSerializer.
+					// STJ would otherwise handle an object-typed property with the high-level serializer.
+					if (ifaceProp.GetCustomAttribute<SourceSerializationAttribute>() != null)
+					{
+						var sourceConverter = GetSourceConverter(typeInfo.Options, ifaceProp.PropertyType);
+						if (sourceConverter != null)
+							jsonProp.CustomConverter = sourceConverter;
+
+						var capturedSource = ifaceProp;
+						if (capturedSource.CanRead)
+							jsonProp.Get = obj => capturedSource.GetValue(obj);
+						if (capturedSource.CanWrite)
+							jsonProp.Set = (obj, value) => capturedSource.SetValue(obj, value);
+
+						rebuilt.Add(jsonProp);
+						continue;
+					}
+
+					// Honor an explicit [JsonConverter] attribute on the interface property. The
+					// manually-rebuilt JsonPropertyInfo does not inherit attribute-channel converters,
+					// so apply it here (e.g. SourceValueWriteConverter on weakly-typed query values).
+					var converterAttr = ifaceProp.GetCustomAttribute<JsonConverterAttribute>();
+					if (converterAttr != null)
+					{
+						var converter = converterAttr.ConverterType != null
+							? (JsonConverter)Activator.CreateInstance(converterAttr.ConverterType)
+							: converterAttr.CreateConverter(ifaceProp.PropertyType);
+						if (converter != null)
+							jsonProp.CustomConverter = converter;
+					}
 
 					// Pin the options-registered converter for leaf value types and enums.
 					// These factory converters (Field/IndexName/RelationName, enums) are skipped for
@@ -102,6 +141,25 @@ namespace OpenSearch.Client
 						}
 						catch { /* If GetConverter throws, leave it unset — STJ will resolve normally */ }
 					}
+					// Dictionaries keyed by Field need settings-aware key inference. STJ skips the
+					// options-registered Field converter factory for dictionary keys at depth, so pin a
+					// dedicated converter that resolves each key through the Field converter.
+					else if (TryGetFieldKeyedDictionaryValueType(propType, out var dictValueType))
+					{
+						try
+						{
+							var convType = typeof(FieldKeyedDictionaryConverter<>).MakeGenericType(dictValueType);
+							jsonProp.CustomConverter = (System.Text.Json.Serialization.JsonConverter)Activator.CreateInstance(convType);
+						}
+						catch { /* If construction fails, leave it unset — STJ will resolve normally */ }
+					}
+					// IEnumerable<double> properties must keep the client's trailing-".0" wire format for
+					// integral values. STJ skips the options-registered DoubleConverter for collection
+					// elements at depth, so pin a converter that routes each element through it.
+					else if (propType == typeof(IEnumerable<double>))
+					{
+						jsonProp.CustomConverter = new DoubleEnumerableConverter();
+					}
 
 					var captured = ifaceProp;
 					if (captured.CanRead)
@@ -109,11 +167,55 @@ namespace OpenSearch.Client
 					if (captured.CanWrite)
 						jsonProp.Set = (obj, value) => captured.SetValue(obj, value);
 
+					// A QueryContainer that is conditionless (e.g. an empty bool query) must be
+					// omitted entirely rather than emitted as "prop": null. Utf8Json achieved this
+					// by not writing conditionless queries; mirror it with a ShouldSerialize guard.
+					if (propType == typeof(QueryContainer))
+						jsonProp.ShouldSerialize = (_, value) => value is QueryContainer qc && qc.IsWritable;
+
 					rebuilt.Add(jsonProp);
 				}
 			}
 
-			// If the interface contract declares no [DataMember] properties, decide between two cases:
+			// Custom (e.g. plugin) implementations may declare additional public properties that carry
+			// their own [PropertyName]/[DataMember] annotation but are not part of the contract interface.
+			// Emit those too (honoring the interface-declared [IgnoreDataMember] exclusions), matching the
+			// Utf8Json behavior where any [PropertyName]/[DataMember]-marked property is serialized.
+			foreach (var clrProp in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+			{
+				if (ignoredMemberNames.Contains(clrProp.Name))
+					continue;
+
+				var propertyNameAttr = clrProp.GetCustomAttribute<PropertyNameAttribute>();
+				var dataMemberAttr = clrProp.GetCustomAttribute<DataMemberAttribute>();
+				if (propertyNameAttr == null && dataMemberAttr == null)
+					continue;
+
+				if (propertyNameAttr?.Ignore == true)
+					continue;
+
+				if (clrProp.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
+					continue;
+
+				var jsonName = propertyNameAttr?.Name
+					?? dataMemberAttr?.Name
+					?? JsonNamingPolicy.CamelCase.ConvertName(clrProp.Name);
+
+				if (!seen.Add(jsonName))
+					continue;
+
+				var jsonProp = typeInfo.CreateJsonPropertyInfo(clrProp.PropertyType, jsonName);
+
+				var captured = clrProp;
+				if (captured.CanRead)
+					jsonProp.Get = obj => captured.GetValue(obj);
+				if (captured.CanWrite)
+					jsonProp.Set = (obj, value) => captured.SetValue(obj, value);
+
+				rebuilt.Add(jsonProp);
+			}
+
+			// If the rebuilt contract has no properties, decide between two cases:
 			//  - The concrete class itself declares [DataMember] properties (e.g. response types such as
 			//    GetResponse<T> whose members live on the class, not the interface). Leave the default
 			//    contract intact so those class properties still (de)serialize.
@@ -121,11 +223,8 @@ namespace OpenSearch.Client
 			//    own members (e.g. GlobalAggregation, whose only inherited property Aggregations is not a
 			//    [DataMember] and is emitted by the aggregation container, not inline). Fall through to
 			//    rebuild the contract to an empty object so it serializes as {}.
-			if (rebuilt.Count == 0)
-			{
-				if (ConcreteTypeDeclaresDataMember(type))
-					return;
-			}
+			if (rebuilt.Count == 0 && ConcreteTypeDeclaresDataMember(type))
+				return;
 
 			// These types are (de)serialized purely by their property contract. Many define a
 			// public convenience constructor (e.g. AverageAggregation(string name, Field field))
@@ -136,10 +235,35 @@ namespace OpenSearch.Client
 			if (ctor != null)
 				typeInfo.CreateObject = () => ctor.Invoke(null);
 
-			// Rebuild the contract deterministically from the interface [DataMember] properties.
+			// Rebuild the contract deterministically from the collected properties.
 			typeInfo.Properties.Clear();
 			foreach (var jsonProp in rebuilt)
 				typeInfo.Properties.Add(jsonProp);
+		}
+
+		/// <summary>
+		/// Resolves a <see cref="System.Text.Json.Serialization.JsonConverter"/> that delegates to the
+		/// SourceSerializer for the given property type, by locating the <c>SourceConverterFactory</c>
+		/// registered on the options. Returns <c>null</c> if it cannot be resolved.
+		/// </summary>
+		private static System.Text.Json.Serialization.JsonConverter GetSourceConverter(JsonSerializerOptions options, Type propertyType)
+		{
+			foreach (var converter in options.Converters)
+			{
+				if (converter is SourceConverterFactory factory)
+				{
+					try
+					{
+						return factory.CreateSourceConverter(propertyType, options);
+					}
+					catch
+					{
+						return null;
+					}
+				}
+			}
+
+			return null;
 		}
 
 		/// <summary>
@@ -176,6 +300,29 @@ namespace OpenSearch.Client
 			typeof(Names),
 			typeof(TaskId),
 		};
+
+		/// <summary>
+		/// Determines whether <paramref name="propType"/> is an <see cref="IDictionary{TKey,TValue}"/>
+		/// (or a type implementing it) whose key type is <see cref="Field"/>, returning the value type.
+		/// </summary>
+		private static bool TryGetFieldKeyedDictionaryValueType(Type propType, out Type valueType)
+		{
+			valueType = null;
+
+			if (!propType.IsGenericType)
+				return false;
+
+			var def = propType.GetGenericTypeDefinition();
+			if (def != typeof(IDictionary<,>) && def != typeof(Dictionary<,>))
+				return false;
+
+			var args = propType.GetGenericArguments();
+			if (args.Length != 2 || args[0] != typeof(Field))
+				return false;
+
+			valueType = args[1];
+			return true;
+		}
 
 		/// <summary>
 		/// Returns all interfaces in <paramref name="type"/>'s hierarchy that participate in the

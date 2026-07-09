@@ -6,12 +6,19 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using OpenSearch.Net;
 
 namespace OpenSearch.Client
 {
+	/// <summary>
+	/// Serializes <see cref="Indices"/> using the "multi syntax" wire format: a single
+	/// comma-separated string (e.g. <c>"index-a,index-b"</c>) or <c>"_all"</c>. This matches
+	/// the historical (Utf8Json) default (<c>IndicesMultiSyntaxFormatter</c>) applied at the
+	/// <see cref="Indices"/> type level. Reading also accepts a JSON array of index strings.
+	/// </summary>
 	internal sealed class IndicesConverterFactory : JsonConverterFactory
 	{
 		private readonly IConnectionSettingsValues _settings;
@@ -25,28 +32,35 @@ namespace OpenSearch.Client
 			new IndicesConverter(_settings);
 	}
 
-	/// <summary>
-	/// Serializes <see cref="Indices"/> as its multi-index string form (<c>_all</c> or the
-	/// comma-joined resolved index names) rather than the underlying <c>Union</c> object shape.
-	/// Ports the Utf8Json <c>IndicesMultiSyntaxFormatter</c>.
-	/// </summary>
 	internal sealed class IndicesConverter : JsonConverter<Indices>
 	{
 		private readonly IConnectionSettingsValues _settings;
 
-		public IndicesConverter(IConnectionSettingsValues settings) =>
-			_settings = settings ?? throw new ArgumentNullException(nameof(settings));
+		public IndicesConverter(IConnectionSettingsValues settings) => _settings = settings;
 
 		public override Indices Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			if (reader.TokenType == JsonTokenType.String)
+			switch (reader.TokenType)
 			{
-				var value = reader.GetString();
-				return value == null ? null : (Indices)value;
+				case JsonTokenType.Null:
+					return null;
+				case JsonTokenType.String:
+					return Indices.Parse(reader.GetString());
+				case JsonTokenType.StartArray:
+				{
+					var indices = new List<IndexName>();
+					while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
+					{
+						var s = reader.GetString();
+						if (s != null)
+							indices.Add(s);
+					}
+					return indices.Count == 0 ? null : Indices.Index(indices);
+				}
+				default:
+					reader.Skip();
+					return null;
 			}
-
-			reader.Skip();
-			return null;
 		}
 
 		public override void Write(Utf8JsonWriter writer, Indices value, JsonSerializerOptions options)

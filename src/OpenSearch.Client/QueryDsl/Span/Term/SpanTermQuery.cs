@@ -27,6 +27,7 @@
 */
 
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
@@ -35,6 +36,7 @@ namespace OpenSearch.Client
 	public interface ISpanTermQuery : ISpanSubQuery, IFieldNameQuery
 	{
 		[DataMember(Name = "value")]
+		[JsonConverter(typeof(SourceValueWriteConverter))]
 		object Value { get; set; }
 	}
 

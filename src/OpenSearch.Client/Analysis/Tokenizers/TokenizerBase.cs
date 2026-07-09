@@ -27,10 +27,12 @@
 */
 
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[JsonConverter(typeof(TokenizerConverter))]
 	public interface ITokenizer
 	{
 		[DataMember(Name = "type")]

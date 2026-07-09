@@ -27,8 +27,13 @@
 */
 
 
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 namespace OpenSearch.Client
 {
+	[JsonConverter(typeof(ContextConverter))]
 	public class Context : Union<string, GeoLocation>
 	{
 		public Context(string category) : base(category) { }
@@ -43,4 +48,39 @@ namespace OpenSearch.Client
 		public static implicit operator Context(GeoLocation context) => new Context(context);
 	}
 
+	/// <summary>
+	/// (De)serializes <see cref="Context"/> (a <see cref="Union{String, GeoLocation}"/> subtype).
+	/// Reads via the underlying union and wraps the resulting member in a <see cref="Context"/>;
+	/// writes whichever member is set. Replaces the Utf8Json <c>ContextFormatter</c>.
+	/// </summary>
+	internal sealed class ContextConverter : JsonConverter<Context>
+	{
+		public override Context Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			if (reader.TokenType == JsonTokenType.Null)
+				return null;
+
+			var union = JsonSerializer.Deserialize<Union<string, GeoLocation>>(ref reader, options);
+			if (union == null)
+				return null;
+
+			return union.Tag switch
+			{
+				0 => new Context(union.Item1),
+				1 => new Context(union.Item2),
+				_ => null
+			};
+		}
+
+		public override void Write(Utf8JsonWriter writer, Context value, JsonSerializerOptions options)
+		{
+			if (value == null)
+			{
+				writer.WriteNullValue();
+				return;
+			}
+
+			JsonSerializer.Serialize(writer, value, typeof(Union<string, GeoLocation>), options);
+		}
+	}
 }
