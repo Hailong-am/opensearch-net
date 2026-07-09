@@ -54,7 +54,17 @@ namespace OpenSearch.Client
 		/// effectively acting as a catch-all for user document types (e.g., the generic <c>T</c>
 		/// in <c>SearchResponse&lt;T&gt;</c>).
 		/// </remarks>
-		public override bool CanConvert(Type typeToConvert)
+		public override bool CanConvert(Type typeToConvert) => IsSourceDocumentType(typeToConvert);
+
+		/// <summary>
+		/// Whether <paramref name="typeToConvert"/> is a user document type that should be serialized by
+		/// the SourceSerializer rather than the high-level domain machinery. Exposed statically so the
+		/// high-level serializer can recognize a bare top-level document and route it through the
+		/// inference-aware terminal source options (matching the pre-STJ behavior, where a document
+		/// serialized at the JSON root honored OSC field-name inference rather than a distinct source
+		/// serializer's own naming — the source serializer only applied to nested <c>_source</c> members).
+		/// </summary>
+		internal static bool IsSourceDocumentType(Type typeToConvert)
 		{
 			if (typeToConvert == null) return false;
 
@@ -198,11 +208,17 @@ namespace OpenSearch.Client
 	}
 
 	/// <summary>
+	/// Non-generic marker for <see cref="SourceConverter{T}"/> so callers can detect that the domain
+	/// options resolve a given type to the source-delegating converter without knowing its type argument.
+	/// </summary>
+	internal interface ISourceConverter { }
+
+	/// <summary>
 	/// A <see cref="JsonConverter{T}"/> that delegates serialization/deserialization of user
 	/// document type <typeparamref name="T"/> to the configured SourceSerializer.
 	/// </summary>
 	/// <typeparam name="T">The user document type being serialized or deserialized.</typeparam>
-	internal sealed class SourceConverter<T> : JsonConverter<T>
+	internal sealed class SourceConverter<T> : JsonConverter<T>, ISourceConverter
 	{
 		private readonly IConnectionSettingsValues _settings;
 
