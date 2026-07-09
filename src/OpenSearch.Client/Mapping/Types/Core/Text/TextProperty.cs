@@ -40,6 +40,7 @@ namespace OpenSearch.Client
 	/// Text fields are not used for sorting and seldom used for aggregations
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(TextProperty))]
 	public interface ITextProperty : ICoreProperty
 	{
 		[DataMember(Name = "analyzer")]

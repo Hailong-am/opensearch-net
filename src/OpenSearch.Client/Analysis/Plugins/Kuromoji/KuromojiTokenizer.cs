@@ -35,6 +35,7 @@ namespace OpenSearch.Client
 	/// A tokenizer of type pattern that can flexibly separate text into terms via a regular expression.
 	/// Part of the `analysis-kuromoji` plugin:
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IKuromojiTokenizer : ITokenizer
 	{
 		/// <summary>

@@ -34,6 +34,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(GrokProcessor))]
 	public interface IGrokProcessor : IProcessor
 	{
 		/// <summary>

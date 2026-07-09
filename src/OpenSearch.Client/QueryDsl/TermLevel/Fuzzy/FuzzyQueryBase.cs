@@ -31,6 +31,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(FuzzyQuery))]
 	public interface IFuzzyQuery : IFieldNameQuery
 	{
 		[DataMember(Name ="max_expansions")]
@@ -46,6 +47,7 @@ namespace OpenSearch.Client
 		bool? Transpositions { get; set; }
 	}
 
+	[InterfaceDataContract]
 	public interface IFuzzyQuery<TValue, TFuzziness> : IFuzzyQuery
 	{
 		[DataMember(Name ="fuzziness")]

@@ -34,6 +34,7 @@ namespace OpenSearch.Client
 	/// Queries documents that contain terms matching a regular expression.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(RegexpQuery))]
 	public interface IRegexpQuery : IFieldNameQuery
 	{
 		/// <summary>

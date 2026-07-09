@@ -30,6 +30,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using OpenSearch.Net.Extensions;
 
@@ -42,6 +44,47 @@ namespace OpenSearch.Client
 		DateMathTimeUnit? Round { get; }
 	}
 
+	/// <summary>
+	/// Serializes <see cref="DateMath"/> (and subclasses) as its string form and parses it back from a
+	/// string. A factory so it matches the abstract base and any concrete subtype (e.g.
+	/// <see cref="DateMathExpression"/>), since STJ resolves converters by the value's runtime type.
+	/// Declared via <c>[JsonConverter]</c> on the base type. Replaces the Utf8Json <c>DateMathFormatter</c>.
+	/// </summary>
+	internal sealed class DateMathConverter : JsonConverterFactory
+	{
+		public override bool CanConvert(Type typeToConvert) => typeof(DateMath).IsAssignableFrom(typeToConvert);
+
+		public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+		{
+			var converterType = typeof(DateMathConverterImpl<>).MakeGenericType(typeToConvert);
+			return (JsonConverter)Activator.CreateInstance(converterType);
+		}
+	}
+
+	internal sealed class DateMathConverterImpl<T> : JsonConverter<T> where T : DateMath
+	{
+		public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			if (reader.TokenType != JsonTokenType.String)
+			{
+				reader.Skip();
+				return null;
+			}
+
+			var value = reader.GetString();
+			return value == null ? null : (T)DateMath.FromString(value);
+		}
+
+		public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
+		{
+			if (value == null)
+				writer.WriteNullValue();
+			else
+				writer.WriteStringValue(value.ToString());
+		}
+	}
+
+	[JsonConverter(typeof(DateMathConverter))]
 	public abstract class DateMath : IDateMath
 	{
 		private static readonly Regex DateMathRegex =

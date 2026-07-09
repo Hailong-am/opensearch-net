@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// Renames an existing field. If the field doesn't exist or the new name is already used, an exception will be thrown.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(RenameProcessor))]
 	public interface IRenameProcessor : IProcessor
 	{
 		/// <summary>

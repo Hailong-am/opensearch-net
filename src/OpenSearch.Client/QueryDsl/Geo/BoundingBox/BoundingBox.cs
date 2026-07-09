@@ -30,6 +30,7 @@ using System.Runtime.Serialization;
 
 namespace OpenSearch.Client
 {
+	[InterfaceDataContract]
 	[ReadAs(typeof(BoundingBox))]
 	public interface IBoundingBox
 	{

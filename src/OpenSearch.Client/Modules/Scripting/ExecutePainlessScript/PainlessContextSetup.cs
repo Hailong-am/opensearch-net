@@ -35,6 +35,7 @@ namespace OpenSearch.Client
 	/// Sets up contextual scope for the painless script the execute under.
 	/// </summary>
 	[ReadAs(typeof(PainlessContextSetup))]
+	[InterfaceDataContract]
 	public interface IPainlessContextSetup
 	{
 		/// <summary>

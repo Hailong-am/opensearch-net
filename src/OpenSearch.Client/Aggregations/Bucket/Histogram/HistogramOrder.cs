@@ -26,6 +26,9 @@
 *  under the License.
 */
 
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using OpenSearch.Net;
 
 namespace OpenSearch.Client
@@ -37,6 +40,51 @@ namespace OpenSearch.Client
 		SortOrder Order { get; set; }
 	}
 
+	/// <summary>
+	/// Serializes an <see cref="ISortOrder"/> as a single-key object <c>{ "&lt;key&gt;": &lt;order&gt; }</c>.
+	/// Replaces the Utf8Json <c>SortOrderFormatter</c>. Declared via <c>[JsonConverter]</c> on the concrete
+	/// order types so it is honored in every context (including list elements).
+	/// </summary>
+	internal sealed class SortOrderConverter<TSortOrder> : JsonConverter<TSortOrder>
+		where TSortOrder : class, ISortOrder, new()
+	{
+		public override TSortOrder Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			if (reader.TokenType != JsonTokenType.StartObject)
+			{
+				reader.Skip();
+				return null;
+			}
+
+			var sortOrder = new TSortOrder();
+			while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
+			{
+				if (reader.TokenType != JsonTokenType.PropertyName)
+					continue;
+				sortOrder.Key = reader.GetString();
+				reader.Read();
+				sortOrder.Order = JsonSerializer.Deserialize<SortOrder>(ref reader, options);
+			}
+
+			return sortOrder;
+		}
+
+		public override void Write(Utf8JsonWriter writer, TSortOrder value, JsonSerializerOptions options)
+		{
+			if (value?.Key == null)
+			{
+				writer.WriteNullValue();
+				return;
+			}
+
+			writer.WriteStartObject();
+			writer.WritePropertyName(value.Key);
+			JsonSerializer.Serialize(writer, value.Order, options);
+			writer.WriteEndObject();
+		}
+	}
+
+	[JsonConverter(typeof(SortOrderConverter<HistogramOrder>))]
 	public class HistogramOrder : ISortOrder
 	{
 		public static HistogramOrder CountAscending => new HistogramOrder { Key = "_count", Order = SortOrder.Ascending };

@@ -30,6 +30,7 @@
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(SimpleModel))]
 	public interface ISimpleModel : IMovingAverageModel { }
 
 	public class SimpleModel : ISimpleModel

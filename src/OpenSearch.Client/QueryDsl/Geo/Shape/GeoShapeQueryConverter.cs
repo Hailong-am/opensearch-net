@@ -40,6 +40,10 @@ namespace OpenSearch.Client
 	/// </summary>
 	internal sealed class GeoShapeQueryConverter : JsonConverter<IGeoShapeQuery>
 	{
+		private readonly IConnectionSettingsValues _settings;
+
+		public GeoShapeQueryConverter(IConnectionSettingsValues settings) => _settings = settings;
+
 		public override IGeoShapeQuery Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			if (reader.TokenType == JsonTokenType.Null)
@@ -112,7 +116,7 @@ namespace OpenSearch.Client
 				return;
 			}
 
-			var fieldName = value.Field?.ToString();
+			var fieldName = _settings.Inferrer.Field(value.Field);
 			if (string.IsNullOrEmpty(fieldName))
 			{
 				writer.WriteNullValue();

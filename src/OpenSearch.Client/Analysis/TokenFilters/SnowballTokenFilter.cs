@@ -33,6 +33,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A filter that stems words using a Snowball-generated stemmer.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface ISnowballTokenFilter : ITokenFilter
 	{
 		[DataMember(Name ="language")]

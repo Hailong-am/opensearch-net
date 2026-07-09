@@ -34,6 +34,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(NetworkDirectionProcessor))]
 	public interface INetworkDirectionProcessor : IProcessor
 	{
 		[DataMember(Name = "destination_ip")]

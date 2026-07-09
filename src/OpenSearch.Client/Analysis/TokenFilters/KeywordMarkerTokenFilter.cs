@@ -34,6 +34,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Protects words from being modified by stemmers. Must be placed before any stemming filters.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IKeywordMarkerTokenFilter : ITokenFilter
 	{
 		/// <summary>

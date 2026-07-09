@@ -31,6 +31,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[ReadAs(typeof(DateRangeExpression))]
+	[InterfaceDataContract]
 	public interface IDateRangeExpression
 	{
 		[DataMember(Name ="from")]

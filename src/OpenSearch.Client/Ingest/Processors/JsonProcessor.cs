@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// Converts a JSON string into a structured JSON object.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(JsonProcessor))]
 	public interface IJsonProcessor : IProcessor
 	{
 		/// <summary>

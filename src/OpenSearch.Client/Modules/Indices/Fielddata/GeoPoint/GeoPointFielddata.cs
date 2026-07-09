@@ -31,6 +31,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(GeoPointFielddata))]
 	public interface IGeoPointFielddata : IFielddata
 	{
 		[DataMember(Name ="format")]

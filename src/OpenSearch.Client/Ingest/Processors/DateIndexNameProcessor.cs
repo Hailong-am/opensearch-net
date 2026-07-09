@@ -40,6 +40,7 @@ namespace OpenSearch.Client
 	/// by using the date math index name support.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(DateIndexNameProcessor))]
 	public interface IDateIndexNameProcessor : IProcessor
 	{
 		/// <summary>

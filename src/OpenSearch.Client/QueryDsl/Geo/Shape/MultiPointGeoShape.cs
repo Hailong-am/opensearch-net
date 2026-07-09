@@ -32,6 +32,7 @@ using System.Runtime.Serialization;
 
 namespace OpenSearch.Client
 {
+	[InterfaceDataContract]
 	public interface IMultiPointGeoShape : IGeoShape
 	{
 		[DataMember(Name ="coordinates")]

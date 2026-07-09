@@ -34,6 +34,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(DateProcessor))]
 	public interface IDateProcessor : IProcessor
 	{
 		/// <summary>

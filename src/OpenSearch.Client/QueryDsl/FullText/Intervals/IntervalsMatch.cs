@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// Matches the analyzed text
 	/// </summary>
 	[ReadAs(typeof(IntervalsMatch))]
+	[InterfaceDataContract]
 	public interface IIntervalsMatch : IIntervals
 	{
 		/// <summary>

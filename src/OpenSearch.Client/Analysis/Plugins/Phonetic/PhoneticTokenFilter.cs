@@ -38,6 +38,7 @@ namespace OpenSearch.Client
 	/// <remarks>
 	/// Requires the Phonetic Analysis plugin be installed (analysis-phonetic)
 	/// </remarks>
+	[InterfaceDataContract]
 	public interface IPhoneticTokenFilter : ITokenFilter
 	{
 		/// <summary>

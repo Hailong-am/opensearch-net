@@ -32,6 +32,7 @@ using System.Runtime.Serialization;
 
 namespace OpenSearch.Client
 {
+	[InterfaceDataContract]
 	public interface IDecayFunction : IScoreFunction
 	{
 		[DataMember(Name ="decay")]
@@ -45,6 +46,7 @@ namespace OpenSearch.Client
 		MultiValueMode? MultiValueMode { get; set; }
 	}
 
+	[InterfaceDataContract]
 	public interface IDecayFunction<TOrigin, TScale> : IDecayFunction
 	{
 		[DataMember(Name ="offset")]

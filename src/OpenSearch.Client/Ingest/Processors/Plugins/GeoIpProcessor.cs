@@ -43,6 +43,7 @@ namespace OpenSearch.Client
 	/// Requires the Ingest Geoip Processor Plugin to be installed on the cluster.
 	/// </remarks>
 	[InterfaceDataContract]
+	[ReadAs(typeof(GeoIpProcessor))]
 	public interface IGeoIpProcessor : IProcessor
 	{
 		[DataMember(Name ="database_file")]

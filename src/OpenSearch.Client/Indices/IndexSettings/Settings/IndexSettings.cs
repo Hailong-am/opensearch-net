@@ -35,6 +35,7 @@ namespace OpenSearch.Client
 	/// The settings for an index
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(IndexSettings))]
 	public interface IIndexSettings : IDynamicIndexSettings
 	{
 		/// <summary>

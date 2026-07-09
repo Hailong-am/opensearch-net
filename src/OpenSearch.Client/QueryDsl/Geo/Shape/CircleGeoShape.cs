@@ -31,6 +31,7 @@ using System.Runtime.Serialization;
 
 namespace OpenSearch.Client
 {
+	[InterfaceDataContract]
 	public interface ICircleGeoShape : IGeoShape
 	{
 		[DataMember(Name ="coordinates")]

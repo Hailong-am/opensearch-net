@@ -33,6 +33,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(FingerprintProcessor))]
 	public interface IFingerprintProcessor : IProcessor
 	{
 		[DataMember(Name = "fields")]

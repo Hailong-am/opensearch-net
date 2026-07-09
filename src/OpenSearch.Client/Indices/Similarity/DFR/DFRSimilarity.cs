@@ -43,6 +43,7 @@ namespace OpenSearch.Client
 	/// chosen to match the
 	/// names of their counterparts in the Terrier IR engine.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IDFRSimilarity : ISimilarity
 	{
 		/// <summary>

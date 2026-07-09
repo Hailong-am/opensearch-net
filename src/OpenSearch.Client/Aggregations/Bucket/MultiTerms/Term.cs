@@ -33,6 +33,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[ReadAs(typeof(Term))]
+	[InterfaceDataContract]
 	public interface ITerm
 	{
 		Field Field { get; set; }

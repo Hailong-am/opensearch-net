@@ -28,13 +28,46 @@
 
 using System;
 using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
+	/// Serializes <see cref="DateMathTime"/> as its string form (e.g. <c>"5d"</c>) and parses it back.
+	/// Declared via <c>[JsonConverter]</c> so it is honored in every context (including Union members).
+	/// </summary>
+	internal sealed class DateMathTimeConverter : JsonConverter<DateMathTime>
+	{
+		public override DateMathTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			switch (reader.TokenType)
+			{
+				case JsonTokenType.String:
+					var s = reader.GetString();
+					return s == null ? null : new DateMathTime(s);
+				case JsonTokenType.Number:
+					return new DateMathTime(reader.GetDouble());
+				default:
+					reader.Skip();
+					return null;
+			}
+		}
+
+		public override void Write(Utf8JsonWriter writer, DateMathTime value, JsonSerializerOptions options)
+		{
+			if (value == null)
+				writer.WriteNullValue();
+			else
+				writer.WriteStringValue(value.ToString());
+		}
+	}
+
+	/// <summary>
 	/// A time representation for use within <see cref="DateMath" /> expressions.
 	/// </summary>
+	[JsonConverter(typeof(DateMathTimeConverter))]
 	public class DateMathTime : IComparable<DateMathTime>, IEquatable<DateMathTime>
 	{
 		private const double MillisecondsInADay = MillisecondsInAnHour * 24;

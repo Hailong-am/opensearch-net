@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// URL-decodes a string
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(UrlDecodeProcessor))]
 	public interface IUrlDecodeProcessor : IProcessor
 	{
 		/// <summary>

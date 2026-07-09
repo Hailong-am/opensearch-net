@@ -30,6 +30,10 @@ namespace OpenSearch.Client
 	/// </summary>
 	internal sealed class GeoDistanceQueryConverter : JsonConverter<IGeoDistanceQuery>
 	{
+		private readonly IConnectionSettingsValues _settings;
+
+		public GeoDistanceQueryConverter(IConnectionSettingsValues settings) => _settings = settings;
+
 		public override IGeoDistanceQuery Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			if (reader.TokenType == JsonTokenType.Null)
@@ -90,7 +94,7 @@ namespace OpenSearch.Client
 				return;
 			}
 
-			var fieldName = value.Field?.ToString();
+			var fieldName = _settings.Inferrer.Field(value.Field);
 			if (string.IsNullOrEmpty(fieldName))
 			{
 				writer.WriteNullValue();

@@ -27,10 +27,12 @@
 */
 
 using System;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Extensions;
 
 namespace OpenSearch.Client
 {
+	[JsonConverter(typeof(DateMathConverter))]
 	public class DateMathExpression : DateMath
 	{
 		public DateMathExpression(string anchor) => Anchor = anchor;

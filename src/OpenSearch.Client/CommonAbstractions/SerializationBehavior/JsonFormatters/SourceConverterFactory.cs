@@ -83,7 +83,33 @@ namespace OpenSearch.Client
 				 assemblyName.StartsWith("OpenSearch.Client", StringComparison.Ordinal)))
 				return false;
 
+			// Generic collection types (IList<T>, IEnumerable<T>, etc.) whose element types
+			// are from OpenSearch assemblies are NOT user document types — they are domain
+			// collections that STJ's built-in collection handling should process, with element
+			// converters resolved from the options. Without this check, SourceConverter claims
+			// them and delegates to JsonNet, which can't handle OpenSearch interfaces/types.
+			if (typeToConvert.IsGenericType)
+			{
+				var args = typeToConvert.GetGenericArguments();
+				if (args.Length > 0 && AllOpenSearchTypes(args))
+					return false;
+			}
+
 			// Everything else is a user document type that should be delegated to the SourceSerializer
+			return true;
+		}
+
+		private static bool AllOpenSearchTypes(Type[] types)
+		{
+			foreach (var t in types)
+			{
+				var name = t.Assembly.GetName().Name;
+				if (name == null)
+					return false;
+				if (!name.StartsWith("OpenSearch.Net", StringComparison.Ordinal)
+					&& !name.StartsWith("OpenSearch.Client", StringComparison.Ordinal))
+					return false;
+			}
 			return true;
 		}
 
@@ -118,7 +144,7 @@ namespace OpenSearch.Client
 				&& s.TryGetJsonSerializerOptions(out var sourceOptions))
 			{
 				if (ReferenceEquals(sourceOptions, options))
-					return JsonSerializer.Deserialize<T>(ref reader, SourceConverterHelper.DefaultOptions);
+					return JsonSerializer.Deserialize<T>(ref reader, SourceConverterHelper.GetRecursionSafeOptions(options, typeof(T)));
 				return JsonSerializer.Deserialize<T>(ref reader, sourceOptions);
 			}
 
@@ -142,7 +168,7 @@ namespace OpenSearch.Client
 				&& s.TryGetJsonSerializerOptions(out var sourceOptions))
 			{
 				if (ReferenceEquals(sourceOptions, options))
-					JsonSerializer.Serialize(writer, value, SourceConverterHelper.DefaultOptions);
+					JsonSerializer.Serialize(writer, value, SourceConverterHelper.GetRecursionSafeOptions(options, typeof(T)));
 				else
 					JsonSerializer.Serialize(writer, value, sourceOptions);
 				return;
@@ -163,5 +189,65 @@ namespace OpenSearch.Client
 		{
 			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
 		};
+
+		// Cache of recursion-safe options keyed by the originating domain options instance. These
+		// preserve every domain converter (JoinField, RelationName, enums, etc.) so that OpenSearch
+		// domain types embedded in a user document still serialize correctly, but strip the
+		// document-delegating factories (SourceConverterFactory / ProxyRequestConverterFactory) so a
+		// value handled here does not recurse straight back into this converter.
+		private static readonly System.Collections.Concurrent.ConcurrentDictionary<JsonSerializerOptions, JsonSerializerOptions>
+			RecursionSafeOptionsCache = new();
+
+		internal static JsonSerializerOptions GetRecursionSafeOptions(JsonSerializerOptions domainOptions, Type targetType = null)
+		{
+			if (domainOptions == null)
+				return DefaultOptions;
+
+			// For plain BCL types (e.g. Dictionary<string, object> used to read index settings) use the
+			// stripped Web-default options so untyped `object` values round-trip as JsonElement, exactly
+			// as before the domain-aware recursion guard was introduced. Only OpenSearch domain document
+			// types need the domain converters (JoinField, RelationName, enums) preserved.
+			if (targetType != null && IsBclType(targetType))
+				return DefaultOptions;
+
+			return RecursionSafeOptionsCache.GetOrAdd(domainOptions, static source =>
+			{
+				var copy = new JsonSerializerOptions(source);
+				for (var i = copy.Converters.Count - 1; i >= 0; i--)
+				{
+					var converter = copy.Converters[i];
+					if (converter is SourceConverterFactory || converter is ProxyRequestConverterFactory)
+						copy.Converters.RemoveAt(i);
+				}
+				return copy;
+			});
+		}
+
+		/// <summary>
+		/// True if the type (and, for a generic type, all of its type arguments) lives in a System.*
+		/// assembly — i.e. it is a plain BCL type such as <c>Dictionary&lt;string, object&gt;</c> rather
+		/// than an OpenSearch domain document type.
+		/// </summary>
+		private static bool IsBclType(Type type)
+		{
+			var name = type.Assembly.GetName().Name;
+			var isSystem = name != null
+				&& (name.StartsWith("System", StringComparison.Ordinal)
+					|| name.Equals("mscorlib", StringComparison.Ordinal)
+					|| name.Equals("netstandard", StringComparison.Ordinal));
+			if (!isSystem)
+				return false;
+
+			if (type.IsGenericType)
+			{
+				foreach (var arg in type.GetGenericArguments())
+				{
+					if (!IsBclType(arg))
+						return false;
+				}
+			}
+
+			return true;
+		}
 	}
 }

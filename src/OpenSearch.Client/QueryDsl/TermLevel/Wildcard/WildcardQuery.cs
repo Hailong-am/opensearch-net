@@ -33,6 +33,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(WildcardQuery))]
 	public interface IWildcardQuery : ITermQuery
 	{
 		[DataMember(Name = "rewrite")]

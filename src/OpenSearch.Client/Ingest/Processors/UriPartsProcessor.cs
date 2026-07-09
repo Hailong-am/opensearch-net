@@ -33,6 +33,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(UriPartsProcessor))]
 	public interface IUriPartsProcessor : IProcessor
 	{
 		/// <summary>

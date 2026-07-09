@@ -32,6 +32,7 @@ using System.Runtime.Serialization;
 
 namespace OpenSearch.Client
 {
+	[InterfaceDataContract]
 	public interface IPipelineAggregation : IAggregation
 	{
 		[DataMember(Name ="buckets_path")]

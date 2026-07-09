@@ -34,7 +34,6 @@ using OpenSearch.Net.Extensions;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
-	[JsonConverter(typeof(GeoPolygonQueryConverter))]
 	public interface IGeoPolygonQuery : IFieldNameQuery
 	{
 		IEnumerable<GeoLocation> Points { get; set; }

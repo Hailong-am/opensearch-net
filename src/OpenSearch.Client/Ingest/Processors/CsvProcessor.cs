@@ -37,6 +37,7 @@ namespace OpenSearch.Client
 	/// Any empty field in CSV will be skipped.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(CsvProcessor))]
 	public interface ICsvProcessor : IProcessor
 	{
 		/// <summary>

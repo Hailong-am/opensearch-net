@@ -107,8 +107,37 @@ namespace OpenSearch.Client
 			// RelationName converter (resolves relation/type names via Inferrer)
 			options.Converters.Insert(0, new RelationNameConverterFactory(settings));
 
+			// Id converter (resolves document IDs via Inferrer)
+			options.Converters.Insert(0, new IdConverterFactory(settings));
+
+			// Routing converter (resolves routing values via Inferrer)
+			options.Converters.Insert(0, new RoutingConverterFactory(settings));
+
+			// JoinField converter (parent-child relation join on user _source documents)
+			options.Converters.Insert(0, new JoinFieldConverterFactory(settings));
+
+			// Proxy request converter (Index/Create requests delegate their body to the source serializer)
+			options.Converters.Insert(0, new ProxyRequestConverterFactory(settings));
+
+			// MultiGet request converter (flattens to ids/docs and strips redundant per-doc index)
+			options.Converters.Insert(0, new MultiGetRequestConverterFactory(settings));
+
+			// Bulk request converter (NDJSON: action-metadata line + body line per operation)
+			options.Converters.Insert(0, new BulkRequestConverterFactory(settings));
+
+			// LazyDocument converter (captures raw JSON for deferred source/response deserialization)
+			options.Converters.Insert(0, new LazyDocumentConverterFactory(settings));
+
 			// Bulk response item converter (single-key operation dispatch on deserialize)
 			options.Converters.Insert(0, new BulkResponseItemConverter());
+
+			// Union converter (writes whichever member is set; reads TFirst then falls back to TSecond)
+			options.Converters.Insert(0, new UnionConverterFactory());
+
+			// Indices converter (multi-index string form: _all or comma-joined resolved names).
+			// Inserted after UnionConverterFactory so it takes precedence: Indices derives from
+			// Union<,> which the union factory would otherwise claim and emit as an object.
+			options.Converters.Insert(0, new IndicesConverterFactory(settings));
 
 			// Query DSL converters (task 6.x)
 			options.Converters.Insert(0, new QueryContainerConverter());
@@ -116,13 +145,20 @@ namespace OpenSearch.Client
 			options.Converters.Insert(0, new QueryContainerCollectionConverter());
 			options.Converters.Insert(0, new TermsQueryConverter());
 			options.Converters.Insert(0, new RangeQueryConverter());
-			options.Converters.Insert(0, new GeoShapeQueryConverter());
 
 			// Field-name query wrapping (term, match, prefix, wildcard, fuzzy, regexp, span_term, etc.).
 			// Adds the { "<resolved-field>": { ...body... } } wrapping around concrete field-name queries
 			// that do not already have a dedicated converter. Inserted last so it takes precedence over
 			// the InterfaceDataContractModifier's default object handling for these concrete types.
 			options.Converters.Insert(0, new FieldNameQueryConverterFactory(settings));
+
+			// Geo query converters (dedicated field-name-wrapping shapes). Inserted after the
+			// field-name query factory so they take precedence for their specific interfaces
+			// (the factory would otherwise claim them and emit the generic { field: { body } } wrapping).
+			options.Converters.Insert(0, new GeoShapeQueryConverter(settings));
+			options.Converters.Insert(0, new GeoBoundingBoxQueryConverter(settings));
+			options.Converters.Insert(0, new GeoDistanceQueryConverter(settings));
+			options.Converters.Insert(0, new GeoPolygonQueryConverter(settings));
 
 			// Aggregation converters (task 8.x)
 			options.Converters.Insert(0, new AggregationContainerConverter());
@@ -133,6 +169,9 @@ namespace OpenSearch.Client
 
 			// Mapping converters (task 9.1)
 			options.Converters.Insert(0, new PropertyConverter());
+
+			// Sort converter (ISort → { "field": { ...body... } } dispatch)
+			options.Converters.Insert(0, new SortConverter(settings));
 
 			// Ingest pipeline converters (task 9.2)
 			options.Converters.Insert(0, new ProcessorConverter());

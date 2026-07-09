@@ -94,11 +94,12 @@ namespace OpenSearch.Client
 				writer.WriteNumberValue(value.Boost.Value);
 			}
 
-			// Write the field name and its value (terms array or lookup object)
-			var field = value.Field?.ToString();
-			if (!string.IsNullOrEmpty(field))
+			// Write the field name (resolved via the settings-aware Field converter) and its value
+			// (terms array or lookup object).
+			if (value.Field != null)
 			{
-				writer.WritePropertyName(field);
+				var fieldConverter = (JsonConverter<Field>)options.GetConverter(typeof(Field));
+				fieldConverter.WriteAsPropertyName(writer, value.Field, options);
 
 				if (value.IsVerbatim)
 				{

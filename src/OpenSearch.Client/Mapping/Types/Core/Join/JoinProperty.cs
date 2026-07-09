@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// The join datatype is a special field that creates parent/child relation within documents of the same index.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(JoinProperty))]
 	public interface IJoinProperty : IProperty
 	{
 		/// <summary>

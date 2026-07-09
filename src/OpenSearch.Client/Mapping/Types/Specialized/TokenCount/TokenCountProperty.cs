@@ -37,6 +37,7 @@ namespace OpenSearch.Client
 	/// analyzes them, then indexes the number of tokens in the string.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(TokenCountProperty))]
 	public interface ITokenCountProperty : IDocValuesProperty
 	{
 		[DataMember(Name ="analyzer")]

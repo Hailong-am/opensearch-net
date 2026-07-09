@@ -12,6 +12,7 @@ using System.Runtime.Serialization;
 
 namespace OpenSearch.Client;
 
+[InterfaceDataContract]
 public interface IInferenceFieldMap : IIsADictionary<Field, Field> { }
 
 [InterfaceDataContract]

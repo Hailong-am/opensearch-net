@@ -33,6 +33,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(NetworkCommunityIdProcessor))]
 	public interface INetworkCommunityIdProcessor : IProcessor
 	{
 		[DataMember(Name = "destination_ip")]

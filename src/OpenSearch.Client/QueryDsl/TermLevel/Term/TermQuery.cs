@@ -31,6 +31,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(TermQuery))]
 	public interface ITermQuery : IFieldNameQuery
 	{
 		[DataMember(Name = "value")]

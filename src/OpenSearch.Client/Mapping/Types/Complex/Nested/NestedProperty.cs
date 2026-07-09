@@ -37,6 +37,7 @@ namespace OpenSearch.Client
 	/// and aggregations.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(NestedProperty))]
 	public interface INestedProperty : IObjectProperty
 	{
 		/// <summary>

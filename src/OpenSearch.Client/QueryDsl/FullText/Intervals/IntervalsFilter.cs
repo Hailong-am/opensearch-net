@@ -35,6 +35,7 @@ namespace OpenSearch.Client
 	/// Filters intervals produced by any rules by their relation to the intervals produced by another rule
 	/// </summary>
 	[ReadAs(typeof(IntervalsFilter))]
+	[InterfaceDataContract]
 	public interface IIntervalsFilter
 	{
 		/// <summary>

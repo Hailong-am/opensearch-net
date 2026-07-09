@@ -34,6 +34,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// The synonym token filter allows to easily handle synonyms during the analysis process.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface ISynonymTokenFilter : ITokenFilter
 	{
 		[DataMember(Name ="expand")]

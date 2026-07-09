@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// <para />
 	/// Requires the repository-azure plugin to be installed on the cluster
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IAzureRepository : IRepository<IAzureRepositorySettings> { }
 
 	/// <inheritdoc />
@@ -53,6 +54,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Snapshot repository settings for <see cref="IAzureRepository"/>
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IAzureRepositorySettings : IRepositorySettings
 	{
 		/// <summary>

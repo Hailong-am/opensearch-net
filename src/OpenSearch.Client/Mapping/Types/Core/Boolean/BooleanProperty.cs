@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// The boolean fields accepts true and false values
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(BooleanProperty))]
 	public interface IBooleanProperty : IDocValuesProperty
 	{
 		[DataMember(Name = "boost")]

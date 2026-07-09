@@ -33,6 +33,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A tokenizer of type keyword that emits the entire input as a single input.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IKeywordTokenizer : ITokenizer
 	{
 		/// <summary>

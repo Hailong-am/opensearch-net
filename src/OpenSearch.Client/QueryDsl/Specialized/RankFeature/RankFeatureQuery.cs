@@ -91,6 +91,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A function to boost scores in a rank_feature query, using the values of rank features.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IRankFeatureFunction { }
 
 	/// <summary>
@@ -98,6 +99,7 @@ namespace OpenSearch.Client
 	/// scaling factor. Scores are unbounded.
 	/// This function only supports rank features that have a positive score impact.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IRankFeatureLogarithmFunction : IRankFeatureFunction
 	{
 		/// <summary>
@@ -130,6 +132,7 @@ namespace OpenSearch.Client
 	/// so that the result will be less than 0.5 if S is less than pivot and greater than 0.5 otherwise. Scores are always is (0, 1).
 	/// If the rank feature has a negative score impact then the function will be computed as pivot / (S + pivot), which decreases when S increases.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IRankFeatureSaturationFunction : IRankFeatureFunction
 	{
 		[DataMember(Name = "pivot")]
@@ -159,6 +162,7 @@ namespace OpenSearch.Client
 	/// exponent must be positive, but is typically in [0.5, 1]. A good value should be computed via training. If you don’t have the opportunity
 	/// to do so, we recommend that you stick to the saturation function instead.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IRankFeatureSigmoidFunction : IRankFeatureFunction
 	{
 		[DataMember(Name = "pivot")]

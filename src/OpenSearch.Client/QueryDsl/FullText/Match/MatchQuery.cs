@@ -35,6 +35,7 @@ namespace OpenSearch.Client
 	/// A match query for a single field
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(MatchQuery))]
 	public interface IMatchQuery : IFieldNameQuery
 	{
 		/// <summary>

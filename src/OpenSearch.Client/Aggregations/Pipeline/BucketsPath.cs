@@ -26,10 +26,14 @@
 *  under the License.
 */
 
+using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
+	[JsonConverter(typeof(BucketsPathConverter))]
 	public interface IBucketsPath { }
 
 	public class SingleBucketsPath : IBucketsPath
@@ -64,4 +68,48 @@ namespace OpenSearch.Client
 		public MultiBucketsPathDescriptor Add(string name, string bucketsPath) => Assign(name, bucketsPath);
 	}
 
+	/// <summary>
+	/// Dispatches <see cref="IBucketsPath"/> to its string form (<see cref="SingleBucketsPath"/>) or
+	/// object/dictionary form (<see cref="MultiBucketsPath"/>). Declared via <c>[JsonConverter]</c> on the
+	/// interface so it is honored in every context. Replaces the Utf8Json <c>BucketsPathFormatter</c>.
+	/// </summary>
+	internal sealed class BucketsPathConverter : JsonConverter<IBucketsPath>
+	{
+		public override IBucketsPath Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			switch (reader.TokenType)
+			{
+				case JsonTokenType.String:
+					return new SingleBucketsPath(reader.GetString());
+				case JsonTokenType.StartObject:
+					var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(ref reader, options);
+					return new MultiBucketsPath(dict);
+				default:
+					reader.Skip();
+					return null;
+			}
+		}
+
+		public override void Write(Utf8JsonWriter writer, IBucketsPath value, JsonSerializerOptions options)
+		{
+			switch (value)
+			{
+				case SingleBucketsPath single:
+					writer.WriteStringValue(single.BucketsPath);
+					break;
+				case MultiBucketsPath multi:
+					writer.WriteStartObject();
+					foreach (var kv in (IEnumerable<KeyValuePair<string, string>>)multi)
+					{
+						writer.WritePropertyName(kv.Key);
+						writer.WriteStringValue(kv.Value);
+					}
+					writer.WriteEndObject();
+					break;
+				default:
+					writer.WriteNullValue();
+					break;
+			}
+		}
+	}
 }

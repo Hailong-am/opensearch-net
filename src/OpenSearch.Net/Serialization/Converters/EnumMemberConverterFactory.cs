@@ -61,7 +61,9 @@ namespace OpenSearch.Net
 				var field = enumType.GetField(name);
 				var enumMemberAttr = field?.GetCustomAttribute<EnumMemberAttribute>();
 
-				var stringValue = enumMemberAttr?.Value ?? ToCamelCase(name);
+				// Match the Utf8Json EnumFormatter behavior: use the EnumMemberAttribute value when
+				// present, otherwise fall back to the raw enum field name (preserving its casing).
+				var stringValue = enumMemberAttr?.Value ?? name;
 
 				_enumToString[value] = stringValue;
 				// Only store the first mapping for duplicate string values
@@ -103,18 +105,7 @@ namespace OpenSearch.Net
 			if (_enumToString.TryGetValue(value, out var stringValue))
 				writer.WriteStringValue(stringValue);
 			else
-				writer.WriteStringValue(ToCamelCase(value.ToString()));
-		}
-
-		private static string ToCamelCase(string name)
-		{
-			if (string.IsNullOrEmpty(name))
-				return name;
-
-			if (char.IsLower(name[0]))
-				return name;
-
-			return char.ToLowerInvariant(name[0]) + name.Substring(1);
+				writer.WriteStringValue(value.ToString());
 		}
 	}
 

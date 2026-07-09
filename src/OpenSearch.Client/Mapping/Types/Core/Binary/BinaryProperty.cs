@@ -35,6 +35,7 @@ namespace OpenSearch.Client
 	/// The field is not stored by default and is not searchable
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(BinaryProperty))]
 	public interface IBinaryProperty : IDocValuesProperty { }
 
 	[DebuggerDisplay("{DebugDisplay}")]

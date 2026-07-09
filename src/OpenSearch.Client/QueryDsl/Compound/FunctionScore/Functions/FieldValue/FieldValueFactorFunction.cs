@@ -34,6 +34,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(FieldValueFactorFunction))]
 	public interface IFieldValueFactorFunction : IScoreFunction
 	{
 		[DataMember(Name ="factor")]

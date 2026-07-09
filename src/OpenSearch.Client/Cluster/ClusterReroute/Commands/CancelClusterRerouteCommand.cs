@@ -30,6 +30,7 @@ using System.Runtime.Serialization;
 
 namespace OpenSearch.Client
 {
+	[InterfaceDataContract]
 	public interface ICancelClusterRerouteCommand : IClusterRerouteCommand
 	{
 		[DataMember(Name ="allow_primary")]

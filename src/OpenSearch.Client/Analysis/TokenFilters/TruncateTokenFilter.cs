@@ -34,6 +34,7 @@ namespace OpenSearch.Client
 	/// The truncate token filter can be used to truncate tokens into a specific length. This can come in handy with keyword (single token)
 	/// <para> based mapped fields that are used for sorting in order to reduce memory usage.</para>
 	/// </summary>
+	[InterfaceDataContract]
 	public interface ITruncateTokenFilter : ITokenFilter
 	{
 		/// <summary>

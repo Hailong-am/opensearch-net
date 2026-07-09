@@ -32,6 +32,7 @@ using System.Runtime.Serialization;
 
 namespace OpenSearch.Client
 {
+	[InterfaceDataContract]
 	public interface IMatrixAggregation : IAggregation
 	{
 		[DataMember(Name ="fields")]

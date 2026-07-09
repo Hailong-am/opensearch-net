@@ -40,6 +40,7 @@ namespace OpenSearch.Client
 	/// <para>OpenSearch does not ship with built-in normalizers so far, so the only way to create one is through composing a custom one</para>
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(CustomNormalizer))]
 	public interface ICustomNormalizer : INormalizer
 	{
 		/// <summary>

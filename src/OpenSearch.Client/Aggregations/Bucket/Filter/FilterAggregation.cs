@@ -32,6 +32,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(FilterAggregation))]
 	public interface IFilterAggregation : IBucketAggregation
 	{
 		[DataMember(Name ="filter")]

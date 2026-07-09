@@ -40,6 +40,7 @@ namespace OpenSearch.Client
 	/// These intervals can be further combined and filtered by parent sources.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(IntervalsQuery))]
 	public interface IIntervalsQuery : IFieldNameQuery, IIntervalsContainer { }
 
 	/// <inheritdoc cref="IIntervalsQuery" />
@@ -112,6 +113,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Container for an <see cref="IIntervalsQuery" /> rule
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IIntervalsContainer
 	{
 		/// <inheritdoc cref="IIntervalsAllOf" />
@@ -208,6 +210,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// An <see cref="IIntervalsQuery" /> rule with an optional filter
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IIntervals
 	{
 		/// <summary>

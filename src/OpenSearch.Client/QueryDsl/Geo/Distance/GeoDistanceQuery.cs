@@ -32,7 +32,6 @@ using OpenSearch.Net.Extensions;
 
 namespace OpenSearch.Client
 {
-	[JsonConverter(typeof(GeoDistanceQueryConverter))]
 	public interface IGeoDistanceQuery : IFieldNameQuery
 	{
 		Distance Distance { get; set; }

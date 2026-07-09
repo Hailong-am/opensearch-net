@@ -44,6 +44,7 @@ namespace OpenSearch.Client
 	/// should happen to each element, array fields can easily be preprocessed.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(ForeachProcessor))]
 	public interface IForeachProcessor : IProcessor
 	{
 		/// <summary>

@@ -33,6 +33,7 @@ using OpenSearch.Net;
 namespace OpenSearch.Client
 {
 	[ReadAs(typeof(TermVectorsResult))]
+	[InterfaceDataContract]
 	public interface ITermVectors
 	{
 		bool Found { get; }

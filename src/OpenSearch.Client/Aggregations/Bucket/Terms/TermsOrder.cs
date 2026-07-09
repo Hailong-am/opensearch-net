@@ -26,10 +26,12 @@
 *  under the License.
 */
 
+using System.Text.Json.Serialization;
 using OpenSearch.Net;
 
 namespace OpenSearch.Client
 {
+	[JsonConverter(typeof(SortOrderConverter<TermsOrder>))]
 	public class TermsOrder : ISortOrder
 	{
 		public static TermsOrder CountAscending => new TermsOrder { Key = "_count", Order = SortOrder.Ascending };

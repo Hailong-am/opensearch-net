@@ -33,6 +33,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(AliasAddAction))]
 	public interface IAliasAddAction : IAliasAction
 	{
 		[DataMember(Name ="add")]

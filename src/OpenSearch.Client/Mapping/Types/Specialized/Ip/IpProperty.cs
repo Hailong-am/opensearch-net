@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// An ip field can index/store either IPv4 or IPv6 addresses.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(IpProperty))]
 	public interface IIpProperty : IDocValuesProperty
 	{
 		[DataMember(Name ="index")]

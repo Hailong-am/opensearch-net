@@ -34,6 +34,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// An analyzer of type stop that is built using a Lower Case Tokenizer, with Stop Token Filter.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IStopAnalyzer : IAnalyzer
 	{
 		/// <summary>

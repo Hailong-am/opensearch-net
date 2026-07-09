@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client;
 
 [ReadAs(typeof(PointInTime))]
+[InterfaceDataContract]
 public interface IPointInTime
 {
 	[DataMember(Name = "id")]

@@ -34,6 +34,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Named word_delimiter, it Splits words into subwords and performs optional transformations on subword groups.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IWordDelimiterTokenFilter : ITokenFilter
 	{
 		/// <summary>

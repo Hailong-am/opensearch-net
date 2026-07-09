@@ -33,6 +33,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(AliasRemoveAction))]
 	public interface IAliasRemoveAction : IAliasAction
 	{
 		[DataMember(Name = "remove")]

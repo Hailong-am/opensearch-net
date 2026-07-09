@@ -30,6 +30,7 @@ using System.Runtime.Serialization;
 
 namespace OpenSearch.Client
 {
+	[InterfaceDataContract]
 	public interface ITokenFilter
 	{
 		[DataMember(Name = "type")]

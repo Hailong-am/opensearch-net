@@ -33,6 +33,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A token filter of type edgeNGram.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IEdgeNGramTokenFilter : ITokenFilter
 	{
 		/// <summary>

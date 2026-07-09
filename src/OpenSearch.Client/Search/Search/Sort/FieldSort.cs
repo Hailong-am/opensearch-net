@@ -36,6 +36,7 @@ using OpenSearch.Net;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(FieldSort))]
 	public interface IFieldSort : ISort
 	{
 		[DataMember(Name ="ignore_unmapped")]

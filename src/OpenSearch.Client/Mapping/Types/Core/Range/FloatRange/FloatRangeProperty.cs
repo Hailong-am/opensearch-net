@@ -33,6 +33,7 @@ namespace OpenSearch.Client
 	/// A range of single-precision 32-bit IEEE 754 floating point values.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(FloatRangeProperty))]
 	public interface IFloatRangeProperty : IRangeProperty { }
 
 	/// <inheritdoc cref="IFloatRangeProperty"/>

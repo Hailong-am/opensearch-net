@@ -39,6 +39,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A values source for <see cref="ICompositeAggregation" />
 	/// </summary>
+	[InterfaceDataContract]
 	public interface ICompositeAggregationSource
 	{
 		/// <summary>

@@ -33,6 +33,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A token filter of type length that removes words that are too long or too short for the stream.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface ILengthTokenFilter : ITokenFilter
 	{
 		/// <summary>

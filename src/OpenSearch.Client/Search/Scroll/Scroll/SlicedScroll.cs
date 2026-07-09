@@ -33,6 +33,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[ReadAs(typeof(SlicedScroll))]
+	[InterfaceDataContract]
 	public interface ISlicedScroll
 	{
 		[DataMember(Name ="field")]

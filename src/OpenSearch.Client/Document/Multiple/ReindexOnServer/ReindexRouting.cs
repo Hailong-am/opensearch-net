@@ -26,9 +26,13 @@
 *  under the License.
 */
 
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
+	[JsonConverter(typeof(ReindexRoutingConverter))]
 	public class ReindexRouting
 	{
 		public static ReindexRouting Discard = new ReindexRouting("discard", true);
@@ -51,5 +55,30 @@ namespace OpenSearch.Client
 		public static implicit operator ReindexRouting(string routing) => new ReindexRouting(routing);
 
 		public override string ToString() => _newRoutingValue;
+	}
+
+	internal sealed class ReindexRoutingConverter : JsonConverter<ReindexRouting>
+	{
+		public override ReindexRouting Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			if (reader.TokenType == JsonTokenType.Null)
+				return null;
+
+			var value = reader.GetString();
+			switch (value)
+			{
+				case "keep": return ReindexRouting.Keep;
+				case "discard": return ReindexRouting.Discard;
+				default: return value == null ? null : new ReindexRouting(value);
+			}
+		}
+
+		public override void Write(Utf8JsonWriter writer, ReindexRouting value, JsonSerializerOptions options)
+		{
+			if (value == null)
+				writer.WriteNullValue();
+			else
+				writer.WriteStringValue(value.ToString());
+		}
 	}
 }

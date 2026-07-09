@@ -11,6 +11,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client;
 
 [ReadAs(typeof(ComponentTemplate))]
+[InterfaceDataContract]
 public interface IComponentTemplate
 {
 	[DataMember(Name = "template")]

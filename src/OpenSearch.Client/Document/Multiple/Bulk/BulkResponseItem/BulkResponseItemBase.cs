@@ -60,8 +60,11 @@ namespace OpenSearch.Client
 		[DataMember(Name = "_primary_term")]
 		public long PrimaryTerm { get; internal set; }
 
+		// Public getter (with a non-public setter honored by the DataMember contract modifier) so the
+		// response deserializer can populate the raw "get" payload; STJ surfaces only public getters.
 		[DataMember(Name = "get")]
-		internal LazyDocument Get { get; set; }
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+		public LazyDocument Get { get; internal set; }
 
 		/// <summary>
 		/// Deserialize the <see cref="Get"/> property as a <see cref="GetResponse{TDocument}"/> type, where <typeparamref name="TDocument"/> is the document type.

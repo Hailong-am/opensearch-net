@@ -38,6 +38,7 @@ namespace OpenSearch.Client
 	/// dates from roughly 1970 to 2262.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(DateNanosProperty))]
 	public interface IDateNanosProperty : IDocValuesProperty
 	{
 		/// <summary>

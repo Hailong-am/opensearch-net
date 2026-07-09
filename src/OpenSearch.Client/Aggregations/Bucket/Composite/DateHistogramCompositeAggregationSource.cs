@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// The interval parameter defines a date/time expression that determines how values should be transformed.
 	/// For instance an interval set to month will translate any values to its closest month interval..
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IDateHistogramCompositeAggregationSource : ICompositeAggregationSource
 	{
 		/// <summary>

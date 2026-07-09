@@ -34,7 +34,6 @@ using System.Text.Json.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
-	[JsonConverter(typeof(GeoShapeQueryConverter))]
 	public interface IGeoShapeQuery : IFieldNameQuery
 	{
 		/// <summary>

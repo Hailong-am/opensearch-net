@@ -34,7 +34,6 @@ using OpenSearch.Net.Extensions;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
-	[JsonConverter(typeof(GeoBoundingBoxQueryConverter))]
 	public interface IGeoBoundingBoxQuery : IFieldNameQuery
 	{
 		IBoundingBox BoundingBox { get; set; }

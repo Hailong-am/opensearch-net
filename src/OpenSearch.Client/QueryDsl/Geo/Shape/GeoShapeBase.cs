@@ -33,6 +33,7 @@ using OpenSearch.Net.Extensions;
 
 namespace OpenSearch.Client
 {
+	[InterfaceDataContract]
 	public interface IGeoShape
 	{
 		/// <summary>

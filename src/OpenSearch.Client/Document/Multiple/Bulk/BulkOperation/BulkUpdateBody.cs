@@ -39,24 +39,24 @@ namespace OpenSearch.Client
 		public bool? DocAsUpsert { get; set; }
 
 		[DataMember(Name ="doc")]
-		internal TPartialUpdate PartialUpdate { get; set; }
+		public TPartialUpdate PartialUpdate { get; set; }
 
 		[DataMember(Name ="script")]
-		internal IScript Script { get; set; }
+		public IScript Script { get; set; }
 
 		[DataMember(Name ="scripted_upsert")]
-		internal bool? ScriptedUpsert { get; set; }
+		public bool? ScriptedUpsert { get; set; }
 
 		[DataMember(Name ="upsert")]
-		internal TDocument Upsert { get; set; }
+		public TDocument Upsert { get; set; }
 
 		[DataMember(Name = "if_seq_no")]
-		internal long? IfSequenceNumber { get; set; }
+		public long? IfSequenceNumber { get; set; }
 
 		[DataMember(Name = "if_primary_term")]
-		internal long? IfPrimaryTerm { get; set; }
+		public long? IfPrimaryTerm { get; set; }
 
 		[DataMember(Name = "_source")]
-		internal Union<bool, ISourceFilter> Source { get; set; }
+		public Union<bool, ISourceFilter> Source { get; set; }
 	}
 }

@@ -13,6 +13,7 @@ using OpenSearch.Net;
 namespace OpenSearch.Client;
 
 [ReadAs(typeof(Template))]
+[InterfaceDataContract]
 public interface ITemplate
 {
 	[DataMember(Name = "aliases")]
@@ -52,6 +53,7 @@ public class TemplateDescriptor : DescriptorBase<TemplateDescriptor, ITemplate>,
 }
 
 [ReadAs(typeof(ComposableIndexTemplate))]
+[InterfaceDataContract]
 public interface IComposableIndexTemplate
 {
 	[DataMember(Name = "composed_of")]

@@ -33,6 +33,7 @@ namespace OpenSearch.Client
 	/// Drops the document without raising any errors. This is useful to prevent the document from getting indexed based on some condition.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(DropProcessor))]
 	public interface IDropProcessor : IProcessor { }
 
 	/// <inheritdoc cref="IDropProcessor"/>

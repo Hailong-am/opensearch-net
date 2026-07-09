@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// wouldn't be reasonable to add one field to the mappings for each of them.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(RankFeaturesProperty))]
 	public interface IRankFeaturesProperty : IProperty
 	{
 	}

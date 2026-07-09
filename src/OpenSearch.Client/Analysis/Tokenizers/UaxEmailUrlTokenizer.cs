@@ -33,6 +33,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A tokenizer of type uax_url_email which works exactly like the standard tokenizer, but tokenizes emails and urls as single tokens
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IUaxEmailUrlTokenizer : ITokenizer
 	{
 		/// <summary>

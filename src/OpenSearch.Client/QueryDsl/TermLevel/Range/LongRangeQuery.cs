@@ -31,6 +31,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(LongRangeQuery))]
 	public interface ILongRangeQuery : IRangeQuery
 	{
 		[DataMember(Name ="gt")]

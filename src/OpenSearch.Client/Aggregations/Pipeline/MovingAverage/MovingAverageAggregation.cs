@@ -32,6 +32,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(MovingAverageAggregation))]
 	public interface IMovingAverageAggregation : IPipelineAggregation
 	{
 		[DataMember(Name ="minimize")]

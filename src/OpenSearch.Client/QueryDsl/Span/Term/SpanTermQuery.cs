@@ -31,6 +31,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(SpanTermQuery))]
 	public interface ISpanTermQuery : ISpanSubQuery, IFieldNameQuery
 	{
 		[DataMember(Name = "value")]

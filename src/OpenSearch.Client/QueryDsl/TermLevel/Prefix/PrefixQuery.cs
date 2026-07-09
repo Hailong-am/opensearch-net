@@ -31,6 +31,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(PrefixQuery))]
 	public interface IPrefixQuery : ITermQuery
 	{
 		[DataMember(Name ="rewrite")]

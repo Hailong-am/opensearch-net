@@ -32,6 +32,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(SourceFilter))]
 	public interface ISourceFilter
 	{
 		[DataMember(Name = "excludes")]

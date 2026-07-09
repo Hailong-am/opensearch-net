@@ -96,7 +96,13 @@ namespace OpenSearch.Client
 					continue;
 
 				writer.WritePropertyName(keyString);
-				JsonSerializer.Serialize(writer, kvp.Value, options);
+				// Serialize by the value's runtime type so polymorphic values (e.g. ITokenFilter,
+				// IAnalyzer, IProperty) emit their full concrete contract rather than the (often empty)
+				// declared-interface contract. STJ resolves the runtime type's converter/contract.
+				if (kvp.Value is null)
+					writer.WriteNullValue();
+				else
+					JsonSerializer.Serialize(writer, kvp.Value, kvp.Value.GetType(), options);
 			}
 
 			writer.WriteEndObject();

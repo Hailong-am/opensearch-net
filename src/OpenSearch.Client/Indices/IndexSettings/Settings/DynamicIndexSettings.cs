@@ -35,6 +35,7 @@ namespace OpenSearch.Client
 	/// Dynamic index settings
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(DynamicIndexSettings))]
 	public interface IDynamicIndexSettings : IIsADictionary<string, object>
 	{
 		/// <summary>

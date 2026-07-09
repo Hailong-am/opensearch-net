@@ -35,6 +35,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A geo shape representing a collection of <see cref="IGeoShape" /> geometries
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IGeometryCollection : IGeoShape
 	{
 		/// <summary>

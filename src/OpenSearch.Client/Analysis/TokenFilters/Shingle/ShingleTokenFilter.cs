@@ -34,6 +34,7 @@ namespace OpenSearch.Client
 	/// A token filter of type shingle that constructs shingles (token n-grams) from a token stream.
 	/// <para>In other words, it creates combinations of tokens as a single token. </para>
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IShingleTokenFilter : ITokenFilter
 	{
 		/// <summary>

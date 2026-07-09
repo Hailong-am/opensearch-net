@@ -77,6 +77,7 @@ public class KnnMethod : IKnnMethod
 }
 
 [InterfaceDataContract]
+[ReadAs(typeof(KnnMethodParameters))]
 public interface IKnnMethodParameters : IIsADictionary<string, object> { }
 
 public class KnnMethodParameters : IsADictionaryBase<string, object>, IKnnMethodParameters

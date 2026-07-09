@@ -34,6 +34,7 @@ namespace OpenSearch.Client
 	/// A range of date values represented as unsigned 64-bit integer milliseconds elapsed since system epoch.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(DateRangeProperty))]
 	public interface IDateRangeProperty : IRangeProperty
 	{
 		/// <summary>

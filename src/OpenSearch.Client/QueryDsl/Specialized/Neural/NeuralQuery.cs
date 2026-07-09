@@ -13,6 +13,7 @@ namespace OpenSearch.Client;
 /// A neural query.
 /// </summary>
 [InterfaceDataContract]
+[ReadAs(typeof(NeuralQuery))]
 public interface INeuralQuery : IFieldNameQuery
 {
 	/// <summary>

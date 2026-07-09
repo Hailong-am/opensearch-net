@@ -35,6 +35,7 @@ namespace OpenSearch.Client
 	/// An alias to one or more indices
 	/// </summary>
 	[ReadAs(typeof(Alias))]
+	[InterfaceDataContract]
 	public interface IAlias
 	{
 		/// <summary>

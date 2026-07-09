@@ -35,6 +35,7 @@ namespace OpenSearch.Client
 	/// Data type mapping to map a property as a geopoint
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(GeoPointProperty))]
 	public interface IGeoPointProperty : IDocValuesProperty
 	{
 		/// <summary>

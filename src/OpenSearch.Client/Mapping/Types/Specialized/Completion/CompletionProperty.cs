@@ -34,6 +34,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(CompletionProperty))]
 	public interface ICompletionProperty : IDocValuesProperty
 	{
 		[DataMember(Name ="analyzer")]

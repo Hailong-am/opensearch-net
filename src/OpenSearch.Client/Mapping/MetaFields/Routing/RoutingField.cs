@@ -31,6 +31,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[ReadAs(typeof(RoutingField))]
+	[InterfaceDataContract]
 	public interface IRoutingField : IFieldMapping
 	{
 		[DataMember(Name ="required")]

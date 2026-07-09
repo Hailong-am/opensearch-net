@@ -34,6 +34,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Token filters that allow to decompose compound words.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface ICompoundWordTokenFilter : ITokenFilter
 	{
 		/// <summary>

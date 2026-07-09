@@ -37,6 +37,7 @@ namespace OpenSearch.Client
 	/// field values in the doc using a script expression.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(ScriptScoreFunction))]
 	public interface IScriptScoreFunction : IScoreFunction
 	{
 		/// <summary>

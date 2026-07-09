@@ -71,6 +71,7 @@ namespace OpenSearch.Client
 
     /// <remarks>Deprecated as of OpenSearch 2.0</remarks>
     [InterfaceDataContract]
+    [ReadAs(typeof(TypeExistsRequest))]
     public partial interface ITypeExistsRequest : IRequest<TypeExistsRequestParameters>
     {
         [IgnoreDataMember]

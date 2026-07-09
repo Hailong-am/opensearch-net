@@ -37,6 +37,7 @@ namespace OpenSearch.Client
 	/// If the pattern matches more than 128 terms, OpenSearch returns an error.
 	/// </summary>
 	[ReadAs(typeof(IntervalsWildcard))]
+	[InterfaceDataContract]
 	public interface IIntervalsWildcard : IIntervalsNoFilter
 	{
 		/// <summary>

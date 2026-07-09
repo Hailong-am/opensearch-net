@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// The date datatype maps a field as a date in OpenSearch.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(DateProperty))]
 	public interface IDateProperty : IDocValuesProperty
 	{
 		/// <summary>

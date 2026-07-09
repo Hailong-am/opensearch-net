@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// <para />
 	/// Requires the repository-s3 plugin to be installed on the cluster
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IS3Repository : IRepository<IS3RepositorySettings> { }
 
 	/// <inheritdoc />
@@ -53,6 +54,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Snapshot repository settings for <see cref="IS3Repository"/>
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IS3RepositorySettings : IRepositorySettings
 	{
 		/// <summary>

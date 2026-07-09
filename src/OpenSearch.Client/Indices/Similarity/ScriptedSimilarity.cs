@@ -34,6 +34,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A similarity that allows a script to be used in order to specify how scores should be computed.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IScriptedSimilarity : ISimilarity
 	{
 		/// <summary>

@@ -26,9 +26,11 @@
 *  under the License.
 */
 
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
+	[JsonConverter(typeof(FuzzinessConverter))]
 	public class Fuzziness : IFuzziness
 	{
 		private bool _auto;

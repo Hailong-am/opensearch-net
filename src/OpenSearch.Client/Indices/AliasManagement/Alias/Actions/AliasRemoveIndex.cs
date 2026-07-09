@@ -32,6 +32,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(AliasRemoveIndexAction))]
 	public interface IAliasRemoveIndexAction : IAliasAction
 	{
 		[DataMember(Name ="remove_index")]

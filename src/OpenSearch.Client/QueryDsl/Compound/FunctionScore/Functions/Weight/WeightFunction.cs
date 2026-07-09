@@ -30,6 +30,7 @@
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(WeightFunction))]
 	public interface IWeightFunction : IScoreFunction { }
 
 	public class WeightFunction : FunctionScoreFunctionBase, IWeightFunction { }

@@ -37,6 +37,7 @@ namespace OpenSearch.Client
 	/// Not all methods are valid for all types.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(GenericProperty))]
 	public interface IGenericProperty : IDocValuesProperty
 	{
 		[DataMember(Name ="analyzer")]

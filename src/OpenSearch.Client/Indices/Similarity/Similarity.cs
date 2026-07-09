@@ -33,6 +33,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A similarity.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface ISimilarity
 	{
 		/// <summary>

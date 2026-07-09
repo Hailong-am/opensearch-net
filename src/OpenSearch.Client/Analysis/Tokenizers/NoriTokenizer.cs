@@ -50,6 +50,7 @@ namespace OpenSearch.Client
 	}
 
 	/// <summary> Tokenizer that ships with the analysis-nori plugin</summary>
+	[InterfaceDataContract]
 	public interface INoriTokenizer : ITokenizer
 	{
 		/// <summary>

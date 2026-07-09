@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// Converts a string to its uppercase equivalent.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(UppercaseProcessor))]
 	public interface IUppercaseProcessor : IProcessor
 	{
 		/// <summary>

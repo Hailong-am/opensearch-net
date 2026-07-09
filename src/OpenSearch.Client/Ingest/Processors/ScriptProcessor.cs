@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// Allows inline and stored scripts to be executed within ingest pipelines.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(ScriptProcessor))]
 	public interface IScriptProcessor : IProcessor
 	{
 		/// <summary>

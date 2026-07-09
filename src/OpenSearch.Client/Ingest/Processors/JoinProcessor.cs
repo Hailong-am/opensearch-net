@@ -37,6 +37,7 @@ namespace OpenSearch.Client
 	/// character between each element. Throws an error when the field is not an array.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(JoinProcessor))]
 	public interface IJoinProcessor : IProcessor
 	{
 		/// <summary>

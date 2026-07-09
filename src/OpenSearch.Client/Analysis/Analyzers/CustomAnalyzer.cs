@@ -40,6 +40,7 @@ namespace OpenSearch.Client
 	/// logical/registered names of token filters.
 	/// </para>
 	/// </summary>
+	[InterfaceDataContract]
 	public interface ICustomAnalyzer : IAnalyzer
 	{
 		/// <summary>

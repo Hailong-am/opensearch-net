@@ -31,6 +31,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(HDRHistogramMethod))]
 	public interface IHDRHistogramMethod : IPercentilesMethod
 	{
 		[DataMember(Name ="number_of_significant_value_digits")]

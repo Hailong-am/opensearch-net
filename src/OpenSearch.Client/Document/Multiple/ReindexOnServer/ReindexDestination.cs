@@ -35,6 +35,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Configures the destination for a reindex API request
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IReindexDestination
 	{
 		/// <summary>
