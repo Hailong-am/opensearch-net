@@ -34,7 +34,7 @@ using System.Text.Json.Serialization;
 namespace OpenSearch.Net
 {
 	[DataContract]
-	[JsonConverter(typeof(ErrorCauseConverter))]
+	[JsonConverter(typeof(ErrorConverter))]
 	public class Error : ErrorCause
 	{
 		private static readonly IReadOnlyDictionary<string, string> DefaultHeaders =

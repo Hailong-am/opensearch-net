@@ -54,6 +54,13 @@ namespace OpenSearch.Client
 		{
 			if (typeToConvert == null) return false;
 
+			// System.Object must be handled by STJ's runtime-type dispatch, never by the
+			// source serializer. Capturing it here causes infinite recursion when the JsonNet
+			// source serializer round-trips a nested OpenSearch type back through the built-in
+			// serializer as object (HandleOscTypesOnSourceJsonConverter -> builtin -> SourceConverter<object>).
+			if (typeToConvert == typeof(object))
+				return false;
+
 			// Primitive types and common BCL types are handled by STJ natively
 			if (typeToConvert.IsPrimitive || typeToConvert == typeof(string) || typeToConvert == typeof(decimal)
 				|| typeToConvert == typeof(DateTime) || typeToConvert == typeof(DateTimeOffset)
@@ -109,7 +116,11 @@ namespace OpenSearch.Client
 			// Fast path: if source serializer is STJ-based, delegate directly
 			if (_settings.SourceSerializer is IInternalSerializer s
 				&& s.TryGetJsonSerializerOptions(out var sourceOptions))
+			{
+				if (ReferenceEquals(sourceOptions, options))
+					return JsonSerializer.Deserialize<T>(ref reader, SourceConverterHelper.DefaultOptions);
 				return JsonSerializer.Deserialize<T>(ref reader, sourceOptions);
+			}
 
 			// Slow path: buffer JSON to a stream, then pass to the source serializer
 			using var doc = JsonDocument.ParseValue(ref reader);
@@ -130,7 +141,10 @@ namespace OpenSearch.Client
 			if (_settings.SourceSerializer is IInternalSerializer s
 				&& s.TryGetJsonSerializerOptions(out var sourceOptions))
 			{
-				JsonSerializer.Serialize(writer, value, sourceOptions);
+				if (ReferenceEquals(sourceOptions, options))
+					JsonSerializer.Serialize(writer, value, SourceConverterHelper.DefaultOptions);
+				else
+					JsonSerializer.Serialize(writer, value, sourceOptions);
 				return;
 			}
 
@@ -141,5 +155,13 @@ namespace OpenSearch.Client
 			using var doc = JsonDocument.Parse(ms);
 			doc.RootElement.WriteTo(writer);
 		}
+	}
+
+	internal static class SourceConverterHelper
+	{
+		internal static readonly JsonSerializerOptions DefaultOptions = new(JsonSerializerDefaults.Web)
+		{
+			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+		};
 	}
 }

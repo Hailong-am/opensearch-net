@@ -31,6 +31,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(InlineScript))]
 	public interface IInlineScript : IScript
 	{
 		[DataMember(Name ="source")]

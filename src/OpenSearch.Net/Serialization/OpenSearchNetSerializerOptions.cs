@@ -47,6 +47,11 @@ namespace OpenSearch.Net
 			};
 
 			// Converters registered in precedence order (first match wins).
+			// Fractional number converters: emit integral doubles/floats/decimals with a
+			// trailing ".0" (e.g. 1.0 not 1), matching the client's historical wire format.
+			options.Converters.Add(new DoubleConverter());
+			options.Converters.Add(new SingleConverter());
+			options.Converters.Add(new DecimalConverter());
 			options.Converters.Add(new ErrorConverter());
 			options.Converters.Add(new ErrorCauseConverter());
 			options.Converters.Add(new DynamicDictionaryConverter());

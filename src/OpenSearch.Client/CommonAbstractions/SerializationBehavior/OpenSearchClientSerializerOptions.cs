@@ -7,6 +7,7 @@
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using OpenSearch.Net;
 
 namespace OpenSearch.Client
@@ -56,7 +57,18 @@ namespace OpenSearch.Client
 			// EnumMemberConverterFactory, ExceptionConverter).
 			var options = new JsonSerializerOptions(OpenSearchNetSerializerOptions.Instance)
 			{
-				WriteIndented = writeIndented
+				WriteIndented = writeIndented,
+				// Rebuild the resolver so that, in addition to the low-level [DataMember]/[IgnoreDataMember]
+				// handling, the high-level [InterfaceDataContract] rebuild runs. The contract rebuild
+				// makes request classes and descriptors serialize purely against their interface contract.
+				TypeInfoResolver = new DefaultJsonTypeInfoResolver
+				{
+					Modifiers =
+					{
+						DataMemberPropertyNameModifier.Modify,
+						InterfaceDataContractModifier.Modify
+					}
+				}
 			};
 
 			// High-level domain converters are inserted at position 0 so they take
@@ -73,14 +85,30 @@ namespace OpenSearch.Client
 			options.Converters.Insert(0, new SourceConverterFactory(settings));
 
 			// --- 5. IsADictionary converters ---
-			// TODO: Implement IsADictionaryConverterFactory to handle types implementing IsADictionaryBase<TKey, TValue>
-			// options.Converters.Insert(0, new IsADictionaryConverterFactory(settings));
+			options.Converters.Insert(0, new IsADictionaryConverterFactory(settings));
 
 			// --- 4. ReadAs converters (interface → implementation mapping) ---
 			options.Converters.Insert(0, new ReadAsConverterFactory());
 
 			// --- 1. Explicit singleton converters (highest precedence among domain converters) ---
-			// TODO: Uncomment as each converter is implemented in subsequent tasks
+
+			// Script converter (type-dispatch for IScript → IInlineScript/IIndexedScript)
+			options.Converters.Insert(0, new ScriptConverter());
+
+			// PropertyName converter (dictionary key support for IProperties and similar types)
+			options.Converters.Insert(0, new PropertyNameConverter());
+
+			// Field converter (resolves field names via Inferrer, handles boost/format)
+			options.Converters.Insert(0, new FieldConverterFactory(settings));
+
+			// IndexName converter (resolves index names via Inferrer)
+			options.Converters.Insert(0, new IndexNameConverterFactory(settings));
+
+			// RelationName converter (resolves relation/type names via Inferrer)
+			options.Converters.Insert(0, new RelationNameConverterFactory(settings));
+
+			// Bulk response item converter (single-key operation dispatch on deserialize)
+			options.Converters.Insert(0, new BulkResponseItemConverter());
 
 			// Query DSL converters (task 6.x)
 			options.Converters.Insert(0, new QueryContainerConverter());
@@ -89,6 +117,12 @@ namespace OpenSearch.Client
 			options.Converters.Insert(0, new TermsQueryConverter());
 			options.Converters.Insert(0, new RangeQueryConverter());
 			options.Converters.Insert(0, new GeoShapeQueryConverter());
+
+			// Field-name query wrapping (term, match, prefix, wildcard, fuzzy, regexp, span_term, etc.).
+			// Adds the { "<resolved-field>": { ...body... } } wrapping around concrete field-name queries
+			// that do not already have a dedicated converter. Inserted last so it takes precedence over
+			// the InterfaceDataContractModifier's default object handling for these concrete types.
+			options.Converters.Insert(0, new FieldNameQueryConverterFactory(settings));
 
 			// Aggregation converters (task 8.x)
 			options.Converters.Insert(0, new AggregationContainerConverter());
@@ -111,6 +145,10 @@ namespace OpenSearch.Client
 			options.Converters.Insert(0, new HitsMetadataConverterFactory());
 			options.Converters.Insert(0, new SuggestDictionaryConverterFactory());
 			options.Converters.Insert(0, new SearchResponseConverterFactory());
+
+			// Index settings converters (must precede IsADictionaryConverterFactory)
+			options.Converters.Insert(0, new IndexSettingsConverter());
+			options.Converters.Insert(0, new DynamicIndexSettingsConverter());
 
 			return options;
 		}

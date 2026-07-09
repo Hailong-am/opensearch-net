@@ -87,4 +87,5 @@ namespace OpenSearch.Client
 			JsonSerializer.Serialize(writer, value, value.GetType(), options);
 		}
 	}
+
 }
