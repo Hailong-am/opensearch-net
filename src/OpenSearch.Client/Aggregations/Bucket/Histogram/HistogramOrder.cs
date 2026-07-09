@@ -27,7 +27,6 @@
 */
 
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -38,7 +37,6 @@ namespace OpenSearch.Client
 		SortOrder Order { get; set; }
 	}
 
-	[JsonFormatter(typeof(SortOrderFormatter<HistogramOrder>))]
 	public class HistogramOrder : ISortOrder
 	{
 		public static HistogramOrder CountAscending => new HistogramOrder { Key = "_count", Order = SortOrder.Ascending };

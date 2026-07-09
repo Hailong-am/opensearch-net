@@ -27,11 +27,9 @@
 */
 
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(SortOrderFormatter<TermsOrder>))]
 	public class TermsOrder : ISortOrder
 	{
 		public static TermsOrder CountAscending => new TermsOrder { Key = "_count", Order = SortOrder.Ascending };

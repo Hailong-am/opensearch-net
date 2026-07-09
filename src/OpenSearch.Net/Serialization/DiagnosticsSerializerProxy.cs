@@ -29,10 +29,10 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenSearch.Net.Diagnostics;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Net
 {
@@ -66,31 +66,32 @@ namespace OpenSearch.Net
 	internal class DiagnosticsSerializerProxy : IOpenSearchSerializer, IInternalSerializer
 	{
 		private readonly IOpenSearchSerializer _serializer;
-		private readonly bool _wrapsUtf8JsonSerializer;
 		private readonly SerializerRegistrationInformation _state;
-		private readonly IJsonFormatterResolver _formatterResolver;
+		private readonly JsonSerializerOptions _jsonSerializerOptions;
+		private readonly bool _wrapsStjSerializer;
 		private static DiagnosticSource DiagnosticSource { get; } = new DiagnosticListener(DiagnosticSources.Serializer.SourceName);
 
 		public DiagnosticsSerializerProxy(IOpenSearchSerializer serializer, string purpose = "request/response")
 		{
 			_serializer = serializer;
 			_state = new SerializerRegistrationInformation(serializer.GetType(), purpose);
-			if (serializer is IInternalSerializer s && s.TryGetJsonFormatter(out var formatterResolver))
+
+			if (serializer is IInternalSerializer s2 && s2.TryGetJsonSerializerOptions(out var jsonOptions))
 			{
-				_formatterResolver = formatterResolver;
-				_wrapsUtf8JsonSerializer = true;
+				_jsonSerializerOptions = jsonOptions;
+				_wrapsStjSerializer = true;
 			}
 			else
 			{
-				_formatterResolver = null;
-				_wrapsUtf8JsonSerializer = false;
+				_jsonSerializerOptions = null;
+				_wrapsStjSerializer = false;
 			}
 		}
 
-		public bool TryGetJsonFormatter(out IJsonFormatterResolver formatterResolver)
+		public bool TryGetJsonSerializerOptions(out JsonSerializerOptions options)
 		{
-			formatterResolver = _formatterResolver;
-			return _wrapsUtf8JsonSerializer;
+			options = _jsonSerializerOptions;
+			return _wrapsStjSerializer;
 		}
 
 		public object Deserialize(Type type, Stream stream)

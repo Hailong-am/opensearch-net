@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -89,14 +88,12 @@ namespace OpenSearch.Client
 		public string Time { get; set; }
 
 		[DataMember(Name = "translog_ops")]
-		[JsonFormatter(typeof(NullableStringLongFormatter))]
 		public long? TranslogOps { get; set; }
 
 		[DataMember(Name = "translog_ops_percent")]
 		public string TranslogOpsPercent { get; set; }
 
 		[DataMember(Name = "translog_ops_recovered")]
-		[JsonFormatter(typeof(NullableStringLongFormatter))]
 		public long? TranslogOpsRecovered { get; set; }
 
 		[DataMember(Name = "type")]

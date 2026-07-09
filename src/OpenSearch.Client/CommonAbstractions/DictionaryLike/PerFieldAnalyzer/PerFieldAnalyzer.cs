@@ -29,11 +29,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(VerbatimDictionaryKeysFormatter<PerFieldAnalyzer, IPerFieldAnalyzer, Field, string>))]
 	public interface IPerFieldAnalyzer : IIsADictionary<Field, string> { }
 
 	public class PerFieldAnalyzer : IsADictionaryBase<Field, string>, IPerFieldAnalyzer

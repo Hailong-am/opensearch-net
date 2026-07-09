@@ -28,7 +28,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -39,7 +38,6 @@ namespace OpenSearch.Client
 	public interface ISynonymGraphTokenFilter : ITokenFilter
 	{
 		[DataMember(Name ="expand")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? Expand { get; set; }
 
 		[DataMember(Name ="format")]
@@ -47,7 +45,6 @@ namespace OpenSearch.Client
 
 		/// <inheritdoc cref="ISynonymTokenFilter.Lenient" />
 		[DataMember(Name ="lenient")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? Lenient { get; set; }
 
 		[DataMember(Name ="synonyms")]
@@ -68,7 +65,6 @@ namespace OpenSearch.Client
 		/// Marking as updateable means this component is only usable at search time
 		/// </summary>
 		[DataMember(Name = "updateable")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? Updateable { get; set; }
 	}
 

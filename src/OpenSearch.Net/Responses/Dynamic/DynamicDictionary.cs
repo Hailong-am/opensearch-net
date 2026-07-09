@@ -35,8 +35,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
-using OpenSearch.Net.Utf8Json;
 
 // ReSharper disable ArrangeMethodOrOperatorBody
 // ReSharper disable RemoveRedundantBraces
@@ -47,7 +47,7 @@ namespace OpenSearch.Net
 	/// <summary>
 	/// A dictionary that supports dynamic access.
 	/// </summary>
-	[JsonFormatter(typeof(DynamicDictionaryFormatter))]
+	[JsonConverter(typeof(DynamicDictionaryConverter))]
 	public class DynamicDictionary
 		: DynamicObject,
 			IEquatable<DynamicDictionary>,

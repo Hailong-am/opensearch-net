@@ -29,11 +29,9 @@
 using System;
 using System.Diagnostics;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(RelationNameFormatter))]
 	[DebuggerDisplay("{DebugDisplay,nq}")]
 	public class RelationName : IEquatable<RelationName>, IUrlParameter
 	{

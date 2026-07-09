@@ -30,7 +30,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -88,7 +87,6 @@ namespace OpenSearch.Client
 		/// matter more than hits coming from another index (think social graph where each user has an index).
 		/// </summary>
 		[DataMember(Name = "indices_boost")]
-		[JsonFormatter(typeof(IndicesBoostFormatter))]
 		IDictionary<IndexName, double> IndicesBoost { get; set; }
 
 		/// <summary>
@@ -219,7 +217,6 @@ namespace OpenSearch.Client
 		IRuntimeFields RuntimeFields { get; set; }
 
         [DataMember(Name = "ext")]
-        [JsonFormatter(typeof(VerbatimDictionaryInterfaceKeysFormatter<string, object>))]
         IDictionary<string, object> Ext { get; set; }
 	}
 
@@ -253,7 +250,6 @@ namespace OpenSearch.Client
 		/// <inheritdoc />
 		public IHighlight Highlight { get; set; }
 		/// <inheritdoc />
-		[JsonFormatter(typeof(IndicesBoostFormatter))]
 		public IDictionary<IndexName, double> IndicesBoost { get; set; }
 		/// <inheritdoc />
 		public double? MinScore { get; set; }

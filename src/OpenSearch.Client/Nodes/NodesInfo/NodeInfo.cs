@@ -29,7 +29,6 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -92,7 +91,6 @@ namespace OpenSearch.Client
 		public List<PluginStats> Plugins { get; internal set; }
 
 		[DataMember(Name = "thread_pool")]
-		[JsonFormatter(typeof(VerbatimInterfaceReadOnlyDictionaryKeysFormatter<string, NodeThreadPoolInfo>))]
 		public IReadOnlyDictionary<string, NodeThreadPoolInfo> ThreadPool { get; internal set; }
 
 		[DataMember(Name = "transport")]

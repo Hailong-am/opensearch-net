@@ -28,12 +28,12 @@
 
 using System;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
-	[JsonFormatter(typeof(CompositeFormatter<IShapeQuery, ShapeQueryFormatter, ShapeQueryFieldNameFormatter>))]
+	[JsonConverter(typeof(ShapeQueryConverter))]
 	public interface IShapeQuery : IFieldNameQuery
 	{
 		/// <summary>

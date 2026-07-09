@@ -29,7 +29,6 @@
 using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {

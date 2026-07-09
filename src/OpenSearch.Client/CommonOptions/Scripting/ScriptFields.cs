@@ -29,7 +29,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -55,7 +54,6 @@ namespace OpenSearch.Client
 			Assign(scriptSelector, (a, v) => a.Script = v?.Invoke(new ScriptDescriptor()));
 	}
 
-	[JsonFormatter(typeof(VerbatimDictionaryKeysFormatter<ScriptFields, IScriptFields, string, IScriptField>))]
 	public interface IScriptFields : IIsADictionary<string, IScriptField> { }
 
 	public class ScriptFields : IsADictionaryBase<string, IScriptField>, IScriptFields

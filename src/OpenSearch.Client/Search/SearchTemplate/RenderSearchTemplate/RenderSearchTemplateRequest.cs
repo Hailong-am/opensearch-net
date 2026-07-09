@@ -29,7 +29,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -40,7 +39,6 @@ namespace OpenSearch.Client
 		string File { get; set; }
 
 		[DataMember(Name = "params")]
-		[JsonFormatter(typeof(VerbatimDictionaryKeysBaseFormatter<Dictionary<string, object>, string, object>))]
 		Dictionary<string, object> Params { get; set; }
 
 		[DataMember(Name = "source")]

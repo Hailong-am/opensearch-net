@@ -29,18 +29,15 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(GeoShapeFormatter<IEnvelopeGeoShape>))]
 	public interface IEnvelopeGeoShape : IGeoShape
 	{
 		[DataMember(Name ="coordinates")]
 		IEnumerable<GeoCoordinate> Coordinates { get; set; }
 	}
 
-	[JsonFormatter(typeof(GeoShapeFormatter<EnvelopeGeoShape>))]
 	public class EnvelopeGeoShape : GeoShapeBase, IEnvelopeGeoShape
 	{
 		internal EnvelopeGeoShape() : base("envelope") { }

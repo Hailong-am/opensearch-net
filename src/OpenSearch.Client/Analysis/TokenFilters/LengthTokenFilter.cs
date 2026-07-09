@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -40,14 +39,12 @@ namespace OpenSearch.Client
 		/// The maximum number. Defaults to Integer.MAX_VALUE.
 		/// </summary>
 		[DataMember(Name ="max")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? Max { get; set; }
 
 		/// <summary>
 		/// The minimum number. Defaults to 0.
 		/// </summary>
 		[DataMember(Name ="min")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? Min { get; set; }
 	}
 

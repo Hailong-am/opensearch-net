@@ -49,7 +49,7 @@ using System.Linq.Expressions;
 using System.Text;
 using OpenSearch.Net;
 using OpenSearch.Net.Specification.ClusterApi;
-using OpenSearch.Net.Utf8Json;
+using System.Text.Json.Serialization;
 
 // ReSharper disable RedundantBaseConstructorCall
 // ReSharper disable UnusedTypeParameter
@@ -97,7 +97,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("name", name)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor]
+        [SerializationConstructor, JsonConstructor]
         protected DeleteComponentTemplateDescriptor()
             : base() { }
 
@@ -157,7 +157,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("name", name)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor]
+        [SerializationConstructor, JsonConstructor]
         protected ComponentTemplateExistsDescriptor()
             : base() { }
 
@@ -430,7 +430,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("name", name)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor]
+        [SerializationConstructor, JsonConstructor]
         protected PutComponentTemplateDescriptor()
             : base() { }
 

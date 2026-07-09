@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -90,11 +89,9 @@ namespace OpenSearch.Client
 		public double? UpperPopulation { get; set; }
 
 		[DataMember(Name = "lower_sampling")]
-		[JsonFormatter(typeof(NullableStringDoubleFormatter))]
 		public double? LowerSampling { get; set; }
 
 		[DataMember(Name = "upper_sampling")]
-		[JsonFormatter(typeof(NullableStringDoubleFormatter))]
 		public double? UpperSampling { get; set; }
 	}
 }

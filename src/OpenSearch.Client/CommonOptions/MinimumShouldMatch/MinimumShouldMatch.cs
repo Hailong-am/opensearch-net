@@ -26,11 +26,9 @@
 *  under the License.
 */
 
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(MinimumShouldMatchFormatter))]
 	public class MinimumShouldMatch : Union<int?, string>
 	{
 		public MinimumShouldMatch(int count) : base(count) { }

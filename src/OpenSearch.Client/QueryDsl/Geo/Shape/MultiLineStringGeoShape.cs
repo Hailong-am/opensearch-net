@@ -29,18 +29,15 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(GeoShapeFormatter<IMultiLineStringGeoShape>))]
 	public interface IMultiLineStringGeoShape : IGeoShape
 	{
 		[DataMember(Name ="coordinates")]
 		IEnumerable<IEnumerable<GeoCoordinate>> Coordinates { get; set; }
 	}
 
-	[JsonFormatter(typeof(GeoShapeFormatter<MultiLineStringGeoShape>))]
 	public class MultiLineStringGeoShape : GeoShapeBase, IMultiLineStringGeoShape
 	{
 		internal MultiLineStringGeoShape() : base("multilinestring") { }

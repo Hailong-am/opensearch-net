@@ -28,7 +28,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -42,7 +41,6 @@ namespace OpenSearch.Client
 		/// A list of common words to use.
 		/// </summary>
 		[DataMember(Name ="common_words")]
-		[JsonFormatter(typeof(SingleOrEnumerableFormatter<string>))]
 		IEnumerable<string> CommonWords { get; set; }
 
 		/// <summary>
@@ -55,14 +53,12 @@ namespace OpenSearch.Client
 		/// If true, common words matching will be case insensitive.
 		/// </summary>
 		[DataMember(Name ="ignore_case")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? IgnoreCase { get; set; }
 
 		/// <summary>
 		/// Generates bigrams then removes common words and single terms followed by a common word.
 		/// </summary>
 		[DataMember(Name ="query_mode")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? QueryMode { get; set; }
 	}
 

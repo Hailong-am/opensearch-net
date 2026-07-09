@@ -50,7 +50,6 @@ using System.Runtime.Serialization;
 using System.Text;
 using OpenSearch.Net;
 using OpenSearch.Net.Specification.NodesApi;
-using OpenSearch.Net.Utf8Json;
 
 // ReSharper disable RedundantBaseConstructorCall
 // ReSharper disable UnusedTypeParameter

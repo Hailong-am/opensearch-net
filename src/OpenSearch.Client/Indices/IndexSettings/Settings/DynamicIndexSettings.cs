@@ -28,7 +28,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -36,7 +35,6 @@ namespace OpenSearch.Client
 	/// Dynamic index settings
 	/// </summary>
 	[InterfaceDataContract]
-	[JsonFormatter(typeof(DynamicIndexSettingsFormatter))]
 	public interface IDynamicIndexSettings : IIsADictionary<string, object>
 	{
 		/// <summary>

@@ -22,7 +22,7 @@
 // -----------------------------------------------
 
 using OpenSearch.Net.Specification.HttpApi;
-using OpenSearch.Net.Utf8Json;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client;
 
@@ -32,7 +32,7 @@ public class HttpDeleteRequest
     : ArbitraryHttpRequestBase<HttpDeleteRequestParameters>,
         IHttpDeleteRequest
 {
-    [SerializationConstructor]
+    [SerializationConstructor, JsonConstructor]
     protected HttpDeleteRequest() { }
 
     public HttpDeleteRequest(string path)
@@ -43,7 +43,7 @@ public interface IHttpGetRequest : IArbitraryHttpRequest<HttpGetRequestParameter
 
 public class HttpGetRequest : ArbitraryHttpRequestBase<HttpGetRequestParameters>, IHttpGetRequest
 {
-    [SerializationConstructor]
+    [SerializationConstructor, JsonConstructor]
     protected HttpGetRequest() { }
 
     public HttpGetRequest(string path)
@@ -54,7 +54,7 @@ public interface IHttpHeadRequest : IArbitraryHttpRequest<HttpHeadRequestParamet
 
 public class HttpHeadRequest : ArbitraryHttpRequestBase<HttpHeadRequestParameters>, IHttpHeadRequest
 {
-    [SerializationConstructor]
+    [SerializationConstructor, JsonConstructor]
     protected HttpHeadRequest() { }
 
     public HttpHeadRequest(string path)
@@ -67,7 +67,7 @@ public class HttpPatchRequest
     : ArbitraryBodyHttpRequestBase<HttpPatchRequestParameters>,
         IHttpPatchRequest
 {
-    [SerializationConstructor]
+    [SerializationConstructor, JsonConstructor]
     protected HttpPatchRequest() { }
 
     public HttpPatchRequest(string path)
@@ -80,7 +80,7 @@ public class HttpPostRequest
     : ArbitraryBodyHttpRequestBase<HttpPostRequestParameters>,
         IHttpPostRequest
 {
-    [SerializationConstructor]
+    [SerializationConstructor, JsonConstructor]
     protected HttpPostRequest() { }
 
     public HttpPostRequest(string path)
@@ -93,7 +93,7 @@ public class HttpPutRequest
     : ArbitraryBodyHttpRequestBase<HttpPutRequestParameters>,
         IHttpPutRequest
 {
-    [SerializationConstructor]
+    [SerializationConstructor, JsonConstructor]
     protected HttpPutRequest() { }
 
     public HttpPutRequest(string path)

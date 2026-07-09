@@ -30,8 +30,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -39,7 +39,7 @@ namespace OpenSearch.Client
 	/// A mapping for a property type to a document field in OpenSearch
 	/// </summary>
 	[InterfaceDataContract]
-	[JsonFormatter(typeof(PropertyFormatter))]
+	[JsonConverter(typeof(PropertyConverter))]
 	public interface IProperty : IFieldMapping
 	{
 		/// <summary>

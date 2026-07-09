@@ -48,7 +48,6 @@ namespace OpenSearch.Client
 		/// create missing documents in the destination index.
 		/// </summary>
 		[DataMember(Name ="op_type")]
-
 		OpType? OpType { get; set; }
 
 		/// <summary>
@@ -69,7 +68,6 @@ namespace OpenSearch.Client
 		/// than they do in the source index
 		/// </summary>
 		[DataMember(Name ="version_type")]
-
 		VersionType? VersionType { get; set; }
 	}
 

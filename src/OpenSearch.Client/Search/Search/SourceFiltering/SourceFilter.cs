@@ -28,12 +28,10 @@
 
 using System;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
-	[JsonFormatter(typeof(SourceFilterFormatter))]
 	public interface ISourceFilter
 	{
 		[DataMember(Name = "excludes")]

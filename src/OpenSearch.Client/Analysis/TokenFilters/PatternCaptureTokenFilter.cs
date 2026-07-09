@@ -28,7 +28,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -47,7 +46,6 @@ namespace OpenSearch.Client
 		/// If preserve_original is set to true then it would also emit the original token
 		/// </summary>
 		[DataMember(Name ="preserve_original")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? PreserveOriginal { get; set; }
 	}
 

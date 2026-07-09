@@ -28,11 +28,9 @@
 
 using System;
 using System.Collections.Generic;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(VerbatimDictionaryKeysFormatter<SuggestContainer, ISuggestContainer, string, ISuggestBucket>))]
 	public interface ISuggestContainer : IIsADictionary<string, ISuggestBucket> { }
 
 	public class SuggestContainer : IsADictionaryBase<string, ISuggestBucket>, ISuggestContainer

@@ -50,7 +50,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using OpenSearch.Net;
 using OpenSearch.Net.Specification.IngestApi;
-using OpenSearch.Net.Utf8Json;
+using System.Text.Json.Serialization;
 
 // ReSharper disable RedundantBaseConstructorCall
 // ReSharper disable UnusedTypeParameter
@@ -79,7 +79,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("id", id)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor]
+        [SerializationConstructor, JsonConstructor]
         protected DeletePipelineRequest()
             : base() { }
 
@@ -212,7 +212,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("id", id)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor]
+        [SerializationConstructor, JsonConstructor]
         protected PutPipelineRequest()
             : base() { }
 

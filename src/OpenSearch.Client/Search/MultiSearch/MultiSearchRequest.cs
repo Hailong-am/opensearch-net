@@ -29,12 +29,10 @@
 using System;
 using System.Collections.Generic;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[MapsApi("msearch.json")]
-	[JsonFormatter(typeof(MultiSearchFormatter))]
 	public partial interface IMultiSearchRequest
 	{
 		IDictionary<string, ISearchRequest> Operations { get; set; }

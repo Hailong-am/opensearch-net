@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -38,21 +37,18 @@ namespace OpenSearch.Client
 		/// The number of active threads in the current thread pool
 		/// </summary>
 		[DataMember(Name = "active")]
-		[JsonFormatter(typeof(StringIntFormatter))]
 		public int Active { get; set; }
 
 		/// <summary>
 		/// The number of tasks completed by the thread pool executor
 		/// </summary>
 		[DataMember(Name = "completed")]
-		[JsonFormatter(typeof(NullableStringLongFormatter))]
 		public long? Completed { get; set; }
 
 		/// <summary>
 		/// The configured core number of active threads allowed in the current thread pool
 		/// </summary>
 		[DataMember(Name = "core")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		public int? Core { get; set; }
 
 		/// <summary>
@@ -83,14 +79,12 @@ namespace OpenSearch.Client
 		/// The highest number of active threads in the current thread pool
 		/// </summary>
 		[DataMember(Name = "largest")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		public int? Largest { get; set; }
 
 		/// <summary>
 		/// The configured maximum number of active threads allowed in the current thread pool
 		/// </summary>
 		[DataMember(Name = "max")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		public int? Maximum { get; set; }
 
 		/// <summary>
@@ -115,49 +109,42 @@ namespace OpenSearch.Client
 		/// The number of threads in the current thread pool
 		/// </summary>
 		[DataMember(Name = "pool_size")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		public int? PoolSize { get; set; }
 
 		/// <summary>
 		/// The bound transport port for the current node
 		/// </summary>
 		[DataMember(Name = "port")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		public int? Port { get; set; }
 
 		/// <summary>
 		/// The process ID of the running node
 		/// </summary>
 		[DataMember(Name = "pid")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		public int? ProcessId { get; set; }
 
 		/// <summary>
 		/// The number of tasks in the queue for the current thread pool
 		/// </summary>
 		[DataMember(Name = "queue")]
-		[JsonFormatter(typeof(StringIntFormatter))]
 		public int Queue { get; set; }
 
 		/// <summary>
 		/// The maximum number of tasks permitted in the queue for the current thread pool
 		/// </summary>
 		[DataMember(Name = "queue_size")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		public int? QueueSize { get; set; }
 
 		/// <summary>
 		/// The number of tasks rejected by the thread pool executor
 		/// </summary>
 		[DataMember(Name = "rejected")]
-		[JsonFormatter(typeof(StringLongFormatter))]
 		public long Rejected { get; set; }
 
 		/// <summary>
 		/// The configured fixed number of active threads allowed in the current thread pool
 		/// </summary>
 		[DataMember(Name = "size")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		public int? Size { get; set; }
 
 		/// <summary>

@@ -32,7 +32,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -43,7 +42,6 @@ namespace OpenSearch.Client
 	/// field or computed per document in a minimum should match script.
 	/// </summary>
 	[InterfaceDataContract]
-	[JsonFormatter(typeof(FieldNameQueryFormatter<TermsSetQuery, ITermsSetQuery>))]
 	public interface ITermsSetQuery : IFieldNameQuery
 	{
 		/// <summary>
@@ -62,7 +60,6 @@ namespace OpenSearch.Client
 		/// The required terms to match
 		/// </summary>
 		[DataMember(Name = "terms")]
-		[JsonFormatter(typeof(SourceWriteFormatter<IEnumerable<object>>))]
 		IEnumerable<object> Terms { get; set; }
 	}
 

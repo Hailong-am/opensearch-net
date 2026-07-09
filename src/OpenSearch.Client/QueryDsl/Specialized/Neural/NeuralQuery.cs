@@ -6,7 +6,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client;
 
@@ -14,7 +13,6 @@ namespace OpenSearch.Client;
 /// A neural query.
 /// </summary>
 [InterfaceDataContract]
-[JsonFormatter(typeof(FieldNameQueryFormatter<NeuralQuery, INeuralQuery>))]
 public interface INeuralQuery : IFieldNameQuery
 {
 	/// <summary>

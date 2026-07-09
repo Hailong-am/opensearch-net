@@ -26,11 +26,11 @@
 *  under the License.
 */
 
-using OpenSearch.Net.Utf8Json;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
-	[JsonFormatter(typeof(RangeQueryFormatter))]
+	[JsonConverter(typeof(RangeQueryConverter))]
 	public interface IRangeQuery : IFieldNameQuery { }
 }

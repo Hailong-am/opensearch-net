@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -41,11 +40,9 @@ namespace OpenSearch.Client
 		public string Name { get; set; }
 
 		[DataMember(Name ="order")]
-		[JsonFormatter(typeof(StringLongFormatter))]
 		public long Order { get; set; }
 
 		[DataMember(Name ="version")]
-		[JsonFormatter(typeof(NullableStringLongFormatter))]
 		public long? Version { get; set; }
 	}
 }

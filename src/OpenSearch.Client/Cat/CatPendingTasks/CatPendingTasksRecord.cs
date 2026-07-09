@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -35,7 +34,6 @@ namespace OpenSearch.Client
 	public class CatPendingTasksRecord : ICatRecord
 	{
 		[DataMember(Name ="insertOrder")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		public int? InsertOrder { get; set; }
 
 		[DataMember(Name ="priority")]

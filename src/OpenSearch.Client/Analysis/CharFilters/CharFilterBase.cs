@@ -27,11 +27,9 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(CharFilterFormatter))]
 	public interface ICharFilter
 	{
 		[DataMember(Name = "type")]

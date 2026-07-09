@@ -27,12 +27,10 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
-	[JsonFormatter(typeof(FieldNameQueryFormatter<DateRangeQuery, IDateRangeQuery>))]
 	public interface IDateRangeQuery : IRangeQuery
 	{
 		[DataMember(Name = "format")]

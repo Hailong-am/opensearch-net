@@ -28,7 +28,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -51,7 +50,6 @@ namespace OpenSearch.Client
 		/// it is split at <see cref="MaxTokenLength"/> intervals. Defaults to `255`.
 		/// </summary>
 		[DataMember(Name = "max_token_length")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? MaxTokenLength { get; set; }
 	}
 

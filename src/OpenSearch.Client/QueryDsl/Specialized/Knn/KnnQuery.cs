@@ -7,7 +7,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client;
 
@@ -15,7 +14,6 @@ namespace OpenSearch.Client;
 /// An approximate k-NN query.
 /// </summary>
 [InterfaceDataContract]
-[JsonFormatter(typeof(FieldNameQueryFormatter<KnnQuery, IKnnQuery>))]
 public interface IKnnQuery : IFieldNameQuery
 {
 	/// <summary>

@@ -31,11 +31,9 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(RoutingFormatter))]
 	[DebuggerDisplay("{DebugDisplay,nq}")]
 	public class Routing : IEquatable<Routing>, IUrlParameter
 	{
@@ -177,10 +175,9 @@ namespace OpenSearch.Client
 			}
 		}
 
-		internal bool ShouldSerialize(IJsonFormatterResolver formatterResolver)
+		internal bool ShouldSerialize(IConnectionSettingsValues settings)
 		{
-			var inferrer = formatterResolver.GetConnectionSettings().Inferrer;
-			var resolved = inferrer.Resolve(this);
+			var resolved = settings.Inferrer.Resolve(this);
 			return !resolved.IsNullOrEmpty();
 		}
 	}

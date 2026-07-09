@@ -31,11 +31,9 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(PropertyNameFormatter))]
 	[DebuggerDisplay("{DebugDisplay,nq}")]
 	public class PropertyName : IEquatable<PropertyName>, IUrlParameter
 	{

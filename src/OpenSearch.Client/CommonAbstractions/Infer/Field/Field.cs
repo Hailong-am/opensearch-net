@@ -32,11 +32,9 @@ using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(FieldFormatter))]
 	[DebuggerDisplay("{DebugDisplay,nq}")]
 	public class Field : IEquatable<Field>, IUrlParameter
 	{

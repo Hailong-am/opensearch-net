@@ -26,11 +26,9 @@
 *  under the License.
 */
 
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(FuzzinessInterfaceFormatter))]
 	public interface IFuzziness
 	{
 		bool Auto { get; }

@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -60,7 +59,6 @@ namespace OpenSearch.Client
 		public long? SequenceNumber { get; internal set; }
 
 		[DataMember(Name = "_source")]
-		[JsonFormatter(typeof(SourceFormatter<>))]
 		public TDocument Source { get; internal set; }
 
 		[DataMember(Name = "_type")]

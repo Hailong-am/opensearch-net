@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -43,7 +42,6 @@ namespace OpenSearch.Client
 		/// The maximum token size to emit. Defaults to 255.
 		/// </summary>
 		[DataMember(Name ="max_output_size")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? MaxOutputSize { get; set; }
 
 		/// <summary>

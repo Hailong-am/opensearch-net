@@ -29,14 +29,12 @@
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// A time representation for use within <see cref="DateMath" /> expressions.
 	/// </summary>
-	[JsonFormatter(typeof(DateMathTimeFormatter))]
 	public class DateMathTime : IComparable<DateMathTime>, IEquatable<DateMathTime>
 	{
 		private const double MillisecondsInADay = MillisecondsInAnHour * 24;
@@ -349,14 +347,4 @@ namespace OpenSearch.Client
 		public override int GetHashCode() => _approximateSeconds.GetHashCode();
 	}
 
-	internal class DateMathTimeFormatter: IJsonFormatter<DateMathTime>
-	{
-		public void Serialize(ref JsonWriter writer, DateMathTime value, IJsonFormatterResolver formatterResolver)
-		{
-			if (value is null) writer.WriteNull();
-			else writer.WriteString(value.ToString());
-		}
-
-		public DateMathTime Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver) => reader.ReadString();
-	}
 }

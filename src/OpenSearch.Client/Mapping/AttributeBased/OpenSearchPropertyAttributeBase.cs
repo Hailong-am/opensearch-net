@@ -31,13 +31,12 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[AttributeUsage(AttributeTargets.Property)]
 	[DataContract]
-	public abstract class OpenSearchPropertyAttributeBase : Attribute, IProperty, IPropertyMapping, IJsonProperty
+	public abstract class OpenSearchPropertyAttributeBase : Attribute, IProperty, IPropertyMapping
 	{
 		protected OpenSearchPropertyAttributeBase(FieldType type) => Self.Type = type.GetStringValue();
 

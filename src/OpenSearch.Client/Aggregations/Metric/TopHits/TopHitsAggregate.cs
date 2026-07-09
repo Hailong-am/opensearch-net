@@ -28,21 +28,22 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using OpenSearch.Net.Utf8Json;
+using System.Text.Json;
+using OpenSearch.Net;
 
 namespace OpenSearch.Client
 {
 	public class TopHitsAggregate : MetricAggregateBase
 	{
-		private readonly IJsonFormatterResolver _formatterResolver;
+		private readonly JsonSerializerOptions _options;
 		private readonly IList<LazyDocument> _hits;
 
 		public TopHitsAggregate() { }
 
-		internal TopHitsAggregate(IList<LazyDocument> hits, IJsonFormatterResolver formatterResolver)
+		internal TopHitsAggregate(IList<LazyDocument> hits, JsonSerializerOptions options)
 		{
 			_hits = hits;
-			_formatterResolver = formatterResolver;
+			_options = options;
 		}
 
 		public double? MaxScore { get; set; }
@@ -52,12 +53,11 @@ namespace OpenSearch.Client
 		private IEnumerable<IHit<TDocument>> ConvertHits<TDocument>()
 			where TDocument : class
 		{
-			var formatter = _formatterResolver.GetFormatter<IHit<TDocument>>();
+			if (_hits == null || _options == null)
+				return Enumerable.Empty<IHit<TDocument>>();
+
 			return _hits.Select(h =>
-			{
-				var reader = new JsonReader(h.Bytes);
-				return formatter.Deserialize(ref reader, _formatterResolver);
-			});
+				JsonSerializer.Deserialize<IHit<TDocument>>(h.Bytes, _options));
 		}
 
 		public IReadOnlyCollection<IHit<TDocument>> Hits<TDocument>()

@@ -31,7 +31,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -46,7 +45,6 @@ namespace OpenSearch.Client
 		/// The source of the document to percolate.
 		/// </summary>
 		[DataMember(Name = "document")]
-		[JsonFormatter(typeof(SourceFormatter<object>))]
 		object Document { get; set; }
 
 		/// <summary>
@@ -54,7 +52,6 @@ namespace OpenSearch.Client
 		/// multiple documents to be percolated.
 		/// </summary>
 		[DataMember(Name = "documents")]
-		[JsonFormatter(typeof(SourceFormatter<IEnumerable<object>>))]
 		IEnumerable<object> Documents { get; set; }
 
 		/// <summary>

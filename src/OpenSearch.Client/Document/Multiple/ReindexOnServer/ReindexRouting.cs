@@ -26,11 +26,9 @@
 *  under the License.
 */
 
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(ReindexRoutingFormatter))]
 	public class ReindexRouting
 	{
 		public static ReindexRouting Discard = new ReindexRouting("discard", true);

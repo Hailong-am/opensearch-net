@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -41,7 +40,6 @@ namespace OpenSearch.Client
 		/// If only unique terms should be returned, this needs to be set to true.
 		/// </summary>
 		[DataMember(Name ="dedup")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? Dedup { get; set; }
 
 		/// <summary>
@@ -61,7 +59,6 @@ namespace OpenSearch.Client
 		/// If only the longest term should be returned, set this to true.
 		/// </summary>
 		[DataMember(Name ="longest_only")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? LongestOnly { get; set; }
 	}
 

@@ -31,12 +31,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
-	[JsonFormatter(typeof(TermsQueryFormatter))]
+	[JsonConverter(typeof(TermsQueryConverter))]
 	public interface ITermsQuery : IFieldNameQuery
 	{
 		IEnumerable<object> Terms { get; set; }

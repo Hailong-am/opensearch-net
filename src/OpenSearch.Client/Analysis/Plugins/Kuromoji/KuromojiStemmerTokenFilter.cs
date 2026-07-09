@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -42,7 +41,6 @@ namespace OpenSearch.Client
 		/// Katakana words shorter than the minimum length are not stemmed (default is 4).
 		/// </summary>
 		[DataMember(Name ="minimum_length")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? MinimumLength { get; set; }
 	}
 

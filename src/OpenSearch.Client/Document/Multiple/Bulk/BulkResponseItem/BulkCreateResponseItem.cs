@@ -27,12 +27,10 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[DataContract]
-	[JsonFormatter(typeof(ConcreteBulkIndexResponseItemFormatter<BulkCreateResponseItem>))]
 	public class BulkCreateResponseItem : BulkResponseItemBase
 	{
 		public override string Operation { get; } = "create";

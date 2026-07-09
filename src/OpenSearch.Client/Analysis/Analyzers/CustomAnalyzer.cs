@@ -29,7 +29,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -47,14 +46,12 @@ namespace OpenSearch.Client
 		/// The logical / registered name of the tokenizer to use.
 		/// </summary>
 		[DataMember(Name ="char_filter")]
-		[JsonFormatter(typeof(SingleOrEnumerableFormatter<string>))]
 		IEnumerable<string> CharFilter { get; set; }
 
 		/// <summary>
 		/// An optional list of logical / registered name of token filters.
 		/// </summary>
 		[DataMember(Name ="filter")]
-		[JsonFormatter(typeof(SingleOrEnumerableFormatter<string>))]
 		IEnumerable<string> Filter { get; set; }
 
 		/// <summary>
@@ -63,7 +60,6 @@ namespace OpenSearch.Client
 		/// Defaults to 100.
 		/// </summary>
 		[DataMember(Name ="position_increment_gap")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? PositionIncrementGap { get; set; }
 
 		/// <summary>

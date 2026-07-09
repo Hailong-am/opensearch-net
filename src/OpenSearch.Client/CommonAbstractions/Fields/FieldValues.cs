@@ -30,11 +30,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(FieldValuesFormatter))]
 	public class FieldValues : IsADictionaryBase<string, LazyDocument>
 	{
 		public static readonly FieldValues Empty = new FieldValues();

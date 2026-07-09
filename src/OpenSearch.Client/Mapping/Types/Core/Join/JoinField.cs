@@ -27,7 +27,6 @@
 */
 
 using System;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -40,7 +39,6 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// The field on which a parent-child relationship is joined
 	/// </summary>
-	[JsonFormatter(typeof(JoinFieldFormatter))]
 	public class JoinField
 	{
 		internal Child ChildOption { get;  }

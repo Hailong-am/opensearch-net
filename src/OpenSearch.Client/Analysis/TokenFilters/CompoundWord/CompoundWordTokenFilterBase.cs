@@ -28,7 +28,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -47,28 +46,24 @@ namespace OpenSearch.Client
 		/// Maximum subword size.
 		/// </summary>
 		[DataMember(Name ="max_subword_size")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? MaxSubwordSize { get; set; }
 
 		/// <summary>
 		/// Minimum subword size.
 		/// </summary>
 		[DataMember(Name ="min_subword_size")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? MinSubwordSize { get; set; }
 
 		/// <summary>
 		/// Minimum word size.
 		/// </summary>
 		[DataMember(Name ="min_word_size")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? MinWordSize { get; set; }
 
 		/// <summary>
 		/// Only matching the longest.
 		/// </summary>
 		[DataMember(Name ="only_longest_match")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? OnlyLongestMatch { get; set; }
 
 		/// <summary>

@@ -28,7 +28,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -58,7 +57,6 @@ namespace OpenSearch.Client
 		/// The indices to which to remove the alias
 		/// </summary>
 		[DataMember(Name = "indices")]
-		[JsonFormatter(typeof(IndicesFormatter))]
 		public Indices Indices { get; set; }
 
 		/// <summary>

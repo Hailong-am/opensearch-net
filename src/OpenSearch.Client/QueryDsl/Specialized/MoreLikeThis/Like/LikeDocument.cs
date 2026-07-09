@@ -28,7 +28,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -43,7 +42,6 @@ namespace OpenSearch.Client
 		/// A document to find other documents like
 		/// </summary>
 		[DataMember(Name = "doc")]
-		[JsonFormatter(typeof(SourceFormatter<object>))]
 		object Document { get; set; }
 
 		/// <summary>

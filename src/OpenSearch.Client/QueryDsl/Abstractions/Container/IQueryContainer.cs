@@ -27,12 +27,10 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
-	[JsonFormatter(typeof(QueryContainerInterfaceFormatter))]
 	public interface IQueryContainer
 	{
 		[DataMember(Name ="bool")]

@@ -28,7 +28,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -54,7 +53,6 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A key for a <see cref="CompositeBucket" />
 	/// </summary>
-	[JsonFormatter(typeof(CompositeKeyFormatter))]
 	public class CompositeKey : IsAReadOnlyDictionaryBase<string, object>
 	{
 		public CompositeKey(IReadOnlyDictionary<string, object> backingDictionary) : base(backingDictionary) { }
@@ -112,7 +110,7 @@ namespace OpenSearch.Client
 				return false;
 			}
 
-			value = DateTimeUtil.UnixEpoch.AddMilliseconds(l);
+			value = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero).AddMilliseconds(l);
 			return true;
 		}
 
@@ -137,21 +135,4 @@ namespace OpenSearch.Client
 		}
 	}
 
-	internal class CompositeKeyFormatter : IJsonFormatter<CompositeKey>
-	{
-		private static readonly VerbatimInterfaceReadOnlyDictionaryKeysPreservingNullFormatter<string, object> DictionaryFormatter =
-			new VerbatimInterfaceReadOnlyDictionaryKeysPreservingNullFormatter<string, object>();
-
-		public void Serialize(ref JsonWriter writer, CompositeKey value, IJsonFormatterResolver formatterResolver) =>
-			DictionaryFormatter.Serialize(ref writer, value, formatterResolver);
-
-		public CompositeKey Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
-		{
-			if (reader.ReadIsNull())
-				return null;
-
-			var dictionary = DictionaryFormatter.Deserialize(ref reader, formatterResolver);
-			return new CompositeKey(dictionary);
-		}
-	}
 }

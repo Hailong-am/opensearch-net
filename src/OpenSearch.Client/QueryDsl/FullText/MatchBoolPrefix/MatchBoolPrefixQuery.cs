@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -36,7 +35,6 @@ namespace OpenSearch.Client
 	/// Each term except the last is used in a term query. The last term is used in a prefix query.
 	/// </summary>
 	[InterfaceDataContract]
-	[JsonFormatter(typeof(FieldNameQueryFormatter<MatchBoolPrefixQuery, IMatchBoolPrefixQuery>))]
 	public interface IMatchBoolPrefixQuery : IFieldNameQuery
 	{
 		/// <summary>

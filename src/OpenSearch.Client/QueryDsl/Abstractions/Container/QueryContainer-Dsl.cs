@@ -28,7 +28,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -37,7 +36,6 @@ namespace OpenSearch.Client
 		public static bool IsConditionless(this QueryContainer q) => q == null || q.IsConditionless;
 	}
 
-	[JsonFormatter(typeof(QueryContainerFormatter))]
 	public partial class QueryContainer : IQueryContainer, IDescriptor
 	{
 		public QueryContainer() { }
@@ -130,7 +128,7 @@ namespace OpenSearch.Client
 		public static bool operator true(QueryContainer a) => false;
 
 		// ReSharper disable once UnusedMember.Global
-		internal bool ShouldSerialize(IJsonFormatterResolver formatterResolver) => IsWritable;
+		internal bool ShouldSerialize() => IsWritable;
 
 		/// <summary>
 		/// Assigns a name to the contained query.

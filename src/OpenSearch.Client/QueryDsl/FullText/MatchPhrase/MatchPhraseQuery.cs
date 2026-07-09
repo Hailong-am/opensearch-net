@@ -27,12 +27,10 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
-	[JsonFormatter(typeof(FieldNameQueryFormatter<MatchPhraseQuery, IMatchPhraseQuery>))]
 	public interface IMatchPhraseQuery : IFieldNameQuery
 	{
 		[DataMember(Name = "analyzer")]

@@ -30,7 +30,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -40,7 +39,6 @@ namespace OpenSearch.Client
 	/// In OSC Aggregation always refers to an aggregation
 	/// sent to OpenSearch and an Aggregate describes an aggregation returned from OpenSearch.
 	/// </summary>
-	[JsonFormatter(typeof(AggregationDictionaryFormatter))]
 	public class AggregationDictionary : IsADictionaryBase<string, IAggregationContainer>
 	{
 		public AggregationDictionary() { }
@@ -84,25 +82,14 @@ namespace OpenSearch.Client
 
 		protected override string ValidateKey(string key)
 		{
-			if (AggregateFormatter.AllReservedAggregationNames.Contains(key))
+			if (AggregateConverter.AllReservedAggregationNames.Contains(key))
 				throw new ArgumentException(
-					string.Format(AggregateFormatter.UsingReservedAggNameFormat, key), nameof(key));
+					string.Format(AggregateConverter.UsingReservedAggNameFormat, key), nameof(key));
 
 			return key;
 		}
 	}
 
-	internal class AggregationDictionaryFormatter : IJsonFormatter<AggregationDictionary>
-	{
-		private static readonly VerbatimDictionaryInterfaceKeysFormatter<string, IAggregationContainer> DictionaryKeysFormatter =
-			new VerbatimDictionaryInterfaceKeysFormatter<string, IAggregationContainer>();
-
-		public AggregationDictionary Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver) =>
-			new AggregationDictionary(DictionaryKeysFormatter.Deserialize(ref reader, formatterResolver));
-
-		public void Serialize(ref JsonWriter writer, AggregationDictionary value, IJsonFormatterResolver formatterResolver) =>
-			DictionaryKeysFormatter.Serialize(ref writer, value, formatterResolver);
-	}
 
 	[InterfaceDataContract]
 	[ReadAs(typeof(AggregationContainer))]
@@ -205,7 +192,6 @@ namespace OpenSearch.Client
 		IMaxBucketAggregation MaxBucket { get; set; }
 
 		[DataMember(Name = "meta")]
-		[JsonFormatter(typeof(VerbatimDictionaryInterfaceKeysFormatter<string, object>))]
 		IDictionary<string, object> Meta { get; set; }
 
 		[DataMember(Name = "min")]

@@ -29,7 +29,6 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -63,7 +62,6 @@ namespace OpenSearch.Client
 		/// Whether punctuation should be discarded from the output. Defaults to `true`.
 		/// </summary>
 		[DataMember(Name = "discard_punctuation")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? DiscardPunctuation { get; set; }
 
 		/// <summary>

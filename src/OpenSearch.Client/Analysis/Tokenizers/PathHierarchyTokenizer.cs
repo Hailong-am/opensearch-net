@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -46,7 +45,6 @@ namespace OpenSearch.Client
 		/// The buffer size to use, defaults to 1024.
 		/// </summary>
 		[DataMember(Name ="buffer_size")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? BufferSize { get; set; }
 
 		/// <summary>
@@ -65,14 +63,12 @@ namespace OpenSearch.Client
 		/// Generates tokens in reverse order, defaults to false.
 		/// </summary>
 		[DataMember(Name ="reverse")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? Reverse { get; set; }
 
 		/// <summary>
 		/// Controls initial tokens to skip, defaults to 0.
 		/// </summary>
 		[DataMember(Name ="skip")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? Skip { get; set; }
 	}
 

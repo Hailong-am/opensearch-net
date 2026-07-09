@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -35,7 +34,6 @@ namespace OpenSearch.Client
 	/// Queries documents that contain terms matching a regular expression.
 	/// </summary>
 	[InterfaceDataContract]
-	[JsonFormatter(typeof(FieldNameQueryFormatter<RegexpQuery, IRegexpQuery>))]
 	public interface IRegexpQuery : IFieldNameQuery
 	{
 		/// <summary>

@@ -49,7 +49,7 @@ using System.Linq.Expressions;
 using System.Text;
 using OpenSearch.Net;
 using OpenSearch.Net.Specification.TasksApi;
-using OpenSearch.Net.Utf8Json;
+using System.Text.Json.Serialization;
 
 // ReSharper disable RedundantBaseConstructorCall
 // ReSharper disable UnusedTypeParameter
@@ -113,7 +113,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("task_id", taskId)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor]
+        [SerializationConstructor, JsonConstructor]
         protected GetTaskDescriptor()
             : base() { }
 

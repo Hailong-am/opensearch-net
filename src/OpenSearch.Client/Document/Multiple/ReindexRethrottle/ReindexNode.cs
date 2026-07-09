@@ -29,14 +29,12 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	public class ReindexNode
 	{
 		[DataMember(Name ="attributes")]
-		[JsonFormatter(typeof(VerbatimInterfaceReadOnlyDictionaryKeysFormatter<string, string>))]
 		public IReadOnlyDictionary<string, string> Attributes { get; internal set; } =
 			EmptyReadOnly<string, string>.Dictionary;
 
@@ -53,7 +51,6 @@ namespace OpenSearch.Client
 		public IEnumerable<string> Roles { get; internal set; }
 
 		[DataMember(Name ="tasks")]
-		[JsonFormatter(typeof(VerbatimInterfaceReadOnlyDictionaryKeysFormatter<TaskId, ReindexTask>))]
 		public IReadOnlyDictionary<TaskId, ReindexTask> Tasks { get; internal set; } =
 			EmptyReadOnly<TaskId, ReindexTask>.Dictionary;
 

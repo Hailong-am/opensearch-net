@@ -1,5 +1,11 @@
 <Project>
   <Import Project="src\_PublishArtifacts.Build.props" Condition="$(IsPackable) == True" />
+
+  <!-- Migration verification: ensure vendored Utf8Json does not get re-added -->
+  <Target Name="VerifyUtf8JsonRemoved" BeforeTargets="Build">
+    <Error Condition="Exists('$(MSBuildThisFileDirectory)src/OpenSearch.Net/Utf8Json/')"
+           Text="The vendored Utf8Json directory must not exist. The library has been replaced by System.Text.Json." />
+  </Target>
   <PropertyGroup Condition="$(SignAssembly) == True OR $(IsPackable) == True OR $(MSBuildProjectName.StartsWith('Tests'))">
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)\build\keys\keypair.snk</AssemblyOriginatorKeyFile>

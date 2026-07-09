@@ -28,7 +28,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -41,7 +40,6 @@ namespace OpenSearch.Client
 		/// Set to true to lower case all words first. Defaults to false.
 		/// </summary>
 		[DataMember(Name ="ignore_case")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? IgnoreCase { get; set; }
 
 		/// <summary>
@@ -50,7 +48,6 @@ namespace OpenSearch.Client
 		/// be extended to green apple even though  you remove stop words in general. Defaults to true.
 		/// </summary>
 		[DataMember(Name ="remove_trailing")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? RemoveTrailing { get; set; }
 
 		/// <summary>

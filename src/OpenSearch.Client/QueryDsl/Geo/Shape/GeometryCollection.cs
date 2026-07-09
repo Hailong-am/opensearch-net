@@ -29,14 +29,12 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// A geo shape representing a collection of <see cref="IGeoShape" /> geometries
 	/// </summary>
-	[JsonFormatter(typeof(GeoShapeFormatter<IGeometryCollection>))]
 	public interface IGeometryCollection : IGeoShape
 	{
 		/// <summary>
@@ -47,7 +45,6 @@ namespace OpenSearch.Client
 	}
 
 	/// <inheritdoc cref="IGeometryCollection" />
-	[JsonFormatter(typeof(GeoShapeFormatter<GeometryCollection>))]
 	public class GeometryCollection : GeoShapeBase, IGeometryCollection
 	{
 		public GeometryCollection(IEnumerable<IGeoShape> geometries) : this() =>

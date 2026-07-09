@@ -8,7 +8,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client;
 
@@ -22,7 +22,7 @@ public partial interface ICatPitSegmentsRequest
 
 public partial class CatPitSegmentsRequest
 {
-	[SerializationConstructor]
+	[SerializationConstructor, JsonConstructor]
 	public CatPitSegmentsRequest() { }
 
 	public CatPitSegmentsRequest(IEnumerable<string> pitId) : this(pitId?.ToArray()) { }

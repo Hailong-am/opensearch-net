@@ -28,14 +28,12 @@
 
 using System;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
 	public interface IBulkIndexOperation<T> : IBulkOperation
 	{
-		[JsonFormatter(typeof(SourceWriteFormatter<>))]
 		T Document { get; set; }
 
 		[DataMember(Name ="_percolate")]

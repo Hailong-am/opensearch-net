@@ -27,16 +27,13 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
-	[JsonFormatter(typeof(FieldNameQueryFormatter<TermQuery, ITermQuery>))]
 	public interface ITermQuery : IFieldNameQuery
 	{
 		[DataMember(Name = "value")]
-		[JsonFormatter(typeof(SourceWriteFormatter<object>))]
 		object Value { get; set; }
 
 		[DataMember(Name = "case_insensitive")]

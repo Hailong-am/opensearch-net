@@ -28,12 +28,10 @@
 
 using System;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
-	[JsonFormatter(typeof(ScoreFunctionJsonFormatter))]
 	public interface IScoreFunction
 	{
 		[DataMember(Name ="filter")]

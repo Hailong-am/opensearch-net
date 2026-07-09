@@ -27,10 +27,7 @@
 */
 
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -47,22 +44,7 @@ namespace OpenSearch.Client
 			RelationNameResolver = new RelationNameResolver(connectionSettings);
 			FieldResolver = new FieldResolver(connectionSettings);
 			RoutingResolver = new RoutingResolver(connectionSettings, IdResolver);
-
-			CreateMultiHitDelegates =
-				new ConcurrentDictionary<Type,
-					Action<MultiGetResponseFormatter.MultiHitTuple, IJsonFormatterResolver, ICollection<IMultiGetHit<object>>>>();
-			CreateSearchResponseDelegates =
-				new ConcurrentDictionary<Type,
-					Action<MultiSearchResponseFormatter.SearchHitTuple, IJsonFormatterResolver, IDictionary<string, IResponse>>>();
 		}
-
-		internal ConcurrentDictionary<Type, Action<MultiGetResponseFormatter.MultiHitTuple, IJsonFormatterResolver, ICollection<IMultiGetHit<object>>>
-			>
-			CreateMultiHitDelegates { get; }
-
-		internal ConcurrentDictionary<Type,
-				Action<MultiSearchResponseFormatter.SearchHitTuple, IJsonFormatterResolver, IDictionary<string, IResponse>>>
-			CreateSearchResponseDelegates { get; }
 
 		private FieldResolver FieldResolver { get; }
 		private IdResolver IdResolver { get; }

@@ -27,11 +27,9 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(AnalyzerFormatter))]
 	public interface IAnalyzer
 	{
 		[DataMember(Name = "type")]

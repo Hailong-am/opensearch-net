@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -40,14 +39,12 @@ namespace OpenSearch.Client
 		/// If set to true the filter exhaust the stream even if max_token_count tokens have been consumed already.
 		/// </summary>
 		[DataMember(Name ="consume_all_tokens")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? ConsumeAllTokens { get; set; }
 
 		/// <summary>
 		/// The maximum number of tokens that should be indexed per document and field.
 		/// </summary>
 		[DataMember(Name ="max_token_count")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? MaxTokenCount { get; set; }
 	}
 

@@ -26,13 +26,13 @@
 *  under the License.
 */
 
-using OpenSearch.Net.Utf8Json;
+using System.Text.Json;
 
 namespace OpenSearch.Net
 {
 	internal interface IInternalSerializer
 	{
-		bool TryGetJsonFormatter(out IJsonFormatterResolver formatterResolver);
+		bool TryGetJsonSerializerOptions(out JsonSerializerOptions options);
 	}
 
 }

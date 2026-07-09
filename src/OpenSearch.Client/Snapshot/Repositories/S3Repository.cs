@@ -28,7 +28,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -108,7 +107,6 @@ namespace OpenSearch.Client
 		/// Defaults to false.
 		/// </summary>
 		[DataMember(Name ="compress")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? Compress { get; set; }
 
 		/// <summary>
@@ -116,7 +114,6 @@ namespace OpenSearch.Client
 		/// Defaults to false.
 		/// </summary>
 		[DataMember(Name ="server_side_encryption")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? ServerSideEncryption { get; set; }
 
 		/// <summary>
@@ -132,7 +129,6 @@ namespace OpenSearch.Client
 		/// be automatically determined by the AWS Java SDK used internally by OpenSearch
 		/// </summary>
 		[DataMember(Name = "path_style_access")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? PathStyleAccess { get; set; }
 
 		/// <summary>
@@ -142,14 +138,12 @@ namespace OpenSearch.Client
 		/// encoding. Defaults to false.
 		/// </summary>
 		[DataMember(Name = "disable_chunked_encoding")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? DisableChunkedEncoding { get; set; }
 
 		/// <summary>
 		/// Make the repository readonly. Defaults to false.
 		/// </summary>
 		[DataMember(Name = "readonly")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? ReadOnly { get; set; }
 
 		/// <summary>

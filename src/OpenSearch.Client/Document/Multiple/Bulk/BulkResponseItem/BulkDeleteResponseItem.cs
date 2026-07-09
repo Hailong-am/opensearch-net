@@ -27,12 +27,10 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[DataContract]
-	[JsonFormatter(typeof(ConcreteBulkIndexResponseItemFormatter<BulkDeleteResponseItem>))]
 	public class BulkDeleteResponseItem : BulkResponseItemBase
 	{
 		public override string Operation { get; } = "delete";

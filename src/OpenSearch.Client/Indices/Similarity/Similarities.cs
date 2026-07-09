@@ -28,14 +28,11 @@
 
 using System;
 using System.Collections.Generic;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(VerbatimDictionaryKeysFormatter<Similarities, ISimilarities, string, ISimilarity>))]
 	public interface ISimilarities : IIsADictionary<string, ISimilarity> { }
 
-	[JsonFormatter(typeof(VerbatimDictionaryKeysFormatter<Similarities, Similarities, string, ISimilarity>))]
 	public class Similarities : IsADictionaryBase<string, ISimilarity>, ISimilarities
 	{
 		public Similarities() { }

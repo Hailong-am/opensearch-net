@@ -27,14 +27,12 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// A similarity.
 	/// </summary>
-	[JsonFormatter(typeof(SimilarityFormatter))]
 	public interface ISimilarity
 	{
 		/// <summary>

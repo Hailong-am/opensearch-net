@@ -49,7 +49,7 @@ using System.Linq.Expressions;
 using System.Text;
 using OpenSearch.Net;
 using OpenSearch.Net.Specification.SnapshotApi;
-using OpenSearch.Net.Utf8Json;
+using System.Text.Json.Serialization;
 
 // ReSharper disable RedundantBaseConstructorCall
 // ReSharper disable UnusedTypeParameter
@@ -74,7 +74,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("repository", repository)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor]
+        [SerializationConstructor, JsonConstructor]
         protected CleanupRepositoryDescriptor()
             : base() { }
 
@@ -121,7 +121,7 @@ namespace OpenSearch.Client
             ) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor]
+        [SerializationConstructor, JsonConstructor]
         protected CloneSnapshotDescriptor()
             : base() { }
 
@@ -158,7 +158,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("repository", repository).Required("snapshot", snapshot)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor]
+        [SerializationConstructor, JsonConstructor]
         protected SnapshotDescriptor()
             : base() { }
 
@@ -201,7 +201,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("repository", repository)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor]
+        [SerializationConstructor, JsonConstructor]
         protected CreateRepositoryDescriptor()
             : base() { }
 
@@ -246,7 +246,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("repository", repository).Required("snapshot", snapshot)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor]
+        [SerializationConstructor, JsonConstructor]
         protected DeleteSnapshotDescriptor()
             : base() { }
 
@@ -285,7 +285,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("repository", repository)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor]
+        [SerializationConstructor, JsonConstructor]
         protected DeleteRepositoryDescriptor()
             : base() { }
 
@@ -327,7 +327,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("repository", repository).Required("snapshot", snapshot)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor]
+        [SerializationConstructor, JsonConstructor]
         protected GetSnapshotDescriptor()
             : base() { }
 
@@ -414,7 +414,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("repository", repository).Required("snapshot", snapshot)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor]
+        [SerializationConstructor, JsonConstructor]
         protected RestoreDescriptor()
             : base() { }
 
@@ -513,7 +513,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("repository", repository)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor]
+        [SerializationConstructor, JsonConstructor]
         protected VerifyRepositoryDescriptor()
             : base() { }
 

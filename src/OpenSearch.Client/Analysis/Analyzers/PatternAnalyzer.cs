@@ -28,7 +28,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -41,7 +40,6 @@ namespace OpenSearch.Client
 		string Flags { get; set; }
 
 		[DataMember(Name ="lowercase")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? Lowercase { get; set; }
 
 		[DataMember(Name ="pattern")]

@@ -29,7 +29,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -43,7 +42,6 @@ namespace OpenSearch.Client
 		IndexName Index { get; set; }
 
 		[DataMember(Name = "_source")]
-		[JsonFormatter(typeof(SourceFormatter<>))]
 		object Source { get; set; }
 	}
 

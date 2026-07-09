@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -42,7 +41,6 @@ namespace OpenSearch.Client
 		/// The maximum token length. If a token is seen that exceeds this length then it is discarded. Defaults to 255.
 		/// </summary>
 		[DataMember(Name = "max_token_length")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? MaxTokenLength { get; set; }
 	}
 

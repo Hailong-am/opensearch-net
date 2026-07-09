@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -59,7 +58,6 @@ namespace OpenSearch.Client
 		/// Whether case level sorting is required. When strength is set to primary this will ignore accent differences
 		/// </summary>
 		[DataMember(Name ="caseLevel")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? CaseLevel { get; set; }
 
 		[DataMember(Name ="country")]
@@ -80,7 +78,6 @@ namespace OpenSearch.Client
 		/// Distinguishing between Katakana and Hiragana characters in quaternary strength.
 		/// </summary>
 		[DataMember(Name ="hiraganaQuaternaryMode")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? HiraganaQuaternaryMode { get; set; }
 
 		[DataMember(Name ="language")]
@@ -91,7 +88,6 @@ namespace OpenSearch.Client
 		/// For example the value egg-9 is sorted before the value egg-21.
 		/// </summary>
 		[DataMember(Name ="numeric")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? Numeric { get; set; }
 
 		/// <summary>

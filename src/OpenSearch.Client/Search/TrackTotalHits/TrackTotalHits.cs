@@ -5,11 +5,9 @@
 * compatible open source license.
 */
 
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client;
 
-[JsonFormatter(typeof(TrackTotalHitsFormatter))]
 public class TrackTotalHits : Union<bool, long>
 {
 	public TrackTotalHits(bool item) : base(item) { }

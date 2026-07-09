@@ -29,7 +29,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -41,7 +40,6 @@ namespace OpenSearch.Client
 	/// These intervals can be further combined and filtered by parent sources.
 	/// </summary>
 	[InterfaceDataContract]
-	[JsonFormatter(typeof(FieldNameQueryFormatter<IntervalsQuery, IIntervalsQuery>))]
 	public interface IIntervalsQuery : IFieldNameQuery, IIntervalsContainer { }
 
 	/// <inheritdoc cref="IIntervalsQuery" />

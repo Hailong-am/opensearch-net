@@ -30,7 +30,6 @@ using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -69,7 +68,6 @@ namespace OpenSearch.Client
 		int? Size { get; set; }
 
 		[DataMember(Name = "suggest_mode")]
-
 		SuggestMode? SuggestMode { get; set; }
 	}
 

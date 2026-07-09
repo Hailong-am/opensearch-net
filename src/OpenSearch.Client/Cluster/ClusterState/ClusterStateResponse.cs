@@ -28,11 +28,9 @@
 
 using System.Runtime.Serialization;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(DynamicResponseFormatter<ClusterStateResponse>))]
 	public class ClusterStateResponse : DynamicResponseBase
 	{
 		public DynamicDictionary State => Self.BackingDictionary;

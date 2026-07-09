@@ -30,14 +30,12 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// A lazily deserialized document
 	/// </summary>
-	[JsonFormatter(typeof(LazyDocumentInterfaceFormatter))]
 	public interface ILazyDocument
 	{
 		/// <summary>
@@ -70,17 +68,15 @@ namespace OpenSearch.Client
 	}
 
 	/// <inheritdoc />
-	[JsonFormatter(typeof(LazyDocumentFormatter))]
 	public class LazyDocument : ILazyDocument
 	{
 		private readonly IOpenSearchSerializer _sourceSerializer;
 		private readonly IOpenSearchSerializer _requestResponseSerializer;
 		private readonly IMemoryStreamFactory _memoryStreamFactory;
 
-		internal LazyDocument(byte[] bytes, IJsonFormatterResolver formatterResolver)
+		internal LazyDocument(byte[] bytes, IConnectionSettingsValues settings)
 		{
 			Bytes = bytes;
-			var settings = formatterResolver.GetConnectionSettings();
 			_sourceSerializer = settings.SourceSerializer;
 			_requestResponseSerializer = settings.RequestResponseSerializer;
 			_memoryStreamFactory = settings.MemoryStreamFactory;

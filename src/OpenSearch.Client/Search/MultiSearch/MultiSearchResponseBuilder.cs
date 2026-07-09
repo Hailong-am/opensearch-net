@@ -35,13 +35,13 @@ namespace OpenSearch.Client
 {
 	internal class MultiSearchResponseBuilder : CustomResponseBuilderBase
 	{
-		public MultiSearchResponseBuilder(IRequest request) => Formatter = new MultiSearchResponseFormatter(request);
+		public MultiSearchResponseBuilder(IRequest request) => Request = request;
 
-		private MultiSearchResponseFormatter Formatter { get; }
+		private IRequest Request { get; }
 
 		public override object DeserializeResponse(IOpenSearchSerializer builtInSerializer, IApiCallDetails response, Stream stream) =>
 			response.Success
-				? builtInSerializer.CreateStateful(Formatter).Deserialize<MultiSearchResponse>(stream)
+				? builtInSerializer.Deserialize<MultiSearchResponse>(stream)
 				: new MultiSearchResponse();
 
 		public override async Task<object> DeserializeResponseAsync(
@@ -51,9 +51,7 @@ namespace OpenSearch.Client
 			CancellationToken ctx = default
 		) =>
 			response.Success
-				? await builtInSerializer.CreateStateful(Formatter)
-					.DeserializeAsync<MultiSearchResponse>(stream, ctx)
-					.ConfigureAwait(false)
+				? await builtInSerializer.DeserializeAsync<MultiSearchResponse>(stream, ctx).ConfigureAwait(false)
 				: new MultiSearchResponse();
 	}
 }

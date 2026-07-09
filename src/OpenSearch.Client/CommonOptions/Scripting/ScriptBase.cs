@@ -30,7 +30,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -38,7 +37,6 @@ namespace OpenSearch.Client
 	/// A script to execute to provide custom computation
 	/// </summary>
 	[InterfaceDataContract]
-	[JsonFormatter(typeof(ScriptFormatter))]
 	public interface IScript
 	{
 		/// <summary>
@@ -61,7 +59,6 @@ namespace OpenSearch.Client
 		/// <param name="paramsDictionary">param</param>
 		/// <returns>this</returns>
 		[DataMember(Name = "params")]
-		[JsonFormatter(typeof(VerbatimDictionaryKeysPreservingNullFormatter<string, object>))]
 		Dictionary<string, object> Params { get; set; }
 	}
 

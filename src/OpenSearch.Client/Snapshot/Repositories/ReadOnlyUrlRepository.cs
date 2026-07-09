@@ -28,7 +28,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -57,7 +56,6 @@ namespace OpenSearch.Client
 		/// Throttles the number of streams (per node) preforming snapshot operation. Defaults to 5
 		/// </summary>
 		[DataMember(Name ="concurrent_streams")]
-		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? ConcurrentStreams { get; set; }
 
 		/// <summary>

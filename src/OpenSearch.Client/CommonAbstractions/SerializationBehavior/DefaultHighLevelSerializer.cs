@@ -28,44 +28,68 @@
 
 using System;
 using System.IO;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary>The built in internal serializer that the high level client OpenSearch.Client uses.</summary>
 	internal class DefaultHighLevelSerializer : IOpenSearchSerializer, IInternalSerializer
 	{
-		public DefaultHighLevelSerializer(IJsonFormatterResolver formatterResolver) => FormatterResolver = formatterResolver;
+		private readonly OpenSearchClientSerializerOptions _serializerOptions;
 
-		private IJsonFormatterResolver FormatterResolver { get; }
+		public DefaultHighLevelSerializer(IConnectionSettingsValues settings) =>
+			_serializerOptions = new OpenSearchClientSerializerOptions(settings);
 
-		bool IInternalSerializer.TryGetJsonFormatter(out IJsonFormatterResolver formatterResolver)
+		bool IInternalSerializer.TryGetJsonSerializerOptions(out JsonSerializerOptions options)
 		{
-			formatterResolver = FormatterResolver;
+			options = _serializerOptions.Options;
 			return true;
 		}
 
-		public T Deserialize<T>(Stream stream) =>
-			JsonSerializer.Deserialize<T>(stream, FormatterResolver);
+		public T Deserialize<T>(Stream stream)
+		{
+			if (stream == null || stream.CanSeek && stream.Length == 0) return default;
+			return JsonSerializer.Deserialize<T>(stream, _serializerOptions.Options);
+		}
 
-		public object Deserialize(Type type, Stream stream) =>
-			JsonSerializer.NonGeneric.Deserialize(type, stream, FormatterResolver);
+		public object Deserialize(Type type, Stream stream)
+		{
+			if (stream == null || stream.CanSeek && stream.Length == 0) return null;
+			return JsonSerializer.Deserialize(stream, type, _serializerOptions.Options);
+		}
 
-		public Task<T> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default) =>
-			JsonSerializer.DeserializeAsync<T>(stream, FormatterResolver);
+		public Task<T> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
+		{
+			if (stream == null || stream.CanSeek && stream.Length == 0)
+				return Task.FromResult(default(T));
+			return JsonSerializer.DeserializeAsync<T>(stream, _serializerOptions.Options, cancellationToken).AsTask();
+		}
 
-		public Task<object> DeserializeAsync(Type type, Stream stream, CancellationToken cancellationToken = default) =>
-			JsonSerializer.NonGeneric.DeserializeAsync(type, stream, FormatterResolver);
+		public Task<object> DeserializeAsync(Type type, Stream stream, CancellationToken cancellationToken = default)
+		{
+			if (stream == null || stream.CanSeek && stream.Length == 0)
+				return Task.FromResult((object)null);
+			return JsonSerializer.DeserializeAsync(stream, type, _serializerOptions.Options, cancellationToken).AsTask();
+		}
 
-		public virtual void Serialize<T>(T data, Stream writableStream, SerializationFormatting formatting = SerializationFormatting.None) =>
-			JsonSerializer.Serialize(writableStream, data, FormatterResolver);
+		public virtual void Serialize<T>(T data, Stream writableStream, SerializationFormatting formatting = SerializationFormatting.None)
+		{
+			var options = formatting == SerializationFormatting.Indented
+				? _serializerOptions.Indented
+				: _serializerOptions.Options;
+			JsonSerializer.Serialize(writableStream, data, options);
+		}
 
 		public Task SerializeAsync<T>(T data, Stream stream, SerializationFormatting formatting = SerializationFormatting.None,
-			CancellationToken cancellationToken = default
-		) => JsonSerializer.SerializeAsync(stream, data, FormatterResolver);
-
+			CancellationToken cancellationToken = default)
+		{
+			var options = formatting == SerializationFormatting.Indented
+				? _serializerOptions.Indented
+				: _serializerOptions.Options;
+			return JsonSerializer.SerializeAsync(stream, data, options, cancellationToken);
+		}
 	}
 }

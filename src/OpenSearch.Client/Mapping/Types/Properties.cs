@@ -29,11 +29,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(PropertiesFormatter))]
 	public interface IProperties : IIsADictionary<PropertyName, IProperty> { }
 
 	public class Properties : IsADictionaryBase<PropertyName, IProperty>, IProperties

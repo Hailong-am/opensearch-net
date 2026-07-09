@@ -29,7 +29,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -51,7 +50,6 @@ namespace OpenSearch.Client
 		/// will result in an error if an unknown field is encountered in a document.
 		/// </summary>
 		[DataMember(Name = "dynamic")]
-		[JsonFormatter(typeof(DynamicMappingFormatter))]
 		Union<bool, DynamicMapping> Dynamic { get; set; }
 
 		/// <summary>
@@ -89,7 +87,6 @@ namespace OpenSearch.Client
 		/// but can be used to store application-specific metadata.
 		/// </summary>
 		[DataMember(Name = "_meta")]
-		[JsonFormatter(typeof(VerbatimDictionaryInterfaceKeysFormatter<string, object>))]
 		IDictionary<string, object> Meta { get; set; }
 
 		/// <summary>

@@ -28,7 +28,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -41,7 +40,6 @@ namespace OpenSearch.Client
 		bool? DetectNoop { get; set; }
 
 		[DataMember(Name = "doc")]
-		[JsonFormatter(typeof(SourceFormatter<>))]
 		TPartialDocument Doc { get; set; }
 
 		[DataMember(Name = "doc_as_upsert")]
@@ -61,7 +59,6 @@ namespace OpenSearch.Client
 		Union<bool, ISourceFilter> Source { get; set; }
 
 		[DataMember(Name = "upsert")]
-		[JsonFormatter(typeof(SourceFormatter<>))]
 		TDocument Upsert { get; set; }
 	}
 

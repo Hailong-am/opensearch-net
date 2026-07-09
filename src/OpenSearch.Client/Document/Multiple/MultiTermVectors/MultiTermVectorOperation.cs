@@ -29,7 +29,6 @@
 using System;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -44,7 +43,6 @@ namespace OpenSearch.Client
 		/// to generate term vectors for
 		/// </summary>
 		[DataMember(Name = "doc")]
-		[JsonFormatter(typeof(SourceFormatter<>))]
 		object Document { get; set; }
 
 		/// <summary>

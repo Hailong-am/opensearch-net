@@ -29,7 +29,6 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -51,7 +50,6 @@ namespace OpenSearch.Client
 		public string Index { get; internal set; }
 
 		[DataMember(Name ="term_vectors")]
-		[JsonFormatter(typeof(ResolvableReadOnlyDictionaryFormatter<Field, TermVector>))]
 		public IReadOnlyDictionary<Field, TermVector> TermVectors { get; internal set; } = EmptyReadOnly<Field, TermVector>.Dictionary;
 
 		[DataMember(Name ="took")]

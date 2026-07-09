@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -42,21 +41,18 @@ namespace OpenSearch.Client
 		/// Controls to what degree document length normalizes tf values.
 		/// </summary>
 		[DataMember(Name = "b")]
-		[JsonFormatter(typeof(NullableStringDoubleFormatter))]
 		double? B { get; set; }
 
 		/// <summary>
 		/// Sets whether overlap tokens (Tokens with 0 position increment) are ignored when computing norm.
 		/// </summary>
 		[DataMember(Name = "discount_overlaps")]
-		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? DiscountOverlaps { get; set; }
 
 		/// <summary>
 		/// Controls non-linear term frequency normalization (saturation).
 		/// </summary>
 		[DataMember(Name = "k1")]
-		[JsonFormatter(typeof(NullableStringDoubleFormatter))]
 		double? K1 { get; set; }
 	}
 

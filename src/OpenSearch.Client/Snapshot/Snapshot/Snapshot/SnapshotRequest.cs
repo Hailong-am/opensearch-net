@@ -29,7 +29,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -43,7 +42,6 @@ namespace OpenSearch.Client
 		bool? IncludeGlobalState { get; set; }
 
 		[DataMember(Name ="indices")]
-		[JsonFormatter(typeof(IndicesMultiSyntaxFormatter))]
 		Indices Indices { get; set; }
 
 		[DataMember(Name ="partial")]

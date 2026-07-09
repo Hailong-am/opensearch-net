@@ -28,28 +28,11 @@
 
 using System.Collections.Generic;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
-	internal class SuggestDictionaryFormatter<T> : IJsonFormatter<ISuggestDictionary<T>>
-		where T : class
-	{
-		public ISuggestDictionary<T> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
-		{
-			var formatter = formatterResolver.GetFormatter<Dictionary<string, ISuggest<T>[]>>();
-			var dict = formatter.Deserialize(ref reader, formatterResolver);
-			return new SuggestDictionary<T>(dict);
-		}
 
-		public void Serialize(ref JsonWriter writer, ISuggestDictionary<T> value, IJsonFormatterResolver formatterResolver)
-		{
-			var formatter = new VerbatimInterfaceReadOnlyDictionaryKeysFormatter<string, ISuggest<T>[]>();
-			formatter.Serialize(ref writer, (SuggestDictionary<T>)value, formatterResolver);
-		}
-	}
-
-	[JsonFormatter(typeof(SuggestDictionaryFormatter<>))]
 	public interface ISuggestDictionary<out T>
 		where T : class
 	{
@@ -66,7 +49,7 @@ namespace OpenSearch.Client
 	public class SuggestDictionary<T> : IsAReadOnlyDictionaryBase<string, ISuggest<T>[]>, ISuggestDictionary<T>
 		where T : class
 	{
-		[SerializationConstructor]
+		[SerializationConstructor, JsonConstructor]
 		public SuggestDictionary(IReadOnlyDictionary<string, ISuggest<T>[]> backingDictionary) : base(backingDictionary) { }
 
 		public static SuggestDictionary<T> Default { get; } = new SuggestDictionary<T>(EmptyReadOnly<string, ISuggest<T>[]>.Dictionary);

@@ -30,11 +30,9 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(IdFormatter))]
 	[DebuggerDisplay("{DebugDisplay,nq}")]
 	public class Id : IEquatable<Id>, IUrlParameter
 	{

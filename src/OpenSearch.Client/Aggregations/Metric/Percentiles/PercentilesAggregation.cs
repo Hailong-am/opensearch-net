@@ -28,11 +28,9 @@
 
 using System;
 using System.Collections.Generic;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(PercentilesAggregationFormatter))]
 	public interface IPercentilesAggregation : IFormattableMetricAggregation
 	{
 		IPercentilesMethod Method { get; set; }

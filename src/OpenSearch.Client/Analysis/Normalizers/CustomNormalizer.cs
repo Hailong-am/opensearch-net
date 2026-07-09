@@ -28,7 +28,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -47,14 +46,12 @@ namespace OpenSearch.Client
 		/// Char filters to normalize the keyword
 		/// </summary>
 		[DataMember(Name ="char_filter")]
-		[JsonFormatter(typeof(SingleOrEnumerableFormatter<string>))]
 		IEnumerable<string> CharFilter { get; set; }
 
 		/// <summary>
 		/// An optional list of logical / registered name of token filters.
 		/// </summary>
 		[DataMember(Name ="filter")]
-		[JsonFormatter(typeof(SingleOrEnumerableFormatter<string>))]
 		IEnumerable<string> Filter { get; set; }
 	}
 

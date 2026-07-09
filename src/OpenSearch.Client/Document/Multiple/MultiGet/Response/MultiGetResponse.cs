@@ -30,12 +30,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[DataContract]
-	[JsonFormatter(typeof(MultiGetResponseFormatter))]
 	public class MultiGetResponse : ResponseBase
 	{
 		public IReadOnlyCollection<IMultiGetHit<object>> Hits => InternalHits.ToList().AsReadOnly();
