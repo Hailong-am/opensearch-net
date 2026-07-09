@@ -43,9 +43,16 @@ namespace OpenSearch.Net
 	{
 		private static readonly EnumMemberConverterFactory Factory = new EnumMemberConverterFactory(useVerbatimName: true);
 
-		public override JsonConverter CreateConverter(Type typeToConvert) =>
-			Factory.CanConvert(typeToConvert)
+		public override JsonConverter CreateConverter(Type typeToConvert)
+		{
+			// The attribute's presence is the explicit opt-in to string-enum serialization, so build
+			// the converter for ANY enum (or nullable enum) type — even framework enums like
+			// HttpStatusCode that the factory's type-level CanConvert heuristic would not claim on
+			// its own. Returning null here would make STJ throw "converter not compatible".
+			var underlying = Nullable.GetUnderlyingType(typeToConvert) ?? typeToConvert;
+			return underlying.IsEnum
 				? Factory.CreateConverter(typeToConvert, JsonSerializerOptions.Default)
 				: null;
+		}
 	}
 }

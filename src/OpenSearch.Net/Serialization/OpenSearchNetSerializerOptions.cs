@@ -5,7 +5,6 @@
 * compatible open source license.
 */
 
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
@@ -38,7 +37,7 @@ namespace OpenSearch.Net
 				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
 				NumberHandling = JsonNumberHandling.AllowReadingFromString,
 				PropertyNameCaseInsensitive = true,
-				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+				Encoder = MinimalJsonEscapingEncoder.Shared,
 				WriteIndented = writeIndented,
 				TypeInfoResolver = new DefaultJsonTypeInfoResolver
 				{
@@ -52,6 +51,13 @@ namespace OpenSearch.Net
 			options.Converters.Add(new DoubleConverter());
 			options.Converters.Add(new SingleConverter());
 			options.Converters.Add(new DecimalConverter());
+			// ISO-8601 date converters: accept OpenSearch's flexible offset (+1000/+10) and
+			// variable fractional-second forms that STJ's built-in readers reject.
+			options.Converters.Add(new IsoDateTimeConverter());
+			options.Converters.Add(new IsoDateTimeOffsetConverter());
+			// TimeSpan serialized as ticks (a long), matching the client's historical wire format.
+			options.Converters.Add(new TimeSpanTicksConverter());
+			options.Converters.Add(new NullableTimeSpanTicksConverter());
 			options.Converters.Add(new ErrorConverter());
 			options.Converters.Add(new ErrorCauseConverter());
 			options.Converters.Add(new DynamicDictionaryConverter());

@@ -27,9 +27,11 @@
 */
 
 using System.Runtime.Serialization;
+using OpenSearch.Net;
 
 namespace OpenSearch.Client
 {
+	[StringEnum]
 	public enum GeoOrientation
 	{
 		[EnumMember(Value = "cw")]

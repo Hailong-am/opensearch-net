@@ -54,7 +54,7 @@ namespace OpenSearch.Net
 	@foreach (var (o, i) in e.Options.OrderBy(o => o.Value == "_all" ? 1 : 0).Select((o, i) => (o, i)))
 	{
 		<text>@(i > 0 ? "," : null)
-		[EnumMember(Value = "@(o.Value)")]
+		10[EnumMember(Value = "@(o.Value)")]
 		@(GetEnumMember(e.Name, o))@(isFlag ? Raw($" = 1 << {i}") : null)</text>
 	}
     }</text>

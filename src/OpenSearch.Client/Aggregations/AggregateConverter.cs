@@ -659,7 +659,7 @@ namespace OpenSearch.Client
 				if (prop == "interval")
 				{
 					// AutoInterval for auto_date_histogram
-					reader.Skip(); // TODO: Deserialize DateMathTime if needed
+					bucket.AutoInterval = JsonSerializer.Deserialize<DateMathTime>(ref reader, options);
 				}
 				else
 					reader.Skip();

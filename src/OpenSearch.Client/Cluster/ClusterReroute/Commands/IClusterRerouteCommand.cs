@@ -27,9 +27,11 @@
 */
 
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
+	[JsonConverter(typeof(ClusterRerouteCommandConverter))]
 	public interface IClusterRerouteCommand
 	{
 		[IgnoreDataMember]

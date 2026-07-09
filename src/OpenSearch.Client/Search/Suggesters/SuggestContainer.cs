@@ -31,7 +31,7 @@ using System.Collections.Generic;
 
 namespace OpenSearch.Client
 {
-	public interface ISuggestContainer : IIsADictionary<string, ISuggestBucket> { }
+	public interface ISuggestContainer : IIsADictionary<string, ISuggestBucket>, IVerbatimDictionaryKeys { }
 
 	public class SuggestContainer : IsADictionaryBase<string, ISuggestBucket>, ISuggestContainer
 	{

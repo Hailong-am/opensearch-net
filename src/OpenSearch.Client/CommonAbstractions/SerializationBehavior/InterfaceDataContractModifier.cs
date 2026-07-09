@@ -339,6 +339,15 @@ namespace OpenSearch.Client
 			if (roots.Count == 0)
 				return roots;
 
+			// Order roots most-derived first, so a derived contract interface's [DataMember] properties
+			// are emitted before the base interface's (e.g. ICompletionSuggester's "fuzzy" before
+			// ISuggester's "field"/"size"). Type.GetInterfaces() does not guarantee this ordering.
+			// A more-derived interface implements (transitively) more interfaces than its bases, so
+			// ordering by implemented-interface count (descending) yields derived-first and is a stable sort.
+			roots = roots
+				.OrderByDescending(i => i.GetInterfaces().Length)
+				.ToList();
+
 			var ordered = new List<Type>();
 			var seen = new HashSet<Type>();
 

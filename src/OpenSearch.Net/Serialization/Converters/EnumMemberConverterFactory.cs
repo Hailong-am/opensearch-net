@@ -97,26 +97,29 @@ namespace OpenSearch.Net
 		public EnumMemberConverter(bool useVerbatimName)
 		{
 			var enumType = typeof(TEnum);
-			var values = (TEnum[])Enum.GetValues(enumType);
+			// Iterate the declared static fields (in declaration order) rather than Enum.GetValues,
+			// so that when multiple members share the same underlying value the LAST-declared member
+			// wins the value→string mapping (matching the Utf8Json EnumFormatter behavior).
+			var fields = enumType.GetFields(BindingFlags.Public | BindingFlags.Static);
 			_isFlags = enumType.GetCustomAttribute<FlagsAttribute>() != null;
 
-			_enumToString = new Dictionary<TEnum, string>(values.Length);
-			_stringToEnum = new Dictionary<string, TEnum>(values.Length, StringComparer.OrdinalIgnoreCase);
-			_orderedFlags = _isFlags ? new List<KeyValuePair<long, string>>(values.Length) : null;
+			_enumToString = new Dictionary<TEnum, string>(fields.Length);
+			_stringToEnum = new Dictionary<string, TEnum>(fields.Length, StringComparer.OrdinalIgnoreCase);
+			_orderedFlags = _isFlags ? new List<KeyValuePair<long, string>>(fields.Length) : null;
 
-			foreach (var value in values)
+			foreach (var field in fields)
 			{
-				var name = value.ToString();
-				var field = enumType.GetField(name);
-				var enumMemberAttr = field?.GetCustomAttribute<EnumMemberAttribute>();
-				var dataMemberAttr = field?.GetCustomAttribute<DataMemberAttribute>();
+				var value = (TEnum)field.GetValue(null);
+				var enumMemberAttr = field.GetCustomAttribute<EnumMemberAttribute>();
+				var dataMemberAttr = field.GetCustomAttribute<DataMemberAttribute>();
 
 				// EnumMember value wins, then DataMember name, then the verbatim CLR member name
 				// (matches the Utf8Json EnumFormatter behavior — no camelCasing).
-				var stringValue = enumMemberAttr?.Value ?? dataMemberAttr?.Name ?? name;
+				var stringValue = enumMemberAttr?.Value ?? dataMemberAttr?.Name ?? field.Name;
 
+				// Last-declared member wins for the value→string map (duplicate underlying values).
 				_enumToString[value] = stringValue;
-				// Only store the first mapping for duplicate string values
+				// First mapping wins for the string→value map (duplicate string values).
 				if (!_stringToEnum.ContainsKey(stringValue))
 					_stringToEnum[stringValue] = value;
 

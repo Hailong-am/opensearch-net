@@ -302,6 +302,10 @@ namespace OpenSearch.Client
 				{
 					DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
 					PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+					// Match the base serializer's minimal escaping (only JSON-required characters +
+					// U+0085/U+2028/U+2029), matching the historical Utf8Json wire behavior, rather than
+					// STJ's default encoder that escapes U+007F and all non-allow-listed code points.
+					Encoder = OpenSearch.Net.MinimalJsonEscapingEncoder.Shared,
 					TypeInfoResolver = new DefaultJsonTypeInfoResolver
 					{
 						Modifiers =
@@ -311,6 +315,35 @@ namespace OpenSearch.Client
 						}
 					}
 				};
+				// Fractional-number converters so whole-valued doubles/floats/decimals keep their
+				// trailing ".0" (e.g. 1.0 rather than 1) on the terminal source path, matching the
+				// base low-level serializer (OpenSearchNetSerializerOptions) behavior.
+				options.Converters.Add(new OpenSearch.Net.DoubleConverter());
+				options.Converters.Add(new OpenSearch.Net.SingleConverter());
+				options.Converters.Add(new OpenSearch.Net.DecimalConverter());
+
+				// ISO-8601 date converters so flexible offset / fractional-second date strings on user
+				// documents round-trip (STJ's built-in DateTime/DateTimeOffset readers are stricter).
+				options.Converters.Add(new OpenSearch.Net.IsoDateTimeConverter());
+				options.Converters.Add(new OpenSearch.Net.IsoDateTimeOffsetConverter());
+				// TimeSpan serialized as ticks (a long) on user documents, matching the wire format.
+				options.Converters.Add(new OpenSearch.Net.TimeSpanTicksConverter());
+				options.Converters.Add(new OpenSearch.Net.NullableTimeSpanTicksConverter());
+
+				// Read-only / non-parameterless dictionary types (ReadOnlyDictionary<,> and custom
+				// IReadOnlyDictionary/IDictionary implementations) that STJ cannot construct on read.
+				options.Converters.Add(new ReadOnlyDictionaryConverterFactory());
+
+				// Union<,> support so user-document properties typed as a domain union (e.g.
+				// Union<bool, ISourceFilter>) round-trip on the terminal source path. Union members that
+				// are OpenSearch types resolve via their own attribute-channel converters.
+				options.Converters.Add(new UnionConverterFactory());
+
+				// ValueTuple support: STJ does not serialize a value tuple's public Item1..ItemN fields
+				// unless IncludeFields is enabled, so a tuple-typed document property would otherwise be
+				// written as an empty object. This converter emits the Item fields verbatim.
+				options.Converters.Add(new ValueTupleConverter());
+
 				// OpenSearch.Client value types that can appear as fields on user documents and need
 				// settings-aware serialization even on the terminal source path.
 				options.Converters.Add(new JoinFieldConverter(s));

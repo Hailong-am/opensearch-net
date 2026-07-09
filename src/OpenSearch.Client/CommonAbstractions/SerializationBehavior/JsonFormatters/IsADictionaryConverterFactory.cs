@@ -51,6 +51,11 @@ namespace OpenSearch.Client
 	{
 		private readonly IConnectionSettingsValues _settings;
 
+		// When true, plain string keys are written verbatim rather than being run through the
+		// DefaultFieldNameInferrer. Mirrors the historical Utf8Json VerbatimDictionaryKeysFormatter,
+		// used for dictionaries whose string keys are user-provided names (e.g. suggester names).
+		private static readonly bool VerbatimKeys = typeof(IVerbatimDictionaryKeys).IsAssignableFrom(typeof(TDictionary));
+
 		public IsADictionaryConverter(IConnectionSettingsValues settings) => _settings = settings;
 
 		public override TDictionary Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -88,9 +93,6 @@ namespace OpenSearch.Client
 
 			foreach (var kvp in (IEnumerable<KeyValuePair<TKey, TValue>>)value)
 			{
-				if (kvp.Value == null)
-					continue;
-
 				var keyString = ResolveKey(kvp.Key);
 				if (keyString == null)
 					continue;
@@ -139,10 +141,17 @@ namespace OpenSearch.Client
 			if (key is RelationName relationName)
 				return _settings.Inferrer.RelationName(relationName) ?? string.Empty;
 
+			// Plain string (or arbitrary object) keys are camel-cased via the DefaultFieldNameInferrer,
+			// matching the Utf8Json IsADictionary formatter (which applied the inferrer "mutator" to every
+			// key). Typed keys above (PropertyName/IndexName/Field/RelationName) are already resolved to
+			// their final wire form by the Inferrer and are returned as-is.
+			// Verbatim-key dictionaries (IVerbatimDictionaryKeys) keep their string keys untouched.
 			if (key is string s)
-				return s;
+				return VerbatimKeys ? s : (_settings.DefaultFieldNameInferrer(s) ?? s);
 
-			return key.ToString();
+			return VerbatimKeys
+				? key.ToString()
+				: (_settings.DefaultFieldNameInferrer(key.ToString()) ?? key.ToString());
 		}
 
 		private TKey ReadKey(ref Utf8JsonReader reader, JsonSerializerOptions options)

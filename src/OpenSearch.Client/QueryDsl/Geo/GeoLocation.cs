@@ -39,6 +39,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Represents a Latitude/Longitude as a 2 dimensional point that gets serialized as { lat, lon }
 	/// </summary>
+	[System.Text.Json.Serialization.JsonConverter(typeof(GeoLocationConverter))]
 	public class GeoLocation : IEquatable<GeoLocation>, IFormattable
 	{
 		/// <summary>

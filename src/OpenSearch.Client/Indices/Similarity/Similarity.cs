@@ -34,6 +34,7 @@ namespace OpenSearch.Client
 	/// A similarity.
 	/// </summary>
 	[InterfaceDataContract]
+	[System.Text.Json.Serialization.JsonConverter(typeof(SimilarityConverter))]
 	public interface ISimilarity
 	{
 		/// <summary>

@@ -72,8 +72,24 @@ namespace OpenSearch.Client
 			}
 
 			var value = reader.GetString();
-			return value == null ? null : (T)DateMath.FromString(value);
+			if (value == null)
+				return null;
+
+			// Mirror the Utf8Json DateMathExpressionFormatter: when the value has no date-math
+			// separator and parses as a DateTime, anchor on the DateTime (Union TFirst) so a
+			// round-tripped plain date exposes its Anchor as a DateTime rather than a string.
+			if (!ContainsDateMathSeparator(value)
+				&& System.DateTime.TryParse(value, System.Globalization.CultureInfo.InvariantCulture,
+					System.Globalization.DateTimeStyles.RoundtripKind, out var dateTime))
+				return (T)(DateMath)new DateMathExpression(dateTime);
+
+			return (T)DateMath.FromString(value);
 		}
+
+		private static bool ContainsDateMathSeparator(string value) =>
+			value.Contains("||") || value.EndsWith("|") || value.IndexOf('/') >= 0
+			// a '+' or '-' after the first char indicates a range (avoid matching a leading sign / date '-')
+			|| value.IndexOf('+') > 0;
 
 		public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
 		{
