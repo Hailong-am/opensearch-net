@@ -27,6 +27,7 @@
 */
 
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
@@ -43,6 +44,7 @@ namespace OpenSearch.Client
 		public string Reason { get; set; }
 
 		[DataMember(Name ="shard_id")]
+		[JsonConverter(typeof(IntStringConverter))]
 		public string ShardId { get; set; }
 
 		[DataMember(Name ="status")]

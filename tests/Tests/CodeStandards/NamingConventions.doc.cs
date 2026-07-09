@@ -196,7 +196,9 @@ namespace Tests.CodeStandards
 				oscAssembly.GetType("System.ComponentModel.Browsable", throwOnError: false),
 				oscAssembly.GetType("Microsoft.CodeAnalysis.EmbeddedAttribute", throwOnError: false),
 				oscAssembly.GetType("System.Runtime.CompilerServices.IsReadOnlyAttribute", throwOnError: false),
-                oscAssembly.GetType("System.Runtime.CompilerServices.RefSafetyRulesAttribute", throwOnError: false)
+                oscAssembly.GetType("System.Runtime.CompilerServices.RefSafetyRulesAttribute", throwOnError: false),
+                oscAssembly.GetType("System.Runtime.CompilerServices.NullableAttribute", throwOnError: false),
+                oscAssembly.GetType("System.Runtime.CompilerServices.NullableContextAttribute", throwOnError: false)
 			};
 
 			var types = oscAssembly.GetTypes();

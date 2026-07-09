@@ -218,10 +218,10 @@ namespace OpenSearch.Client
 			{
 				// When the source serializer IS the high-level serializer (no distinct source
 				// serializer configured), delegating back to the same options would re-enter this
-				// converter and recurse infinitely. Use a clone of those options with the
-				// SourceConverterFactory removed so the document is still (de)serialized with the
-				// full set of domain converters (enums, JoinField, Field, etc.), just without the
-				// source catch-all.
+				// converter and recurse infinitely. Use the terminal source options — a POCO-oriented
+				// clone that honors OSC property naming but does NOT apply the high-level domain
+				// converters (Field->string, EnumMember->string, etc.), matching how a plain user
+				// document round-trips through a distinct source serializer.
 				if (ReferenceEquals(sourceOptions, options))
 					return JsonSerializer.Deserialize<T>(ref reader, SourceConverterHelper.GetDefaultSourceOptions(_settings));
 				return JsonSerializer.Deserialize<T>(ref reader, sourceOptions);
@@ -315,6 +315,11 @@ namespace OpenSearch.Client
 						}
 					}
 				};
+				// ObjectConverter so object-typed values deserialize to .NET primitives (not JsonElement)
+				// and, crucially, object-keyed dictionaries (IDictionary<object, object>) can (de)serialize
+				// their keys — STJ's built-in object converter has no property-name support and throws.
+				options.Converters.Add(new OpenSearch.Net.ObjectConverter());
+
 				// Fractional-number converters so whole-valued doubles/floats/decimals keep their
 				// trailing ".0" (e.g. 1.0 rather than 1) on the terminal source path, matching the
 				// base low-level serializer (OpenSearchNetSerializerOptions) behavior.
@@ -347,6 +352,12 @@ namespace OpenSearch.Client
 				// OpenSearch.Client value types that can appear as fields on user documents and need
 				// settings-aware serialization even on the terminal source path.
 				options.Converters.Add(new JoinFieldConverter(s));
+
+				// Settings-aware Field converter so a Field-typed property (or a Fields collection, whose
+				// FieldsConverter resolves each element via options.GetConverter(typeof(Field))) reachable
+				// from a user type (e.g. SourceFilter.Includes on a Union<bool, ISourceFilter> document
+				// property) serializes to its resolved field-name string rather than a Field POCO object.
+				options.Converters.Add(new FieldConverterFactory(s));
 				return options;
 			});
 	}

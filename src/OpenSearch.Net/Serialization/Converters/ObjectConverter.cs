@@ -29,5 +29,22 @@ namespace OpenSearch.Net
 		{
 			DynamicValueConverter.WriteValue(writer, value, options);
 		}
+
+		/// <summary>
+		/// Supports <c>object</c>-keyed dictionaries (e.g. <c>IDictionary&lt;object, object&gt;</c>).
+		/// STJ has no built-in property-name converter for <see cref="object"/>, so a dictionary with
+		/// object keys would otherwise throw <see cref="NotSupportedException"/>. Writes the key's
+		/// verbatim string form (matching the legacy Utf8Json behavior for weakly-typed dictionary keys).
+		/// </summary>
+		public override void WriteAsPropertyName(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
+		{
+			if (value == null)
+				throw new ArgumentNullException(nameof(value), "Dictionary key must not be null.");
+			writer.WritePropertyName(value.ToString());
+		}
+
+		/// <inheritdoc cref="WriteAsPropertyName" />
+		public override object ReadAsPropertyName(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
+			reader.GetString();
 	}
 }

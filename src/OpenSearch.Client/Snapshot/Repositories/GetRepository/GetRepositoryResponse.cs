@@ -28,11 +28,13 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net;
 
 namespace OpenSearch.Client
 {
 	[DataContract]
+	[JsonConverter(typeof(GetRepositoryResponseConverter))]
 	public class GetRepositoryResponse : ResponseBase
 	{
 		public IReadOnlyDictionary<string, ISnapshotRepository> Repositories { get; internal set; } =

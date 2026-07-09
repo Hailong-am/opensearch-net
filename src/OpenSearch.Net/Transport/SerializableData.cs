@@ -51,9 +51,11 @@ namespace OpenSearch.Net
 			var stream = writableStream;
 			BufferIfNeeded(settings, ref buffer, ref stream);
 
-			// Request JSON is never indented, even when PrettyJson is enabled (e.g. via EnableDebugMode).
-			// This matches the historical Utf8Json behavior, where the request/response serializer ignored
-			// the SerializationFormatting parameter and always produced compact JSON.
+			// Request bodies are always written compact. The original Utf8Json request/response
+			// serializer ignored the formatting parameter entirely, so PrettyJson never indented
+			// request bodies (it only affects response debug rendering). The STJ serializer honours
+			// SerializationFormatting.Indented, so we must explicitly request None here to preserve
+			// wire parity (see GitHubIssue4573 and DebugInformation docs which assert compact bodies).
 			settings.RequestResponseSerializer.Serialize(_serializable, stream, None);
 
 			FinishStream(writableStream, buffer, settings);
@@ -65,7 +67,7 @@ namespace OpenSearch.Net
             var stream = writableStream;
             BufferIfNeeded(settings, ref buffer, ref stream);
 
-            // Request JSON is never indented, even when PrettyJson is enabled (see Write above).
+            // See Write: request bodies are always compact to preserve parity with the Utf8Json serializer.
 			await settings.RequestResponseSerializer.SerializeAsync(_serializable, stream, None, cancellationToken)
 				.ConfigureAwait(false);
 

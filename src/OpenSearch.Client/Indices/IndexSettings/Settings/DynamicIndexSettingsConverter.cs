@@ -199,9 +199,41 @@ namespace OpenSearch.Client
 			SetValue<int?>(settings, RoutingPartitionSize, v => s.RoutingPartitionSize = v);
 			SetValue<bool?>(settings, Hidden, v => s.Hidden = v);
 
-			// Remaining entries go into the backing dictionary
+			// Extract the analysis and similarity sub-objects into their typed properties. These are left
+			// un-flattened by Flatten (see below) so they arrive as nested objects under either the bare or
+			// the "index."-prefixed key. Remaining entries fall through to the backing dictionary.
 			foreach (var kv in settings)
-				dict[kv.Key] = kv.Value;
+			{
+				switch (kv.Key)
+				{
+					case UpdatableIndexSettings.Analysis:
+					case "index.analysis":
+						s.Analysis = ReserializeAndDeserialize<IAnalysis>(kv.Value, options);
+						break;
+					case Similarity:
+					case "index.similarity":
+						s.Similarity = ReserializeAndDeserialize<ISimilarities>(kv.Value, options);
+						break;
+					default:
+						dict[kv.Key] = kv.Value;
+						break;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Reserializes a value that was deserialized to a loosely-typed representation (e.g. a nested
+		/// <see cref="Dictionary{TKey,TValue}"/> or <see cref="JsonElement"/>) and deserializes it into the
+		/// strongly-typed <typeparamref name="T"/> using the same options. Mirrors the Utf8Json
+		/// roundtrip used by the original IndexSettings formatter for the analysis/similarity sub-objects.
+		/// </summary>
+		private static T ReserializeAndDeserialize<T>(object value, JsonSerializerOptions options)
+		{
+			if (value == null)
+				return default;
+
+			var json = JsonSerializer.Serialize(value, value.GetType(), options);
+			return JsonSerializer.Deserialize<T>(json, options);
 		}
 
 		private static void Set(IDictionary<string, object> d, string key, object value)
@@ -226,15 +258,18 @@ namespace OpenSearch.Client
 			current ??= new Dictionary<string, object>();
 			foreach (var property in original)
 			{
-				if (property.Value is JsonElement element && element.ValueKind == JsonValueKind.Object
-					&& property.Key != UpdatableIndexSettings.Analysis
-					&& property.Key != Similarity
-					&& !property.Key.EndsWith(".analysis")
-					&& !property.Key.EndsWith(".similarity"))
+				// The analysis and similarity sub-objects must stay intact (they are extracted into typed
+				// properties later); everything else is flattened into dotted keys (e.g. index.number_of_shards).
+				var isPreserved = property.Key == UpdatableIndexSettings.Analysis
+					|| property.Key == Similarity
+					|| property.Key.EndsWith(".analysis")
+					|| property.Key.EndsWith(".similarity");
+
+				// The value may arrive either as a nested Dictionary<string, object> (from the base
+				// DynamicDictionary/object handling) or as a JsonElement object, depending on the path.
+				if (!isPreserved && TryGetNestedObject(property.Value, out var nested))
 				{
-					var nested = JsonSerializer.Deserialize<Dictionary<string, object>>(element.GetRawText());
-					if (nested != null)
-						Flatten(nested, prefix + property.Key + ".", current);
+					Flatten(nested, prefix + property.Key + ".", current);
 				}
 				else
 				{
@@ -242,6 +277,27 @@ namespace OpenSearch.Client
 				}
 			}
 			return current;
+		}
+
+		/// <summary>
+		/// Extracts a nested JSON object as a <see cref="Dictionary{TKey,TValue}"/> when the value is either a
+		/// <see cref="Dictionary{TKey,TValue}"/> (from the base object/DynamicDictionary handling) or a
+		/// <see cref="JsonElement"/> of kind <see cref="JsonValueKind.Object"/>. Returns false otherwise.
+		/// </summary>
+		private static bool TryGetNestedObject(object value, out Dictionary<string, object> nested)
+		{
+			switch (value)
+			{
+				case Dictionary<string, object> dict:
+					nested = dict;
+					return true;
+				case JsonElement element when element.ValueKind == JsonValueKind.Object:
+					nested = JsonSerializer.Deserialize<Dictionary<string, object>>(element.GetRawText());
+					return nested != null;
+				default:
+					nested = null;
+					return false;
+			}
 		}
 
 		private static void SetValue<T>(Dictionary<string, object> settings, string key, Action<T> assign)

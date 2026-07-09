@@ -26,7 +26,10 @@ namespace OpenSearch.Client
 	{
 		public override bool CanConvert(Type typeToConvert)
 		{
-			if (!typeToConvert.IsGenericType || typeToConvert.IsInterface || typeToConvert.IsAbstract)
+			// The concrete type need not itself be generic — a non-generic class that implements a
+			// generic dictionary interface (e.g. class Foo : IReadOnlyDictionary<object, object>) also
+			// qualifies. Only reject interfaces/abstract types, which cannot be instantiated at all.
+			if (typeToConvert.IsInterface || typeToConvert.IsAbstract)
 				return false;
 
 			var args = GetDictionaryArguments(typeToConvert);

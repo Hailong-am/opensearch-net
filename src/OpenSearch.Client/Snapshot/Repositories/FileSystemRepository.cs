@@ -28,6 +28,7 @@
 
 using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
@@ -67,6 +68,7 @@ namespace OpenSearch.Client
 		/// Turns on compression of the snapshot files. Defaults to true.
 		/// </summary>
 		[DataMember(Name ="compress")]
+		[JsonConverter(typeof(NullableStringBooleanConverter))]
 		bool? Compress { get; set; }
 
 		/// <summary>

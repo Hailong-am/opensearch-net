@@ -36,9 +36,20 @@ namespace OpenSearch.Client
 	/// no write-only converter is needed.
 	/// </para>
 	/// </summary>
-	internal static class InterfaceDataContractModifier
+	internal sealed class InterfaceDataContractModifier
 	{
-		public static void Modify(JsonTypeInfo typeInfo)
+		// Enum-member converter factory used to pin the correct string/numeric enum converter onto
+		// rebuilt-contract enum properties (bypassing the options factory list, whose lowest-precedence
+		// SourceConverterFactory also claims enums). Naming is verbatim, matching the base serializer.
+		private static readonly OpenSearch.Net.EnumMemberConverterFactory EnumMemberConverterFactoryInstance =
+			new OpenSearch.Net.EnumMemberConverterFactory(useVerbatimName: true);
+
+		private readonly IConnectionSettingsValues _settings;
+
+		public InterfaceDataContractModifier(IConnectionSettingsValues settings) =>
+			_settings = settings ?? throw new ArgumentNullException(nameof(settings));
+
+		public void Modify(JsonTypeInfo typeInfo)
 		{
 			if (typeInfo.Kind != JsonTypeInfoKind.Object)
 				return;
@@ -52,7 +63,17 @@ namespace OpenSearch.Client
 			var type = typeInfo.Type;
 
 			if (type.IsInterface || type.IsAbstract)
+			{
+				// Interfaces/abstracts are not rebuilt here (their contract is produced by
+				// DataMemberPropertyNameModifier), but a value serialized against its interface type
+				// (e.g. each IMultiTermVectorOperation element of an IEnumerable<...> contract) must still
+				// honor any type-level ShouldSerialize hook declared by a property's type — otherwise a
+				// Routing that resolves to empty is emitted as "routing": null. Apply those hooks to the
+				// existing interface-contract properties.
+				foreach (var prop in typeInfo.Properties)
+					ApplyTypeLevelShouldSerialize(prop, prop.PropertyType);
 				return;
+			}
 
 			// Types serialized by a dedicated converter (dictionaries, scripts, etc.) never reach here.
 			if (typeof(IIsADictionary).IsAssignableFrom(type))
@@ -61,6 +82,12 @@ namespace OpenSearch.Client
 			var contractInterfaces = GetContractInterfaces(type);
 			if (contractInterfaces.Count == 0)
 				return;
+
+			// User-defined analysis components (custom ITokenizer/ITokenFilter/ICharFilter/IAnalyzer/
+			// INormalizer implementations declared outside the client assembly) are serialized by their
+			// full public property set — matching the Utf8Json behavior where unknown analysis types fell
+			// through to the object formatter. Interface [DataMember]s still take precedence for naming.
+			var isUserDefinedAnalysisComponent = IsUserDefinedAnalysisComponent(type);
 
 			// Build the contract from the interface [DataMember] properties.
 			var seen = new HashSet<string>(StringComparer.Ordinal);
@@ -125,13 +152,31 @@ namespace OpenSearch.Client
 
 					// Pin the options-registered converter for leaf value types and enums.
 					// These factory converters (Field/IndexName/RelationName, enums) are skipped for
-					// properties on contracts rebuilt by this modifier when used at depth. We only pin
-					// for concrete non-generic types to avoid interfering with collection/interface
-					// resolution (which must fall through to STJ's built-in handling).
+					// properties on contracts rebuilt by this modifier when used at depth.
 					var propType = ifaceProp.PropertyType;
 					var underlying = Nullable.GetUnderlyingType(propType) ?? propType;
-					if (!propType.IsGenericType && !propType.IsInterface && !propType.IsAbstract
-						&& (underlying.IsEnum || ConverterBackedValueTypes.Contains(underlying)))
+					// Enums (including Nullable<enum>) that serialize to a string form ([StringEnum],
+					// [Flags], or any [EnumMember] value) must be pinned to the enum-member converter.
+					// The lowest-precedence SourceConverterFactory (a catch-all for non-framework types)
+					// also claims enums — and a nullable enum's own assembly is CoreLib, so it is not
+					// excluded as a framework type. Resolving through the options factory list would
+					// therefore hand back a SourceConverter that delegates the enum to the source
+					// serializer, dropping the [StringEnum]/[Flags] "AND|NEAR" formatting. Build the
+					// enum-member converter directly instead of asking the options. Enums that serialize
+					// numerically (e.g. GeoHashPrecision) are not claimed by the factory and are left to
+					// STJ's numeric default.
+					if (underlying.IsEnum && EnumMemberConverterFactoryInstance.CanConvert(propType))
+					{
+						try
+						{
+							var conv = EnumMemberConverterFactoryInstance.CreateConverter(propType, typeInfo.Options);
+							if (conv != null)
+								jsonProp.CustomConverter = conv;
+						}
+						catch { /* leave unset — STJ will resolve normally */ }
+					}
+					else if (!propType.IsGenericType && !propType.IsInterface && !propType.IsAbstract
+						&& ConverterBackedValueTypes.Contains(underlying))
 					{
 						try
 						{
@@ -172,6 +217,8 @@ namespace OpenSearch.Client
 					// by not writing conditionless queries; mirror it with a ShouldSerialize guard.
 					if (propType == typeof(QueryContainer))
 						jsonProp.ShouldSerialize = (_, value) => value is QueryContainer qc && qc.IsWritable;
+					else
+						ApplyTypeLevelShouldSerialize(jsonProp, propType);
 
 					rebuilt.Add(jsonProp);
 				}
@@ -188,13 +235,21 @@ namespace OpenSearch.Client
 
 				var propertyNameAttr = clrProp.GetCustomAttribute<PropertyNameAttribute>();
 				var dataMemberAttr = clrProp.GetCustomAttribute<DataMemberAttribute>();
-				if (propertyNameAttr == null && dataMemberAttr == null)
+				// For user-defined analysis components emit every readable/writable public property, even
+				// unannotated ones (e.g. a plugin tokenizer's custom setting). Otherwise, only emit
+				// properties carrying their own [PropertyName]/[DataMember] annotation.
+				if (propertyNameAttr == null && dataMemberAttr == null && !isUserDefinedAnalysisComponent)
 					continue;
 
 				if (propertyNameAttr?.Ignore == true)
 					continue;
 
 				if (clrProp.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
+					continue;
+
+				// Skip indexers and non-public accessors for the unannotated fallback path.
+				if (isUserDefinedAnalysisComponent && propertyNameAttr == null && dataMemberAttr == null
+					&& clrProp.GetIndexParameters().Length > 0)
 					continue;
 
 				var jsonName = propertyNameAttr?.Name
@@ -211,6 +266,8 @@ namespace OpenSearch.Client
 					jsonProp.Get = obj => captured.GetValue(obj);
 				if (captured.CanWrite)
 					jsonProp.Set = (obj, value) => captured.SetValue(obj, value);
+
+				ApplyTypeLevelShouldSerialize(jsonProp, clrProp.PropertyType);
 
 				rebuilt.Add(jsonProp);
 			}
@@ -242,6 +299,39 @@ namespace OpenSearch.Client
 		}
 
 		/// <summary>
+		/// Cache of the type-level <c>bool ShouldSerialize(IConnectionSettingsValues)</c> method (if any)
+		/// declared by a property type. This mirrors Utf8Json's per-type <c>ShouldSerialize</c> hook
+		/// (see <c>ReflectionExtensions.GetShouldSerializeMethod</c>): any property whose <em>type</em>
+		/// declares such a method had it invoked to decide whether the property is emitted at all.
+		/// </summary>
+		private static readonly System.Collections.Concurrent.ConcurrentDictionary<Type, MethodInfo> ShouldSerializeMethods = new();
+
+		/// <summary>
+		/// Applies the type-level <c>ShouldSerialize(IConnectionSettingsValues)</c> hook (if the property
+		/// type declares one) as a STJ <see cref="JsonPropertyInfo.ShouldSerialize"/> predicate. This is the
+		/// System.Text.Json equivalent of Utf8Json's per-type <c>ShouldSerialize</c> emission guard, used by
+		/// e.g. <see cref="Routing"/> so that a routing value that resolves to empty is omitted entirely
+		/// rather than written as <c>"routing": null</c>.
+		/// </summary>
+		private void ApplyTypeLevelShouldSerialize(JsonPropertyInfo jsonProp, Type propType)
+		{
+			var method = ShouldSerializeMethods.GetOrAdd(propType, static t =>
+				t.GetMethod("ShouldSerialize",
+					BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+					binder: null, new[] { typeof(IConnectionSettingsValues) }, modifiers: null) is { ReturnType: var rt } m
+				&& rt == typeof(bool)
+					? m
+					: null);
+
+			if (method == null)
+				return;
+
+			var settings = _settings;
+			jsonProp.ShouldSerialize = (_, value) =>
+				value != null && (bool)method.Invoke(value, new object[] { settings });
+		}
+
+		/// <summary>
 		/// Resolves a <see cref="System.Text.Json.Serialization.JsonConverter"/> that delegates to the
 		/// SourceSerializer for the given property type, by locating the <c>SourceConverterFactory</c>
 		/// registered on the options. Returns <c>null</c> if it cannot be resolved.
@@ -264,6 +354,35 @@ namespace OpenSearch.Client
 			}
 
 			return null;
+		}
+
+		/// <summary>
+		/// Analysis component base interfaces. A concrete type implementing one of these but defined
+		/// outside the OpenSearch.Client assembly is a user-defined (plugin) analysis component whose
+		/// full public property set must be serialized (matching the Utf8Json object-formatter fallback).
+		/// </summary>
+		private static readonly Type[] AnalysisComponentInterfaces =
+		{
+			typeof(IAnalyzer),
+			typeof(INormalizer),
+			typeof(ITokenizer),
+			typeof(ITokenFilter),
+			typeof(ICharFilter),
+		};
+
+		private static bool IsUserDefinedAnalysisComponent(Type type)
+		{
+			// Types shipped in the client assembly are handled by their explicit contracts.
+			if (type.Assembly == typeof(InterfaceDataContractModifier).Assembly)
+				return false;
+
+			foreach (var iface in AnalysisComponentInterfaces)
+			{
+				if (iface.IsAssignableFrom(type))
+					return true;
+			}
+
+			return false;
 		}
 
 		/// <summary>

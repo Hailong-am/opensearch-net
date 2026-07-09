@@ -65,6 +65,12 @@ namespace OpenSearch.Client
 				return null;
 			}
 
+			// Depth of the aggregate object's opening brace. The matching closing brace
+			// is reported at this same depth by Utf8JsonReader. We use it below to reliably
+			// re-synchronise the reader onto this aggregate's own EndObject regardless of
+			// where the per-shape helper left it (helpers may stop on an inner EndObject).
+			var startDepth = reader.CurrentDepth;
+
 			reader.Read(); // Move past StartObject
 
 			if (reader.TokenType == JsonTokenType.EndObject)
@@ -132,22 +138,17 @@ namespace OpenSearch.Client
 					break;
 			}
 
-			// Read to end of aggregate object
-			while (reader.TokenType != JsonTokenType.EndObject && reader.Read())
+			// Re-synchronise the reader onto this aggregate object's own closing brace.
+			// The per-shape helpers above are inconsistent about where they leave the reader:
+			// some stop on the aggregate's own EndObject, others stop on an inner EndObject or
+			// on a scalar value. We advance until we reach the EndObject at the same depth as
+			// the opening brace, skipping any remaining sibling properties/values. This must
+			// leave the reader positioned exactly on the LAST token of the value (the EndObject)
+			// so STJ does not report "read too much or not enough".
+			while (!(reader.TokenType == JsonTokenType.EndObject && reader.CurrentDepth == startDepth))
 			{
-				if (reader.TokenType == JsonTokenType.EndObject)
+				if (!reader.Read())
 					break;
-				if (reader.TokenType == JsonTokenType.PropertyName)
-				{
-					reader.Read();
-					reader.Skip();
-				}
-			}
-
-			// reader should now be at EndObject; consume it
-			if (reader.TokenType == JsonTokenType.EndObject)
-			{
-				// Already positioned at EndObject - the caller will advance
 			}
 
 			return aggregate;

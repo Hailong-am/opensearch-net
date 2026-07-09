@@ -66,7 +66,7 @@ namespace OpenSearch.Client
 					Modifiers =
 					{
 						DataMemberPropertyNameModifier.Modify,
-						InterfaceDataContractModifier.Modify,
+						new InterfaceDataContractModifier(settings).Modify,
 						// Honor OpenSearch.Client property-name inference (PropertyName/Text(Name) attributes,
 						// DefaultMappingFor, custom PropertyMappingProvider, DefaultFieldNameInferrer) for user
 						// document types serialized directly through the high-level serializer. No-op for
@@ -91,6 +91,11 @@ namespace OpenSearch.Client
 
 			// --- 5. IsADictionary converters ---
 			options.Converters.Insert(0, new IsADictionaryConverterFactory(settings));
+
+			// Dictionary response converter (GetIndex/GetAlias/GetMapping/GetPipeline/... responses whose
+			// body is a JSON object of dictionary entries plus optional error/status fields). Replaces the
+			// Utf8Json ResolvableDictionaryResponseFormatter/DictionaryResponseFormatter [JsonFormatter]s.
+			options.Converters.Insert(0, new DictionaryResponseConverterFactory(settings));
 
 			// indices_boost dictionary converter (array-of-single-key-objects wire format).
 			// Must precede the generic dictionary handling.
