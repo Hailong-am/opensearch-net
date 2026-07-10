@@ -17,6 +17,7 @@ Inspired from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Changed
 - Changed the namespace client properties on `IOpenSearchClient` to return corresponding interfaces to better enable mocking & unit testing ([#646](https://github.com/opensearch-project/opensearch-net/pull/646))
 - Changed `NeuralQuery`'s `ModelId` to be optional ([#917](https://github.com/opensearch-project/opensearch-net/pull/917))
+- Hardened `AwsSigV4HttpConnection` by computing the SigV4 signature against public crypto primitives (`System.Security.Cryptography`) and the public `AWSSDKUtils` helpers instead of the version-unstable internal `Amazon.Runtime.Internal.Auth.AWS4Signer` API. Produced signatures are unchanged — verified byte-for-byte against the existing known-answer tests and AWS's published SigV4 reference vector (for all `DateTimeKind`s, since the previous internal signer also normalized the signing time to UTC). ([#987](https://github.com/opensearch-project/opensearch-net/pull/987))
 - Changed unreleased integration test matrix to use specific branch versions `1.3` and `2.19` ([#984](https://github.com/opensearch-project/opensearch-net/pull/984))
 - Changed overrided docker image to major version instead of specific minor version in Jenkinsfile ([#991](https://github.com/opensearch-project/opensearch-net/pull/991))
 
