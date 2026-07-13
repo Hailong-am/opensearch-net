@@ -28,6 +28,7 @@
 
 using System;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -37,6 +38,7 @@ namespace OpenSearch.Client
 	/// <typeparam name="TFirst">The first type</typeparam>
 	/// <typeparam name="TSecond">The second type</typeparam>
 	[System.Text.Json.Serialization.JsonConverter(typeof(UnionConverterFactory))]
+	[JsonFormatter(typeof(UnionFormatter<,>))]
 	public class Union<TFirst, TSecond>
 	{
 		internal readonly int Tag;

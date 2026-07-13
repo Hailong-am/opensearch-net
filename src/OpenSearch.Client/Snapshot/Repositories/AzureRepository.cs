@@ -30,6 +30,7 @@ using System;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -78,6 +79,7 @@ namespace OpenSearch.Client
 		/// </summary>
 		[DataMember(Name ="compress")]
 		[JsonConverter(typeof(NullableStringBooleanConverter))]
+		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? Compress { get; set; }
 
 		/// <summary>

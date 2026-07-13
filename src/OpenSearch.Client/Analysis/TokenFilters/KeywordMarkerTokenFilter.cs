@@ -29,6 +29,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -41,6 +42,7 @@ namespace OpenSearch.Client
 		/// Set to true to lower case all words first. Defaults to false.
 		/// </summary>
 		[DataMember(Name = "ignore_case")]
+		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? IgnoreCase { get; set; }
 
 		/// <summary>

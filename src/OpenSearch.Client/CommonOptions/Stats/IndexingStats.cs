@@ -29,6 +29,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[DataContract]
@@ -71,6 +72,7 @@ namespace OpenSearch.Client
 		public long Total { get; set; }
 
 		[DataMember(Name ="types")]
+		[JsonFormatter(typeof(VerbatimInterfaceReadOnlyDictionaryKeysFormatter<string, IndexingStats>))]
 		public IReadOnlyDictionary<string, IndexingStats> Types { get; set; }
 	}
 }

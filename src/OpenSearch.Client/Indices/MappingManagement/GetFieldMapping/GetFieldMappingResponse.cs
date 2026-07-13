@@ -33,8 +33,10 @@ using System.Runtime.Serialization;
 using OpenSearch.Net;
 using static OpenSearch.Client.Infer;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
+	[JsonFormatter(typeof(ResolvableDictionaryResponseFormatter<GetFieldMappingResponse, IndexName, TypeFieldMappings>))]
 	public class GetFieldMappingResponse : DictionaryResponseBase<IndexName, TypeFieldMappings>
 	{
 		[IgnoreDataMember]
@@ -80,6 +82,7 @@ namespace OpenSearch.Client
 	public class TypeFieldMappings
 	{
 		[DataMember(Name = "mappings")]
+		[JsonFormatter(typeof(ResolvableReadOnlyDictionaryFormatter<Field, FieldMapping>))]
 		public IReadOnlyDictionary<Field, FieldMapping> Mappings { get; internal set; } = EmptyReadOnly<Field, FieldMapping>.Dictionary;
 	}
 
@@ -89,6 +92,7 @@ namespace OpenSearch.Client
 		public string FullName { get; internal set; }
 
 		[DataMember(Name = "mapping")]
+		[JsonFormatter(typeof(FieldMappingFormatter))]
 		public IReadOnlyDictionary<Field, IFieldMapping> Mapping { get; internal set; } = EmptyReadOnly<Field, IFieldMapping>.Dictionary;
 	}
 

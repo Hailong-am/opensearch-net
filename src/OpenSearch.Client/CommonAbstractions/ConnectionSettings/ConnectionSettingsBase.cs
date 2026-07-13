@@ -115,6 +115,11 @@ namespace OpenSearch.Client
 		private Func<string, string> _defaultFieldNameInferrer;
 		private string _defaultIndex;
 
+		// Rollback safety net for the Utf8Json -> System.Text.Json migration. Defaults to STJ (false).
+		// Seeded from the OSC_USE_UTF8JSON environment variable so the legacy engine can be forced without
+		// code changes (e.g. in test harnesses); an explicit UseUtf8Json(...) fluent call overrides it.
+		private bool _useUtf8Json = ReadUseUtf8JsonEnvironmentDefault();
+
 		protected ConnectionSettingsBase(
 			IConnectionPool connectionPool,
 			IConnection connection,
@@ -152,6 +157,7 @@ namespace OpenSearch.Client
 		FluentDictionary<MemberInfo, IPropertyMapping> IConnectionSettingsValues.PropertyMappings => _propertyMappings;
 		FluentDictionary<Type, string> IConnectionSettingsValues.RouteProperties => _routeProperties;
 		IOpenSearchSerializer IConnectionSettingsValues.SourceSerializer => _sourceSerializer;
+		bool IConnectionSettingsValues.UseUtf8Json => _useUtf8Json;
 
 		/// <summary>
 		/// The default index to use for a request when no index has been explicitly specified
@@ -178,6 +184,24 @@ namespace OpenSearch.Client
 		/// <see cref="DefaultDisableIdInference"/>
 		/// </summary>
 		public TConnectionSettings DefaultDisableIdInference(bool disable = true) => Assign(disable, (a, v) => a._defaultDisableAllInference = v);
+
+		/// <summary>
+		/// Selects the legacy vendored Utf8Json serialization engine (honoring <c>[JsonFormatter]</c> attributes)
+		/// for the built-in high-level serializer instead of the default <see cref="System.Text.Json"/> engine.
+		/// <para></para>
+		/// This is a rollback safety net for the Utf8Json → System.Text.Json migration; leave it unset to use
+		/// System.Text.Json. It can also be forced globally via the <c>OSC_USE_UTF8JSON</c> environment variable.
+		/// </summary>
+		public TConnectionSettings UseUtf8Json(bool use = true) => Assign(use, (a, v) => a._useUtf8Json = v);
+
+		private static bool ReadUseUtf8JsonEnvironmentDefault()
+		{
+			var value = Environment.GetEnvironmentVariable("OSC_USE_UTF8JSON");
+			if (string.IsNullOrEmpty(value)) return false;
+			return value == "1"
+				|| string.Equals(value, "true", StringComparison.OrdinalIgnoreCase)
+				|| string.Equals(value, "yes", StringComparison.OrdinalIgnoreCase);
+		}
 
 		private void MapIdPropertyFor<TDocument>(Expression<Func<TDocument, object>> objectPath)
 		{

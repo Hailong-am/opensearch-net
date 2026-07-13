@@ -28,9 +28,11 @@
 
 using System.Text.Json.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[JsonConverter(typeof(FuzzinessConverter))]
+	[JsonFormatter(typeof(FuzzinessFormatter))]
 	public class Fuzziness : IFuzziness
 	{
 		private bool _auto;

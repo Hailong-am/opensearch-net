@@ -32,12 +32,14 @@ using System.Linq;
 using OpenSearch.Net;
 using System.Text.Json.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// Contains aggregates that are returned by OpenSearch. In OSC, Aggregation always refers to an aggregation
 	/// request to OpenSearch and an Aggregate describes an aggregation response.
 	/// </summary>
+	[JsonFormatter(typeof(AggregateDictionaryFormatter))]
 	public class AggregateDictionary : IsAReadOnlyDictionaryBase<string, IAggregate>
 	{
 		internal static readonly char[] TypedKeysSeparator = { '#' };

@@ -30,6 +30,7 @@ using System;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -111,6 +112,7 @@ namespace OpenSearch.Client
 		/// </summary>
 		[DataMember(Name ="compress")]
 		[JsonConverter(typeof(NullableStringBooleanConverter))]
+		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? Compress { get; set; }
 
 		/// <summary>
@@ -119,6 +121,7 @@ namespace OpenSearch.Client
 		/// </summary>
 		[DataMember(Name ="server_side_encryption")]
 		[JsonConverter(typeof(NullableStringBooleanConverter))]
+		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? ServerSideEncryption { get; set; }
 
 		/// <summary>
@@ -135,6 +138,7 @@ namespace OpenSearch.Client
 		/// </summary>
 		[DataMember(Name = "path_style_access")]
 		[JsonConverter(typeof(NullableStringBooleanConverter))]
+		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? PathStyleAccess { get; set; }
 
 		/// <summary>
@@ -145,6 +149,7 @@ namespace OpenSearch.Client
 		/// </summary>
 		[DataMember(Name = "disable_chunked_encoding")]
 		[JsonConverter(typeof(NullableStringBooleanConverter))]
+		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? DisableChunkedEncoding { get; set; }
 
 		/// <summary>
@@ -152,6 +157,7 @@ namespace OpenSearch.Client
 		/// </summary>
 		[DataMember(Name = "readonly")]
 		[JsonConverter(typeof(NullableStringBooleanConverter))]
+		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? ReadOnly { get; set; }
 
 		/// <summary>

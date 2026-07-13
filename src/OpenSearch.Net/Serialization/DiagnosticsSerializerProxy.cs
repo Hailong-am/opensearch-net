@@ -69,6 +69,8 @@ namespace OpenSearch.Net
 		private readonly SerializerRegistrationInformation _state;
 		private readonly JsonSerializerOptions _jsonSerializerOptions;
 		private readonly bool _wrapsStjSerializer;
+		private readonly OpenSearch.Net.Utf8Json.IJsonFormatterResolver _formatterResolver;
+		private readonly bool _wrapsUtf8JsonSerializer;
 		private static DiagnosticSource DiagnosticSource { get; } = new DiagnosticListener(DiagnosticSources.Serializer.SourceName);
 
 		public DiagnosticsSerializerProxy(IOpenSearchSerializer serializer, string purpose = "request/response")
@@ -86,12 +88,24 @@ namespace OpenSearch.Net
 				_jsonSerializerOptions = null;
 				_wrapsStjSerializer = false;
 			}
+
+			if (serializer is IInternalSerializer s3 && s3.TryGetFormatterResolver(out var resolver))
+			{
+				_formatterResolver = resolver;
+				_wrapsUtf8JsonSerializer = true;
+			}
 		}
 
 		public bool TryGetJsonSerializerOptions(out JsonSerializerOptions options)
 		{
 			options = _jsonSerializerOptions;
 			return _wrapsStjSerializer;
+		}
+
+		public bool TryGetFormatterResolver(out OpenSearch.Net.Utf8Json.IJsonFormatterResolver formatterResolver)
+		{
+			formatterResolver = _formatterResolver;
+			return _wrapsUtf8JsonSerializer;
 		}
 
 		public object Deserialize(Type type, Stream stream)

@@ -28,6 +28,7 @@
 
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -46,6 +47,7 @@ namespace OpenSearch.Client
 		/// Which group to extract into tokens. Defaults to -1 (split).
 		/// </summary>
 		[DataMember(Name = "group")]
+		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? Group { get; set; }
 
 		/// <summary>

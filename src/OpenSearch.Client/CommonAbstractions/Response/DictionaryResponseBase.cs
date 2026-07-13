@@ -54,6 +54,16 @@ namespace OpenSearch.Client
 			{ "error", 0 },
 			{ "status", 1 }
 		};
+
+		// Byte-segment keyed variant used by the restored Utf8Json response formatters, which match raw
+		// property-name segments (ArraySegment&lt;byte&gt;) rather than decoded strings. Only used on the
+		// legacy Utf8Json serialization path.
+		internal static readonly OpenSearch.Net.Utf8Json.Internal.AutomataDictionary ServerErrorFieldsAutomata =
+			new OpenSearch.Net.Utf8Json.Internal.AutomataDictionary
+			{
+				{ "error", 0 },
+				{ "status", 1 }
+			};
 	}
 
 }

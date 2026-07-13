@@ -29,9 +29,11 @@
 using System;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[JsonFormatter(typeof(GeoShapeFormatter<ICircleGeoShape>))]
 	public interface ICircleGeoShape : IGeoShape
 	{
 		[DataMember(Name ="coordinates")]
@@ -41,6 +43,7 @@ namespace OpenSearch.Client
 		string Radius { get; set; }
 	}
 
+	[JsonFormatter(typeof(GeoShapeFormatter<CircleGeoShape>))]
 	public class CircleGeoShape : GeoShapeBase, ICircleGeoShape
 	{
 		internal CircleGeoShape() : base("circle") { }

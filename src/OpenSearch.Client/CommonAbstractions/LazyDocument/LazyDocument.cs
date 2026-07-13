@@ -31,11 +31,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using OpenSearch.Net;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// A lazily deserialized document
 	/// </summary>
+	[JsonFormatter(typeof(LazyDocumentInterfaceFormatter))]
 	public interface ILazyDocument
 	{
 		/// <summary>
@@ -68,6 +70,7 @@ namespace OpenSearch.Client
 	}
 
 	/// <inheritdoc />
+	[JsonFormatter(typeof(LazyDocumentFormatter))]
 	public class LazyDocument : ILazyDocument
 	{
 		private readonly IOpenSearchSerializer _sourceSerializer;
@@ -81,6 +84,11 @@ namespace OpenSearch.Client
 			_requestResponseSerializer = settings.RequestResponseSerializer;
 			_memoryStreamFactory = settings.MemoryStreamFactory;
 		}
+
+		// Resolver-based overload used by the restored Utf8Json formatters, which carry a formatter resolver
+		// rather than the settings directly. Only reachable on the legacy Utf8Json serialization path.
+		internal LazyDocument(byte[] bytes, IJsonFormatterResolver formatterResolver)
+			: this(bytes, formatterResolver.GetConnectionSettings()) { }
 
 		internal byte[] Bytes { get; }
 

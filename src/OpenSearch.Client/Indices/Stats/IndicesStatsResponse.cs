@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client;
 
 [DataContract]
@@ -24,6 +25,7 @@ public class IndicesStatsResponse : ResponseBase
     public IndicesStatsDictionary Indices { get; internal set; }
 }
 
+[JsonFormatter(typeof(Converter))]
 public class IndicesStatsDictionary : ResolvableDictionaryProxy<IndexName, IndicesStats>
 {
     private IndicesStatsDictionary(IConnectionConfigurationValues s, IReadOnlyDictionary<IndexName, IndicesStats> d)

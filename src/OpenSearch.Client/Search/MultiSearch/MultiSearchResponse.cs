@@ -32,9 +32,11 @@ using System.Runtime.Serialization;
 using System.Text;
 using OpenSearch.Net;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[DataContract]
+	[JsonFormatter(typeof(MultiSearchResponseFormatter))]
 	public class MultiSearchResponse : ResponseBase
 	{
 		public MultiSearchResponse() => Responses = new Dictionary<string, IResponse>();
@@ -47,6 +49,7 @@ namespace OpenSearch.Client
 
 		public int TotalResponses => Responses.HasAny() ? Responses.Count() : 0;
 
+		[JsonFormatter(typeof(VerbatimDictionaryInterfaceKeysFormatter<string, IResponse>))]
 		internal IDictionary<string, IResponse> Responses { get; set; }
 
 		public IEnumerable<IResponse> GetInvalidResponses() => _allResponses<IResponse>().Where(r => !r.IsValid);

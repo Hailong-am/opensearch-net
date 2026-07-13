@@ -28,6 +28,7 @@
 
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
@@ -42,6 +43,7 @@ namespace OpenSearch.Client
 
 		[DataMember(Name = "_source")]
 		[SourceSerialization]
+		[JsonFormatter(typeof(SourceFormatter<>))]
 		TDocument Source { get; }
 	}
 

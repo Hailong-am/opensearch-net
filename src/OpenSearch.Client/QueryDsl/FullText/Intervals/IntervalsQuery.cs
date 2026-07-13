@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -41,6 +42,7 @@ namespace OpenSearch.Client
 	/// </summary>
 	[InterfaceDataContract]
 	[ReadAs(typeof(IntervalsQuery))]
+	[JsonFormatter(typeof(FieldNameQueryFormatter<IntervalsQuery, IIntervalsQuery>))]
 	public interface IIntervalsQuery : IFieldNameQuery, IIntervalsContainer { }
 
 	/// <inheritdoc cref="IIntervalsQuery" />

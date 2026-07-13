@@ -29,10 +29,12 @@
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
 	[JsonConverter(typeof(AnalyzerConverter))]
+	[JsonFormatter(typeof(AnalyzerFormatter))]
 	public interface IAnalyzer
 	{
 		[DataMember(Name = "type")]

@@ -27,6 +27,7 @@
 */
 
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 // ReSharper disable InconsistentNaming
 
 namespace OpenSearch.Client
@@ -42,6 +43,7 @@ namespace OpenSearch.Client
 		/// The lambda parameter
 		/// </summary>
 		[DataMember(Name ="lambda")]
+		[JsonFormatter(typeof(NullableStringDoubleFormatter))]
 		double? Lambda { get; set; }
 	}
 

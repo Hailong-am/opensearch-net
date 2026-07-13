@@ -28,8 +28,10 @@
 
 using System.Collections.Generic;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
+	[JsonFormatter(typeof(StopWordsFormatter))]
 	public class StopWords : Union<string, IEnumerable<string>>
 	{
 		public StopWords(string item) : base(item) { }

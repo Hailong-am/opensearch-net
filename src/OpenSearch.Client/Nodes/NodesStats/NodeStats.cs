@@ -29,6 +29,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net;
 
 namespace OpenSearch.Client
@@ -37,10 +38,12 @@ namespace OpenSearch.Client
 	public class NodeStats
 	{
 		[DataMember(Name = "adaptive_selection")]
+		[JsonFormatter(typeof(VerbatimInterfaceReadOnlyDictionaryKeysFormatter<string, AdaptiveSelectionStats>))]
 		public IReadOnlyDictionary<string, AdaptiveSelectionStats> AdaptiveSelection { get; internal set; }
 			= EmptyReadOnly<string, AdaptiveSelectionStats>.Dictionary;
 
 		[DataMember(Name = "breakers")]
+		[JsonFormatter(typeof(VerbatimInterfaceReadOnlyDictionaryKeysFormatter<string, BreakerStats>))]
 		public IReadOnlyDictionary<string, BreakerStats> Breakers { get; internal set; }
 
 		[DataMember(Name = "fs")]
@@ -57,6 +60,7 @@ namespace OpenSearch.Client
 
 		[DataMember(Name = "ip")]
 		[JsonConverter(typeof(SingleOrManyStringConverter))]
+		[JsonFormatter(typeof(SingleOrEnumerableFormatter<string>))]
 		public IEnumerable<string> Ip { get; internal set; }
 
 		[DataMember(Name = "jvm")]
@@ -85,6 +89,7 @@ namespace OpenSearch.Client
 		public ScriptCacheStats ScriptCache { get; internal set; }
 
 		[DataMember(Name = "thread_pool")]
+		[JsonFormatter(typeof(VerbatimInterfaceReadOnlyDictionaryKeysFormatter<string, ThreadCountStats>))]
 		public IReadOnlyDictionary<string, ThreadCountStats> ThreadPool { get; internal set; }
 
 		[DataMember(Name = "timestamp")]
@@ -290,6 +295,7 @@ namespace OpenSearch.Client
 	public class NodeJvmStats
 	{
 		[DataMember(Name = "buffer_pools")]
+		[JsonFormatter(typeof(VerbatimInterfaceReadOnlyDictionaryKeysFormatter<string, NodeBufferPool>))]
 		public IReadOnlyDictionary<string, NodeBufferPool> BufferPools { get; internal set; }
 
 		[DataMember(Name = "classes")]
@@ -363,6 +369,7 @@ namespace OpenSearch.Client
 			public long NonHeapUsedInBytes { get; internal set; }
 
 			[DataMember(Name = "pools")]
+			[JsonFormatter(typeof(VerbatimInterfaceReadOnlyDictionaryKeysFormatter<string, JvmPool>))]
 			public IReadOnlyDictionary<string, JvmPool> Pools { get; internal set; }
 
 			[DataContract]
@@ -408,6 +415,7 @@ namespace OpenSearch.Client
 		public class GarbageCollectionStats
 		{
 			[DataMember(Name = "collectors")]
+			[JsonFormatter(typeof(VerbatimInterfaceReadOnlyDictionaryKeysFormatter<string, GarbageCollectionGenerationStats>))]
 			public IReadOnlyDictionary<string, GarbageCollectionGenerationStats> Collectors { get; internal set; }
 		}
 

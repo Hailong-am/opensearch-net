@@ -28,6 +28,7 @@
 
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -40,12 +41,14 @@ namespace OpenSearch.Client
 		/// Defaults to 2.
 		/// </summary>
 		[DataMember(Name ="max_gram")]
+		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? MaxGram { get; set; }
 
 		/// <summary>
 		/// Defaults to 1.
 		/// </summary>
 		[DataMember(Name ="min_gram")]
+		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? MinGram { get; set; }
 
 		/// <summary>
@@ -58,6 +61,7 @@ namespace OpenSearch.Client
 		/// Emits original token when set to <c>true</c>. Defaults to <c>false</c>.
 		/// </summary>
 		[DataMember(Name = "preserve_original")]
+		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? PreserveOriginal { get; set; }
 	}
 

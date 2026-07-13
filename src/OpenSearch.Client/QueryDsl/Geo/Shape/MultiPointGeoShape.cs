@@ -30,15 +30,18 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[JsonFormatter(typeof(GeoShapeFormatter<IMultiPointGeoShape>))]
 	public interface IMultiPointGeoShape : IGeoShape
 	{
 		[DataMember(Name ="coordinates")]
 		IEnumerable<GeoCoordinate> Coordinates { get; set; }
 	}
 
+	[JsonFormatter(typeof(GeoShapeFormatter<MultiPointGeoShape>))]
 	public class MultiPointGeoShape : GeoShapeBase, IMultiPointGeoShape
 	{
 		internal MultiPointGeoShape() : base("multipoint") { }

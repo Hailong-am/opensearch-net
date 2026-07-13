@@ -31,9 +31,11 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[JsonFormatter(typeof(CompositeFormatter<IGeoShapeQuery, GeoShapeQueryFormatter, GeoShapeQueryFieldNameFormatter>))]
 	public interface IGeoShapeQuery : IFieldNameQuery
 	{
 		/// <summary>

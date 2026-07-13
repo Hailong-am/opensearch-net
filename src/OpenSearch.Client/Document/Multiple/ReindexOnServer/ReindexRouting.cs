@@ -30,9 +30,11 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using JsonFormatterAttribute = OpenSearch.Net.Utf8Json.JsonFormatterAttribute;
 namespace OpenSearch.Client
 {
 	[JsonConverter(typeof(ReindexRoutingConverter))]
+	[JsonFormatter(typeof(ReindexRoutingFormatter))]
 	public class ReindexRouting
 	{
 		public static ReindexRouting Discard = new ReindexRouting("discard", true);

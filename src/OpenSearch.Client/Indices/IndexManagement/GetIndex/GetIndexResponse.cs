@@ -28,8 +28,10 @@
 
 using System.Collections.Generic;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
+	[JsonFormatter(typeof(ResolvableDictionaryResponseFormatter<GetIndexResponse, IndexName, IndexState>))]
 	public class GetIndexResponse : DictionaryResponseBase<IndexName, IndexState>
 	{
 		public IReadOnlyDictionary<IndexName, IndexState> Indices => Self.BackingDictionary;

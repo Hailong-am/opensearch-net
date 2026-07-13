@@ -30,9 +30,11 @@ using System;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[JsonFormatter(typeof(SortFormatter))]
 	public interface ISort
 	{
 		/// <summary>

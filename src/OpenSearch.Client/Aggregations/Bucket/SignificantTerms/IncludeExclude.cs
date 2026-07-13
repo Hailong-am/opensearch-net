@@ -32,9 +32,11 @@ using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using JsonFormatterAttribute = OpenSearch.Net.Utf8Json.JsonFormatterAttribute;
 namespace OpenSearch.Client
 {
 	[JsonConverter(typeof(IncludeExcludeConverter))]
+	[JsonFormatter(typeof(IncludeExcludeFormatter))]
 	public class IncludeExclude
 	{
 		public IncludeExclude(string pattern) => Pattern = pattern;

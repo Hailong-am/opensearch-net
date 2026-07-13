@@ -28,6 +28,7 @@
 
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -35,6 +36,7 @@ namespace OpenSearch.Client
 	/// </summary>
 	[InterfaceDataContract]
 	[ReadAs(typeof(RegexpQuery))]
+	[JsonFormatter(typeof(FieldNameQueryFormatter<RegexpQuery, IRegexpQuery>))]
 	public interface IRegexpQuery : IFieldNameQuery
 	{
 		/// <summary>

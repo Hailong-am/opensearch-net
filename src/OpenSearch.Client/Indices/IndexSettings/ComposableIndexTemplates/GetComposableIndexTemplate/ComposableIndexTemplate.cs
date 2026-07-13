@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client;
 
 [ReadAs(typeof(Template))]
@@ -75,6 +76,7 @@ public interface IComposableIndexTemplate
 	long? Version { get; set; }
 
 	[DataMember(Name = "_meta")]
+	[JsonFormatter(typeof(VerbatimDictionaryInterfaceKeysFormatter<string, object>))]
 	IDictionary<string, object> Meta { get; set; }
 }
 

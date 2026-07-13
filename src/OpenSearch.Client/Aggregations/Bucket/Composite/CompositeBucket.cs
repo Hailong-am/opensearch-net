@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -53,6 +54,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A key for a <see cref="CompositeBucket" />
 	/// </summary>
+	[JsonFormatter(typeof(CompositeKeyFormatter))]
 	public class CompositeKey : IsAReadOnlyDictionaryBase<string, object>
 	{
 		public CompositeKey(IReadOnlyDictionary<string, object> backingDictionary) : base(backingDictionary) { }

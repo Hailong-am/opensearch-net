@@ -33,6 +33,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -43,6 +44,7 @@ namespace OpenSearch.Client
 	/// </summary>
 	[InterfaceDataContract]
 	[ReadAs(typeof(TermsSetQuery))]
+	[JsonFormatter(typeof(FieldNameQueryFormatter<TermsSetQuery, ITermsSetQuery>))]
 	public interface ITermsSetQuery : IFieldNameQuery
 	{
 		/// <summary>
@@ -61,6 +63,7 @@ namespace OpenSearch.Client
 		/// The required terms to match
 		/// </summary>
 		[DataMember(Name = "terms")]
+		[JsonFormatter(typeof(SourceWriteFormatter<IEnumerable<object>>))]
 		IEnumerable<object> Terms { get; set; }
 	}
 

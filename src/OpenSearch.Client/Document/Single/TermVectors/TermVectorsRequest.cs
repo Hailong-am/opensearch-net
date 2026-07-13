@@ -30,6 +30,7 @@ using System;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[MapsApi("termvectors.json")]
@@ -40,6 +41,7 @@ namespace OpenSearch.Client
 		/// An optional document to get term vectors for instead of using an already indexed document
 		/// </summary>
 		[DataMember(Name = "doc")]
+		[JsonFormatter(typeof(SourceFormatter<>))]
 		TDocument Document { get; set; }
 
 		/// <summary>

@@ -27,6 +27,7 @@
 */
 
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -39,6 +40,7 @@ namespace OpenSearch.Client
 		public bool? DocAsUpsert { get; set; }
 
 		[DataMember(Name ="doc")]
+		[JsonFormatter(typeof(CollapsedSourceFormatter<>))]
 		public TPartialUpdate PartialUpdate { get; set; }
 
 		[DataMember(Name ="script")]
@@ -48,6 +50,7 @@ namespace OpenSearch.Client
 		public bool? ScriptedUpsert { get; set; }
 
 		[DataMember(Name ="upsert")]
+		[JsonFormatter(typeof(CollapsedSourceFormatter<>))]
 		public TDocument Upsert { get; set; }
 
 		[DataMember(Name = "if_seq_no")]

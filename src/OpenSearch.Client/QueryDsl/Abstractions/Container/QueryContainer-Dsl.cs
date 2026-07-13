@@ -29,6 +29,7 @@
 using System;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	internal static class QueryContainerExtensions
@@ -36,6 +37,7 @@ namespace OpenSearch.Client
 		public static bool IsConditionless(this QueryContainer q) => q == null || q.IsConditionless;
 	}
 
+	[JsonFormatter(typeof(QueryContainerFormatter))]
 	public partial class QueryContainer : IQueryContainer, IDescriptor
 	{
 		public QueryContainer() { }

@@ -29,11 +29,13 @@
 using System.Runtime.Serialization;
 using OpenSearch.Net;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// An item within a bulk response
 	/// </summary>
+	[JsonFormatter(typeof(BulkResponseItemFormatter))]
 	public abstract class BulkResponseItemBase
 	{
 		/// <summary>

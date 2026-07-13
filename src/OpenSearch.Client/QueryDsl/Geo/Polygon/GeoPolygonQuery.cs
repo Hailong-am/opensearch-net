@@ -28,12 +28,14 @@
 
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net.Extensions;
 
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[JsonFormatter(typeof(GeoPolygonQueryFormatter))]
 	public interface IGeoPolygonQuery : IFieldNameQuery
 	{
 		IEnumerable<GeoLocation> Points { get; set; }

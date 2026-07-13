@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -55,6 +56,7 @@ namespace OpenSearch.Client
 		/// Parameters for the script
 		/// </summary>
 		[DataMember(Name ="params")]
+		[JsonFormatter(typeof(VerbatimDictionaryKeysFormatter<string, object>))]
 		Dictionary<string, object> Params { get; set; }
 
 		/// <summary>

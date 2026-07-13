@@ -30,9 +30,11 @@ using System;
 using System.Diagnostics;
 using OpenSearch.Net;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[DebuggerDisplay("{DebugDisplay,nq}")]
+	[JsonFormatter(typeof(IndexNameFormatter))]
 	public class IndexName : IEquatable<IndexName>, IUrlParameter
 	{
 		private const char ClusterSeparator = ':';

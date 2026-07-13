@@ -10,9 +10,11 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using JsonFormatterAttribute = OpenSearch.Net.Utf8Json.JsonFormatterAttribute;
 namespace OpenSearch.Client;
 
 [JsonConverter(typeof(TrackTotalHitsConverter))]
+[JsonFormatter(typeof(TrackTotalHitsFormatter))]
 public class TrackTotalHits : Union<bool, long>
 {
 	public TrackTotalHits(bool item) : base(item) { }

@@ -31,10 +31,12 @@ using System.Linq;
 using System.Runtime.Serialization;
 using OpenSearch.Net.Extensions;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
 	[System.Text.Json.Serialization.JsonConverter(typeof(GeoShapeConverter))]
+	[JsonFormatter(typeof(GeoShapeFormatter))]
 	public interface IGeoShape
 	{
 		/// <summary>

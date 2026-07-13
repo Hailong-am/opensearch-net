@@ -6,8 +6,11 @@
 */
 
 
+using OpenSearch.Net.Utf8Json;
+
 namespace OpenSearch.Client;
 
+[JsonFormatter(typeof(SlicesFormatter))]
 public class Slices : Union<long, string>
 {
 	public Slices(long value) : base(value) { }

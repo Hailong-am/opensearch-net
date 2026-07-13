@@ -28,6 +28,7 @@
 
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -41,6 +42,7 @@ namespace OpenSearch.Client
 		///  If only_on_same_position is set to true, it will only remove duplicate tokens on the same position.
 		/// </summary>
 		[DataMember(Name = "only_on_same_position")]
+		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? OnlyOnSamePosition { get; set; }
 	}
 

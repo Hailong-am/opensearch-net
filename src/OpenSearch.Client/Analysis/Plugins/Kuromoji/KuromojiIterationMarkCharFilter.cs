@@ -28,6 +28,7 @@
 
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -38,9 +39,11 @@ namespace OpenSearch.Client
 	public interface IKuromojiIterationMarkCharFilter : ICharFilter
 	{
 		[DataMember(Name ="normalize_kana")]
+		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? NormalizeKana { get; set; }
 
 		[DataMember(Name ="normalize_kanji")]
+		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? NormalizeKanji { get; set; }
 	}
 

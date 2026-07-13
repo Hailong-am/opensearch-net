@@ -29,6 +29,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -90,6 +91,7 @@ namespace OpenSearch.Client
 		/// Completion suggester only, the source of the completed document
 		/// </summary>
 		[DataMember(Name = "_source")]
+		[JsonFormatter(typeof(SourceFormatter<>))]
 		TDocument Source { get; }
 
 		[DataMember(Name = "score")]
@@ -141,6 +143,7 @@ namespace OpenSearch.Client
 
 		/// <inheritdoc />
 		[DataMember(Name = "_source")]
+		[JsonFormatter(typeof(SourceFormatter<>))]
 		public TDocument Source { get; internal set; }
 
 		/// <inheritdoc />

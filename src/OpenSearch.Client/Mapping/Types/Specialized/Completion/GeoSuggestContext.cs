@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
@@ -43,6 +44,7 @@ namespace OpenSearch.Client
 		/// </summary>
 		[DataMember(Name = "precision")]
 		[JsonConverter(typeof(SingleOrEnumerableStringConverter))]
+		[JsonFormatter(typeof(SerializeAsSingleFormatter<string>))]
 		IEnumerable<string> Precision { get; set; }
 	}
 

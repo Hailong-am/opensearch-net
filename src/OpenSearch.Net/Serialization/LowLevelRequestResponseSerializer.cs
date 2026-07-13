@@ -86,6 +86,14 @@ namespace OpenSearch.Net
 			return true;
 		}
 
+		// The low-level serializer always uses System.Text.Json (it serializes OpenSearch.Net primitives, never
+		// user domain types), so it never yields a Utf8Json formatter resolver.
+		bool IInternalSerializer.TryGetFormatterResolver(out OpenSearch.Net.Utf8Json.IJsonFormatterResolver formatterResolver)
+		{
+			formatterResolver = null;
+			return false;
+		}
+
 		private static bool IsEmptyStream(Stream stream)
 		{
 			if (stream == null) return true;

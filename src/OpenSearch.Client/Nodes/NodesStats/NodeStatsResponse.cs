@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	public class NodesStatsResponse : NodesResponseBase
@@ -38,6 +39,7 @@ namespace OpenSearch.Client
 		public string ClusterName { get; internal set; }
 
 		[DataMember(Name = "nodes")]
+		[JsonFormatter(typeof(VerbatimInterfaceReadOnlyDictionaryKeysFormatter<string, NodeStats>))]
 		public IReadOnlyDictionary<string, NodeStats> Nodes { get; internal set; } = EmptyReadOnly<string, NodeStats>.Dictionary;
 	}
 }

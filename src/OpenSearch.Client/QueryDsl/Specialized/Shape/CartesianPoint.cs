@@ -32,6 +32,7 @@ using System.Text;
 using OpenSearch.Client;
 using OpenSearch.Net.Extensions;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	internal enum ShapeFormat
@@ -45,6 +46,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Represents a point in the cartesian plane.
 	/// </summary>
+	[JsonFormatter(typeof(CartesianPointFormatter))]
 	public class CartesianPoint : IEquatable<CartesianPoint>
 	{
 		internal ShapeFormat Format = ShapeFormat.Object;

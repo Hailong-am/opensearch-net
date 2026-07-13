@@ -30,6 +30,7 @@ using System;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using JsonFormatterAttribute = OpenSearch.Net.Utf8Json.JsonFormatterAttribute;
 using System.Text.RegularExpressions;
 using OpenSearch.Net;
 
@@ -63,6 +64,7 @@ namespace OpenSearch.Client
 	}
 
 	[JsonConverter(typeof(DistanceConverter))]
+	[JsonFormatter(typeof(DistanceFormatter))]
 	public class Distance
 	{
 		private static readonly Regex DistanceUnitRegex =

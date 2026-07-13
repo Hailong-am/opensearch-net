@@ -30,6 +30,8 @@ using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
+using OpenSearch.Net.Utf8Json;
+using OpenSearch.Net.Utf8Json.Formatters;
 
 namespace OpenSearch.Net.Extensions
 {
@@ -133,6 +135,25 @@ namespace OpenSearch.Net.Extensions
 			}
 
 			return false;
+		}
+
+		// Used by the restored Utf8Json date-math formatters to detect whether a raw JSON string segment holds
+		// an ISO8601 date-time. Only referenced on the legacy Utf8Json serialization path.
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool IsDateTime(this ref ArraySegment<byte> arraySegment, IJsonFormatterResolver formatterResolver, out DateTime dateTime)
+		{
+			dateTime = default;
+
+			var reader = new JsonReader(arraySegment.Array, arraySegment.Offset - 1); // include opening quote "
+			try
+			{
+				dateTime = ISO8601DateTimeFormatter.Default.Deserialize(ref reader, formatterResolver);
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

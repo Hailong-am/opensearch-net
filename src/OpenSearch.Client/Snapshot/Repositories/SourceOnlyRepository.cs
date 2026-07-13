@@ -29,6 +29,7 @@
 using System;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net.Extensions;
 
 namespace OpenSearch.Client
@@ -39,6 +40,7 @@ namespace OpenSearch.Client
 	/// and are not searchable when restored. After restoring a source-only snapshot, you must reindex the data into a new index.
 	/// </summary>
 	[JsonConverter(typeof(SourceOnlyRepositoryConverter))]
+	[JsonFormatter(typeof(SourceOnlyRepositoryFormatter))]
 	public interface ISourceOnlyRepository : IRepositoryWithSettings
 	{
 		/// <summary>

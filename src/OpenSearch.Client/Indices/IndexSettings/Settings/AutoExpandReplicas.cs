@@ -30,9 +30,11 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using JsonFormatterAttribute = OpenSearch.Net.Utf8Json.JsonFormatterAttribute;
 namespace OpenSearch.Client
 {
 	[JsonConverter(typeof(AutoExpandReplicasConverter))]
+	[JsonFormatter(typeof(AutoExpandReplicasFormatter))]
 	public class AutoExpandReplicas
 	{
 		private const string AllMaxReplicas = "all";

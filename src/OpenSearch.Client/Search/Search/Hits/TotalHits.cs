@@ -28,6 +28,7 @@
 
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net;
 using OpenSearch.Net.Extensions;
 
@@ -42,6 +43,7 @@ namespace OpenSearch.Client
 	/// as a threshold has been reached in order to improve query times.
 	/// </summary>
 	[JsonConverter(typeof(TotalHitsConverter))]
+	[JsonFormatter(typeof(TotalHitsFormatter))]
 	public class TotalHits
 	{
 		/// <summary>Whether <see cref="Value"/> is the exact hit count, in which case <see cref="Relation"/> is

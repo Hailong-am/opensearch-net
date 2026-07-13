@@ -31,9 +31,11 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using JsonFormatterAttribute = OpenSearch.Net.Utf8Json.JsonFormatterAttribute;
 namespace OpenSearch.Client
 {
 	[JsonConverter(typeof(BucketsPathConverter))]
+	[JsonFormatter(typeof(BucketsPathFormatter))]
 	public interface IBucketsPath { }
 
 	public class SingleBucketsPath : IBucketsPath

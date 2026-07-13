@@ -30,6 +30,7 @@ using System;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using JsonFormatterAttribute = OpenSearch.Net.Utf8Json.JsonFormatterAttribute;
 using System.Text.RegularExpressions;
 
 namespace OpenSearch.Client
@@ -68,6 +69,7 @@ namespace OpenSearch.Client
 	/// A time representation for use within <see cref="DateMath" /> expressions.
 	/// </summary>
 	[JsonConverter(typeof(DateMathTimeConverter))]
+	[JsonFormatter(typeof(DateMathTimeFormatter))]
 	public class DateMathTime : IComparable<DateMathTime>, IEquatable<DateMathTime>
 	{
 		private const double MillisecondsInADay = MillisecondsInAnHour * 24;

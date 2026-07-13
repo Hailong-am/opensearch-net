@@ -28,10 +28,12 @@
 
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
 	[ReadAs(typeof(LongRangeQuery))]
+	[JsonFormatter(typeof(FieldNameQueryFormatter<LongRangeQuery, ILongRangeQuery>))]
 	public interface ILongRangeQuery : IRangeQuery
 	{
 		[DataMember(Name ="gt")]

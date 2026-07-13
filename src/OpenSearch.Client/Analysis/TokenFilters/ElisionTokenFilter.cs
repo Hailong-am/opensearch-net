@@ -29,6 +29,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -47,6 +48,7 @@ namespace OpenSearch.Client
 		/// Whether articles should be handled case-insensitively. Defaults to <c>false</c>.
 		/// </summary>
 		[DataMember(Name = "articles_case")]
+		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? ArticlesCase { get; set; }
 	}
 

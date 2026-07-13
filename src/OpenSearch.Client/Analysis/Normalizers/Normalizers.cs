@@ -29,8 +29,10 @@
 using System;
 using System.Collections.Generic;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
+	[JsonFormatter(typeof(VerbatimDictionaryKeysFormatter<Normalizers, INormalizers, string, INormalizer>))]
 	public interface INormalizers : IIsADictionary<string, INormalizer> { }
 
 	public class Normalizers : IsADictionaryBase<string, INormalizer>, INormalizers

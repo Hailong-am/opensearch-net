@@ -27,11 +27,13 @@
 */
 
 using System.Text.Json.Serialization;
+using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net.Extensions;
 
 
 namespace OpenSearch.Client
 {
+	[JsonFormatter(typeof(GeoDistanceQueryFormatter))]
 	public interface IGeoDistanceQuery : IFieldNameQuery
 	{
 		Distance Distance { get; set; }

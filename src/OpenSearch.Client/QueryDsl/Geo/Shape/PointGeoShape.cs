@@ -29,15 +29,18 @@
 using System;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[JsonFormatter(typeof(GeoShapeFormatter<IPointGeoShape>))]
 	public interface IPointGeoShape : IGeoShape
 	{
 		[DataMember(Name ="coordinates")]
 		GeoCoordinate Coordinates { get; set; }
 	}
 
+	[JsonFormatter(typeof(GeoShapeFormatter<PointGeoShape>))]
 	public class PointGeoShape : GeoShapeBase, IPointGeoShape
 	{
 		internal PointGeoShape() : base("point") { }

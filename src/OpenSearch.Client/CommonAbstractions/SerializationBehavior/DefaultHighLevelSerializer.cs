@@ -32,6 +32,8 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenSearch.Net;
+using IJsonFormatterResolver = OpenSearch.Net.Utf8Json.IJsonFormatterResolver;
+using Utf8JsonSerializer = OpenSearch.Net.Utf8Json.JsonSerializer;
 
 namespace OpenSearch.Client
 {
@@ -41,16 +43,46 @@ namespace OpenSearch.Client
 		private readonly OpenSearchClientSerializerOptions _serializerOptions;
 		private readonly IConnectionSettingsValues _settings;
 
+		// Non-null only on the legacy Utf8Json path. When set, all (de)serialization is routed through the
+		// vendored Utf8Json engine using this resolver and the System.Text.Json options are never built.
+		private readonly IJsonFormatterResolver _formatterResolver;
+
 		public DefaultHighLevelSerializer(IConnectionSettingsValues settings)
 		{
 			_settings = settings;
-			_serializerOptions = new OpenSearchClientSerializerOptions(settings);
+			// Select the engine once, at construction, from the resolved setting (which already folds in the
+			// OSC_USE_UTF8JSON environment default). STJ is the default; Utf8Json is the rollback path.
+			if (settings != null && settings.UseUtf8Json)
+				_formatterResolver = new OpenSearchClientFormatterResolver(settings);
+			else
+				_serializerOptions = new OpenSearchClientSerializerOptions(settings);
 		}
+
+		// Legacy Utf8Json entry point retained so stateful serializers (see StatefulSerializerExtensions) and
+		// other resolver-based callers can construct a serializer directly from a formatter resolver.
+		public DefaultHighLevelSerializer(IJsonFormatterResolver formatterResolver)
+		{
+			_formatterResolver = formatterResolver;
+			_settings = (formatterResolver as IJsonFormatterResolverWithSettings)?.Settings;
+		}
+
+		private bool UsesUtf8Json => _formatterResolver != null;
 
 		bool IInternalSerializer.TryGetJsonSerializerOptions(out JsonSerializerOptions options)
 		{
+			if (UsesUtf8Json)
+			{
+				options = null;
+				return false;
+			}
 			options = _serializerOptions.Options;
 			return true;
+		}
+
+		bool IInternalSerializer.TryGetFormatterResolver(out IJsonFormatterResolver formatterResolver)
+		{
+			formatterResolver = _formatterResolver;
+			return UsesUtf8Json;
 		}
 
 		// A bare user document serialized/deserialized at the JSON root (the root type IS the document,
@@ -85,12 +117,14 @@ namespace OpenSearch.Client
 		public T Deserialize<T>(Stream stream)
 		{
 			if (IsNullOrEmpty(ref stream)) return default;
+			if (UsesUtf8Json) return Utf8JsonSerializer.Deserialize<T>(stream, _formatterResolver);
 			return JsonSerializer.Deserialize<T>(stream, OptionsForRoot(typeof(T), _serializerOptions.Options));
 		}
 
 		public object Deserialize(Type type, Stream stream)
 		{
 			if (IsNullOrEmpty(ref stream)) return type is { IsValueType: true } ? Activator.CreateInstance(type) : null;
+			if (UsesUtf8Json) return Utf8JsonSerializer.NonGeneric.Deserialize(type, stream, _formatterResolver);
 			return JsonSerializer.Deserialize(stream, type, OptionsForRoot(type, _serializerOptions.Options));
 		}
 
@@ -98,6 +132,7 @@ namespace OpenSearch.Client
 		{
 			var empty = await IsNullOrEmptyAsync(stream, cancellationToken).ConfigureAwait(false);
 			if (empty.IsEmpty) return default;
+			if (UsesUtf8Json) return await Utf8JsonSerializer.DeserializeAsync<T>(empty.Stream, _formatterResolver).ConfigureAwait(false);
 			return await JsonSerializer.DeserializeAsync<T>(empty.Stream, OptionsForRoot(typeof(T), _serializerOptions.Options), cancellationToken).ConfigureAwait(false);
 		}
 
@@ -105,6 +140,7 @@ namespace OpenSearch.Client
 		{
 			var empty = await IsNullOrEmptyAsync(stream, cancellationToken).ConfigureAwait(false);
 			if (empty.IsEmpty) return type is { IsValueType: true } ? Activator.CreateInstance(type) : null;
+			if (UsesUtf8Json) return await Utf8JsonSerializer.NonGeneric.DeserializeAsync(type, empty.Stream, _formatterResolver).ConfigureAwait(false);
 			return await JsonSerializer.DeserializeAsync(empty.Stream, type, OptionsForRoot(type, _serializerOptions.Options), cancellationToken).ConfigureAwait(false);
 		}
 
@@ -137,6 +173,11 @@ namespace OpenSearch.Client
 
 		public virtual void Serialize<T>(T data, Stream writableStream, SerializationFormatting formatting = SerializationFormatting.None)
 		{
+			if (UsesUtf8Json)
+			{
+				Utf8JsonSerializer.Serialize(writableStream, data, _formatterResolver);
+				return;
+			}
 			var options = formatting == SerializationFormatting.Indented
 				? _serializerOptions.Indented
 				: _serializerOptions.Options;
@@ -146,6 +187,8 @@ namespace OpenSearch.Client
 		public Task SerializeAsync<T>(T data, Stream stream, SerializationFormatting formatting = SerializationFormatting.None,
 			CancellationToken cancellationToken = default)
 		{
+			if (UsesUtf8Json)
+				return Utf8JsonSerializer.SerializeAsync(stream, data, _formatterResolver);
 			var options = formatting == SerializationFormatting.Indented
 				? _serializerOptions.Indented
 				: _serializerOptions.Options;

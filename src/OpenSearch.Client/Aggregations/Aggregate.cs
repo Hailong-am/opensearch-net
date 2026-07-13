@@ -28,11 +28,13 @@
 
 using System.Collections.Generic;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// Aggregation response for an aggregation request
 	/// </summary>
+	[JsonFormatter(typeof(AggregateFormatter))]
 	public interface IAggregate
 	{
 		/// <summary>

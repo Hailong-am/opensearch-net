@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	public class NodeUsageInformation
@@ -46,10 +47,12 @@ namespace OpenSearch.Client
 
 		[DataMember(Name ="since")]
 		[JsonConverter(typeof(EpochMillisecondsDateTimeOffsetConverter))]
+		[JsonFormatter(typeof(DateTimeOffsetEpochMillisecondsFormatter))]
 		public DateTimeOffset Since { get; internal set; }
 
 		[DataMember(Name ="timestamp")]
 		[JsonConverter(typeof(EpochMillisecondsDateTimeOffsetConverter))]
+		[JsonFormatter(typeof(DateTimeOffsetEpochMillisecondsFormatter))]
 		public DateTimeOffset Timestamp { get; internal set; }
 	}
 }

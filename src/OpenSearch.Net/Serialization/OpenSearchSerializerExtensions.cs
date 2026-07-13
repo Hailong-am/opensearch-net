@@ -27,11 +27,28 @@
 */
 
 using OpenSearch.Net.Extensions;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Net
 {
 	public static class OpenSearchSerializerExtensions
 	{
+		// Writes an object directly into a Utf8Json writer when the serializer is running on the legacy
+		// Utf8Json engine; otherwise falls back to serializing to bytes and writing them raw. Used by the
+		// restored Utf8Json request formatters (e.g. BulkRequestFormatter).
+		internal static void SerializeUsingWriter<T>(this IOpenSearchSerializer serializer, ref JsonWriter writer, T body, IConnectionConfigurationValues settings, SerializationFormatting formatting)
+		{
+			if (serializer is IInternalSerializer s && s.TryGetFormatterResolver(out var formatterResolver))
+			{
+				JsonSerializer.Serialize(ref writer, body, formatterResolver);
+				return;
+			}
+
+			var memoryStreamFactory = settings.MemoryStreamFactory;
+			var bodyBytes = serializer.SerializeToBytes(body, memoryStreamFactory, formatting);
+			writer.WriteRaw(bodyBytes);
+		}
+
 		/// Extension method that serializes an instance of <typeparamref name="T"/> to a byte array.
 		/// </summary>
 		public static byte[] SerializeToBytes<T>(

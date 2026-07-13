@@ -30,6 +30,7 @@ using System;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -42,6 +43,7 @@ namespace OpenSearch.Client
 	/// </summary>
 	[JsonConverter(typeof(RankFeatureQueryConverter))]
 	[InterfaceDataContract]
+	[JsonFormatter(typeof(RankFeatureQueryFormatter))]
 	public interface IRankFeatureQuery : IFieldNameQuery
 	{
 		/// <inheritdoc cref="IRankFeatureFunction"/>

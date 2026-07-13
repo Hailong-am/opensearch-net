@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[DataContract]
@@ -54,6 +55,7 @@ namespace OpenSearch.Client
 		public int RelocatingShards { get; internal set; }
 
 		[DataMember(Name = "shards")]
+		[JsonFormatter(typeof(VerbatimInterfaceReadOnlyDictionaryKeysFormatter<string, ShardHealthStats>))]
 		public IReadOnlyDictionary<string, ShardHealthStats> Shards { get; internal set; } = EmptyReadOnly<string, ShardHealthStats>.Dictionary;
 
 		[DataMember(Name = "status")]

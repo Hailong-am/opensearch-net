@@ -32,9 +32,11 @@ using System.Diagnostics;
 using System.Linq;
 using OpenSearch.Net;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[DebuggerDisplay("{DebugDisplay,nq}")]
+	[JsonFormatter(typeof(IndicesMultiSyntaxFormatter))]
 	public class Indices : Union<Indices.AllIndicesMarker, Indices.ManyIndices>, IUrlParameter
 	{
 		internal Indices(AllIndicesMarker all) : base(all) { }

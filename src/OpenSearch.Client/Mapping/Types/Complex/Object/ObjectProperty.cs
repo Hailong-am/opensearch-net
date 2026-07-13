@@ -30,6 +30,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -44,6 +45,7 @@ namespace OpenSearch.Client
 		/// Default is <c>true</c>
 		/// </summary>
 		[DataMember(Name = "dynamic")]
+		[JsonFormatter(typeof(DynamicMappingFormatter))]
 		Union<bool, DynamicMapping> Dynamic { get; set; }
 
 		/// <summary>

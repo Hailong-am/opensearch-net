@@ -29,9 +29,11 @@
 using System;
 using System.Collections.Generic;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[System.Text.Json.Serialization.JsonConverter(typeof(ChildrenConverter))]
+	[JsonFormatter(typeof(ChildrenFormatter))]
 	public class Children : List<RelationName>
 	{
 		public Children() { }

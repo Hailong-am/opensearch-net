@@ -28,6 +28,7 @@
 
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -40,6 +41,7 @@ namespace OpenSearch.Client
 		/// The term buffer size. Defaults to 256.
 		/// </summary>
 		[DataMember(Name ="buffer_size")]
+		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? BufferSize { get; set; }
 	}
 

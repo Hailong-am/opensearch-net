@@ -29,6 +29,7 @@
 using System;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net;
 
 namespace OpenSearch.Client
@@ -94,6 +95,7 @@ namespace OpenSearch.Client
 	/// Controls how a multi term query such as a wildcard or prefix query, is rewritten.
 	/// </summary>
 	[JsonConverter(typeof(MultiTermQueryRewriteConverter))]
+	[JsonFormatter(typeof(MultiTermQueryRewriteFormatter))]
 	public class MultiTermQueryRewrite : IEquatable<MultiTermQueryRewrite>
 	{
 		private static readonly char[] DigitCharacters = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };

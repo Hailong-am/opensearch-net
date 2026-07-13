@@ -29,6 +29,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -41,12 +42,14 @@ namespace OpenSearch.Client
 		/// Maximum size in codepoints of a single n-gram
 		/// </summary>
 		[DataMember(Name ="max_gram")]
+		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? MaxGram { get; set; }
 
 		/// <summary>
 		/// Minimum size in codepoints of a single n-gram
 		/// </summary>
 		[DataMember(Name ="min_gram")]
+		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? MinGram { get; set; }
 
 		/// <summary>

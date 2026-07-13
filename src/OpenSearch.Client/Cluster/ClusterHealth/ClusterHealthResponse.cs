@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[DataContract]
@@ -51,6 +52,7 @@ namespace OpenSearch.Client
 		public int DelayedUnassignedShards { get; internal set; }
 
 		[DataMember(Name = "indices")]
+		[JsonFormatter(typeof(ResolvableReadOnlyDictionaryFormatter<IndexName, IndexHealthStats>))]
 		public IReadOnlyDictionary<IndexName, IndexHealthStats> Indices { get; internal set; } =
 			EmptyReadOnly<IndexName, IndexHealthStats>.Dictionary;
 

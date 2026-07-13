@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -39,6 +40,7 @@ namespace OpenSearch.Client
 	/// In OSC Aggregation always refers to an aggregation
 	/// sent to OpenSearch and an Aggregate describes an aggregation returned from OpenSearch.
 	/// </summary>
+	[JsonFormatter(typeof(AggregationDictionaryFormatter))]
 	public class AggregationDictionary : IsADictionaryBase<string, IAggregationContainer>
 	{
 		public AggregationDictionary() { }
@@ -192,6 +194,7 @@ namespace OpenSearch.Client
 		IMaxBucketAggregation MaxBucket { get; set; }
 
 		[DataMember(Name = "meta")]
+		[JsonFormatter(typeof(VerbatimDictionaryInterfaceKeysFormatter<string, object>))]
 		IDictionary<string, object> Meta { get; set; }
 
 		[DataMember(Name = "min")]

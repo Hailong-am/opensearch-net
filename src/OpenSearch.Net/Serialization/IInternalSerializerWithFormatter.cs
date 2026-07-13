@@ -27,12 +27,24 @@
 */
 
 using System.Text.Json;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Net
 {
 	internal interface IInternalSerializer
 	{
+		/// <summary>
+		/// Exposes the System.Text.Json options backing this serializer. Returns <c>false</c> when the
+		/// serializer is running on the legacy Utf8Json engine (in which case <see cref="TryGetFormatterResolver"/>
+		/// yields the resolver instead).
+		/// </summary>
 		bool TryGetJsonSerializerOptions(out JsonSerializerOptions options);
+
+		/// <summary>
+		/// Exposes the Utf8Json formatter resolver backing this serializer. Returns <c>false</c> when the
+		/// serializer is running on the System.Text.Json engine (the default).
+		/// </summary>
+		bool TryGetFormatterResolver(out IJsonFormatterResolver formatterResolver);
 	}
 
 }

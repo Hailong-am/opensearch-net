@@ -29,6 +29,7 @@
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -39,6 +40,7 @@ namespace OpenSearch.Client
 	/// </summary>
 	[JsonConverter(typeof(DistanceFeatureQueryConverter))]
 	[InterfaceDataContract]
+	[JsonFormatter(typeof(DistanceFeatureQueryFormatter))]
 	public interface IDistanceFeatureQuery : IFieldNameQuery
 	{
 		/// <summary>

@@ -29,8 +29,10 @@
 using System;
 using System.Collections.Generic;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
+	[JsonFormatter(typeof(VerbatimDictionaryKeysFormatter<Relations, IRelations, RelationName, Children>))]
 	public interface IRelations : IIsADictionary<RelationName, Children> { }
 
 	public class Relations : IsADictionaryBase<RelationName, Children>, IRelations

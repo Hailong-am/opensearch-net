@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -74,6 +75,7 @@ namespace OpenSearch.Client
 		/// The source document for the hit
 		/// </summary>
 		[DataMember(Name = "_source")]
+		[JsonFormatter(typeof(SourceFormatter<>))]
 		TDocument Source { get; }
 
 		/// <summary>
@@ -135,6 +137,7 @@ namespace OpenSearch.Client
 		/// The inner hits
 		/// </summary>
 		[DataMember(Name = "inner_hits")]
+		[JsonFormatter(typeof(VerbatimInterfaceReadOnlyDictionaryKeysFormatter<string, InnerHitsResult>))]
 		IReadOnlyDictionary<string, InnerHitsResult> InnerHits { get; }
 
 		[DataMember(Name = "_nested")]

@@ -28,6 +28,7 @@
 
 using System;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	// This does not extend from Union because its intended to be used on folk's _source's
@@ -39,6 +40,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// The field on which a parent-child relationship is joined
 	/// </summary>
+	[JsonFormatter(typeof(JoinFieldFormatter))]
 	public class JoinField
 	{
 		internal Child ChildOption { get;  }

@@ -30,12 +30,14 @@ using System;
 using System.Runtime.Serialization;
 
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// An attachment indexed with an ingest pipeline using the ingest-attachment plugin.
 	/// Convenience class for working with attachment fields.
 	/// </summary>
+	[JsonFormatter(typeof(AttachmentFormatter))]
 	public class Attachment
 	{
 		/// <summary>

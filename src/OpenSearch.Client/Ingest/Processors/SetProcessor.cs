@@ -30,6 +30,7 @@ using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -50,6 +51,7 @@ namespace OpenSearch.Client
 		/// The value to be set for the field. Supports template snippets.
 		/// </summary>
 		[DataMember(Name ="value")]
+		[JsonFormatter(typeof(SourceWriteFormatter<>))]
 		object Value { get; set; }
 
 		/// <summary>

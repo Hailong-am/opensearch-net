@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[DataContract]
@@ -39,6 +40,7 @@ namespace OpenSearch.Client
 		///  A dictionary of nodeId => nodeinfo of nodes that verified the repository
 		/// </summary>
 		[DataMember(Name = "nodes")]
+		[JsonFormatter(typeof(VerbatimInterfaceReadOnlyDictionaryKeysFormatter<string, CompactNodeInfo>))]
 		public IReadOnlyDictionary<string, CompactNodeInfo> Nodes { get; internal set; } = EmptyReadOnly<string, CompactNodeInfo>.Dictionary;
 	}
 }

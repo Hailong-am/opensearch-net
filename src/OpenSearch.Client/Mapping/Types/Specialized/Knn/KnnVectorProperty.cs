@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client;
 
 [ReadAs(typeof(KnnVectorProperty))]
@@ -78,6 +79,7 @@ public class KnnMethod : IKnnMethod
 
 [InterfaceDataContract]
 [ReadAs(typeof(KnnMethodParameters))]
+[JsonFormatter(typeof(VerbatimDictionaryKeysFormatter<KnnMethodParameters, IKnnMethodParameters, string, object>))]
 public interface IKnnMethodParameters : IIsADictionary<string, object> { }
 
 public class KnnMethodParameters : IsADictionaryBase<string, object>, IKnnMethodParameters

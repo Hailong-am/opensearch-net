@@ -28,6 +28,7 @@
 
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -36,6 +37,7 @@ namespace OpenSearch.Client
 	/// </summary>
 	[InterfaceDataContract]
 	[ReadAs(typeof(MatchBoolPrefixQuery))]
+	[JsonFormatter(typeof(FieldNameQueryFormatter<MatchBoolPrefixQuery, IMatchBoolPrefixQuery>))]
 	public interface IMatchBoolPrefixQuery : IFieldNameQuery
 	{
 		/// <summary>

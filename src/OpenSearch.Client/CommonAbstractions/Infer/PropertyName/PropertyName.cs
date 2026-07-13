@@ -32,9 +32,11 @@ using System.Linq.Expressions;
 using System.Reflection;
 using OpenSearch.Net;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[DebuggerDisplay("{DebugDisplay,nq}")]
+	[JsonFormatter(typeof(PropertyNameFormatter))]
 	public class PropertyName : IEquatable<PropertyName>, IUrlParameter
 	{
 		private readonly object _comparisonValue;

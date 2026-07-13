@@ -29,6 +29,7 @@
 using System;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -43,6 +44,7 @@ namespace OpenSearch.Client
 		/// </summary>
 		[DataMember(Name = "doc")]
 		[SourceSerialization]
+		[JsonFormatter(typeof(SourceFormatter<object>))]
 		object Document { get; set; }
 
 		/// <summary>

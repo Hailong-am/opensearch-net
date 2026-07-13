@@ -29,6 +29,7 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using JsonFormatterAttribute = OpenSearch.Net.Utf8Json.JsonFormatterAttribute;
 using OpenSearch.Net;
 
 namespace OpenSearch.Client
@@ -85,6 +86,7 @@ namespace OpenSearch.Client
 	}
 
 	[JsonConverter(typeof(SortOrderConverter<HistogramOrder>))]
+	[JsonFormatter(typeof(SortOrderFormatter<HistogramOrder>))]
 	public class HistogramOrder : ISortOrder
 	{
 		public static HistogramOrder CountAscending => new HistogramOrder { Key = "_count", Order = SortOrder.Ascending };

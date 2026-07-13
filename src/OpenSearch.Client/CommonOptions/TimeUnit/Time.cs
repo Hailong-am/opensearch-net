@@ -29,6 +29,7 @@
 using System;
 using System.Globalization;
 using System.Text.Json.Serialization;
+using OpenSearch.Net.Utf8Json;
 using System.Text.RegularExpressions;
 using OpenSearch.Net;
 
@@ -38,6 +39,7 @@ namespace OpenSearch.Client
 	/// Represents a time value
 	/// </summary>
 	[JsonConverter(typeof(TimeConverter))]
+	[JsonFormatter(typeof(TimeFormatter))]
 	public class Time : IComparable<Time>, IEquatable<Time>, IUrlParameter
 	{
 		private const double MicrosecondsInATick = 0.1; // 10 ticks = 1 microsecond

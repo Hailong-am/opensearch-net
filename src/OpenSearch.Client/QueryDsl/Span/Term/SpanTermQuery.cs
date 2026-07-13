@@ -29,14 +29,17 @@
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
 	[ReadAs(typeof(SpanTermQuery))]
+	[JsonFormatter(typeof(FieldNameQueryFormatter<SpanTermQuery, ISpanTermQuery>))]
 	public interface ISpanTermQuery : ISpanSubQuery, IFieldNameQuery
 	{
 		[DataMember(Name = "value")]
 		[JsonConverter(typeof(SourceValueWriteConverter))]
+		[JsonFormatter(typeof(SourceWriteFormatter<object>))]
 		object Value { get; set; }
 	}
 

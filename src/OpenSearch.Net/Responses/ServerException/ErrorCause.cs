@@ -31,10 +31,12 @@ using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Net
 {
 	[JsonConverter(typeof(ErrorCauseConverter))]
 	[DataContract]
+	[JsonFormatter(typeof(ErrorCauseFormatter))]
 	public class ErrorCause
 	{
 		private static readonly IReadOnlyCollection<string> DefaultCollection =

@@ -29,8 +29,10 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
+	[JsonFormatter(typeof(ResolvableDictionaryResponseFormatter<GetIndexSettingsResponse, IndexName, IndexState>))]
 	public class GetIndexSettingsResponse : DictionaryResponseBase<IndexName, IndexState>
 	{
 		[IgnoreDataMember]

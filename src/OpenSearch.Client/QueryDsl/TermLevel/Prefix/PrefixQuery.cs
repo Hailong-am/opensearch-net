@@ -28,10 +28,12 @@
 
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
 	[ReadAs(typeof(PrefixQuery))]
+	[JsonFormatter(typeof(FieldNameQueryFormatter<PrefixQuery, IPrefixQuery>))]
 	public interface IPrefixQuery : ITermQuery
 	{
 		[DataMember(Name ="rewrite")]

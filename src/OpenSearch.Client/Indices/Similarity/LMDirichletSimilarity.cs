@@ -27,6 +27,7 @@
 */
 
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 // ReSharper disable InconsistentNaming
 
 namespace OpenSearch.Client
@@ -41,6 +42,7 @@ namespace OpenSearch.Client
 		/// The mu parameter. Defaults to 2000.
 		/// </summary>
 		[DataMember(Name ="mu")]
+		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? Mu { get; set; }
 	}
 

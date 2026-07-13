@@ -32,6 +32,7 @@ using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using JsonFormatterAttribute = OpenSearch.Net.Utf8Json.JsonFormatterAttribute;
 using System.Text.RegularExpressions;
 using OpenSearch.Net.Extensions;
 
@@ -101,6 +102,7 @@ namespace OpenSearch.Client
 	}
 
 	[JsonConverter(typeof(DateMathConverter))]
+	[JsonFormatter(typeof(DateMathFormatter))]
 	public abstract class DateMath : IDateMath
 	{
 		private static readonly Regex DateMathRegex =

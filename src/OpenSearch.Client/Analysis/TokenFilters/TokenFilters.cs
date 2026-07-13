@@ -29,8 +29,10 @@
 using System;
 using System.Collections.Generic;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
+	[JsonFormatter(typeof(VerbatimDictionaryKeysFormatter<TokenFilters, ITokenFilters, string, ITokenFilter>))]
 	public interface ITokenFilters : IIsADictionary<string, ITokenFilter> { }
 
 	public class TokenFilters : IsADictionaryBase<string, ITokenFilter>, ITokenFilters

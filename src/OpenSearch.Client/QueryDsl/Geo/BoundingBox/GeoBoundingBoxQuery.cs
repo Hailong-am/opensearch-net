@@ -28,12 +28,14 @@
 
 using System;
 using System.Text.Json.Serialization;
+using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net.Extensions;
 
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[JsonFormatter(typeof(GeoBoundingBoxQueryFormatter))]
 	public interface IGeoBoundingBoxQuery : IFieldNameQuery
 	{
 		IBoundingBox BoundingBox { get; set; }

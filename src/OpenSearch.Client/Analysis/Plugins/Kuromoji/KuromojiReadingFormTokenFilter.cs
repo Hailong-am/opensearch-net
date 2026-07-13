@@ -28,6 +28,7 @@
 
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -41,6 +42,7 @@ namespace OpenSearch.Client
 		/// Whether romaji reading form should be output instead of katakana. Defaults to false.
 		/// </summary>
 		[DataMember(Name ="use_romaji")]
+		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? UseRomaji { get; set; }
 	}
 

@@ -29,6 +29,7 @@
 using System.Runtime.Serialization;
 using OpenSearch.Net;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[ReadAs(typeof(MultiGetHit<>))]
@@ -79,6 +80,7 @@ namespace OpenSearch.Client
 		public string Routing { get; internal set; }
 
 		[DataMember(Name = "_source")]
+		[JsonFormatter(typeof(SourceFormatter<>))]
 		public TDocument Source { get; internal set; }
 
 		[DataMember(Name = "_type")]

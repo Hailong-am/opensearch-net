@@ -32,9 +32,11 @@ using System.Linq;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[MapsApi("mget.json")]
+	[JsonFormatter(typeof(MultiGetRequestFormatter))]
 	public partial interface IMultiGetRequest
 	{
 		[DataMember(Name = "docs")]

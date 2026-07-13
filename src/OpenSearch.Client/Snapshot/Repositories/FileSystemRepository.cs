@@ -30,6 +30,7 @@ using System;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -69,12 +70,14 @@ namespace OpenSearch.Client
 		/// </summary>
 		[DataMember(Name ="compress")]
 		[JsonConverter(typeof(NullableStringBooleanConverter))]
+		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? Compress { get; set; }
 
 		/// <summary>
 		/// Throttles the number of streams (per node) preforming snapshot operation. Defaults to 5
 		/// </summary>
 		[DataMember(Name ="concurrent_streams")]
+		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? ConcurrentStreams { get; set; }
 
 		/// <summary>

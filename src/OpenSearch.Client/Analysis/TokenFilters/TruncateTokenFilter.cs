@@ -28,6 +28,7 @@
 
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -41,6 +42,7 @@ namespace OpenSearch.Client
 		/// length parameter which control the number of characters to truncate to, defaults to 10.
 		/// </summary>
 		[DataMember(Name ="length")]
+		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? Length { get; set; }
 	}
 

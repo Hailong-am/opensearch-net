@@ -28,12 +28,14 @@
 
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[DataContract]
 	public class CatPendingTasksRecord : ICatRecord
 	{
 		[DataMember(Name ="insertOrder")]
+		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		public int? InsertOrder { get; set; }
 
 		[DataMember(Name ="priority")]

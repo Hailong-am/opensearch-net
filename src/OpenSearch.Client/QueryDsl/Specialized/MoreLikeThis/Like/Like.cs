@@ -29,8 +29,10 @@
 using System;
 using System.Collections.Generic;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
+	[JsonFormatter(typeof(LikeFormatter))]
 	public class Like : Union<string, ILikeDocument>
 	{
 		public Like(string item) : base(item) { }

@@ -30,8 +30,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
+	[JsonFormatter(typeof(VerbatimDictionaryKeysFormatter<RuntimeFields, IRuntimeFields, Field, IRuntimeField>))]
 	public interface IRuntimeFields : IIsADictionary<Field, IRuntimeField> { }
 
 	public class RuntimeFields : IsADictionaryBase<Field, IRuntimeField>, IRuntimeFields

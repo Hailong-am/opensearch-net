@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -49,6 +50,7 @@ namespace OpenSearch.Client
 		/// </summary>
 		[DataMember(Name ="char_filter")]
 		[JsonConverter(typeof(SingleOrManyStringConverter))]
+		[JsonFormatter(typeof(SingleOrEnumerableFormatter<string>))]
 		IEnumerable<string> CharFilter { get; set; }
 
 		/// <summary>
@@ -56,6 +58,7 @@ namespace OpenSearch.Client
 		/// </summary>
 		[DataMember(Name ="filter")]
 		[JsonConverter(typeof(SingleOrManyStringConverter))]
+		[JsonFormatter(typeof(SingleOrEnumerableFormatter<string>))]
 		IEnumerable<string> Filter { get; set; }
 	}
 

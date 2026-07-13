@@ -29,6 +29,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -63,6 +64,7 @@ namespace OpenSearch.Client
 		/// Valid for <see cref="PhoneticEncoder.DoubleMetaphone" /> only
 		/// </remarks>
 		[DataMember(Name ="max_code_len")]
+		[JsonFormatter(typeof(NullableStringIntFormatter))]
 		int? MaxCodeLength { get; set; }
 
 		/// <summary>
@@ -79,6 +81,7 @@ namespace OpenSearch.Client
 		///  with the encoded one (set it to true), or added (set it to false).
 		/// </summary>
 		[DataMember(Name ="replace")]
+		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? Replace { get; set; }
 
 		/// <summary>
