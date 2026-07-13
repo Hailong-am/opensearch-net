@@ -39,6 +39,17 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="OpenSearch.Client" Key="$(ExposedPublicKey)" />
+    <!-- Grant the runtime-emitted Utf8Json dynamic-resolver assemblies access to internal formatters.
+         Required by the legacy Utf8Json serialization path (opt-in via UseUtf8Json / OSC_USE_UTF8JSON);
+         without these the emitted resolver types fail to load with "Access is denied". -->
+    <InternalsVisibleTo Include="OpenSearch.Net.CustomDynamicObjectResolver" Key="$(ExposedPublicKey)" />
+    <InternalsVisibleTo Include="OpenSearch.Net.DynamicCompositeResolver" Key="$(ExposedPublicKey)" />
+    <InternalsVisibleTo Include="OpenSearch.Net.DynamicObjectResolverAllowPrivateFalseExcludeNullFalseNameMutateOriginal" Key="$(ExposedPublicKey)" />
+    <InternalsVisibleTo Include="OpenSearch.Net.DynamicObjectResolverAllowPrivateFalseExcludeNullFalseNameMutateCamelCase" Key="$(ExposedPublicKey)" />
+    <InternalsVisibleTo Include="OpenSearch.Net.DynamicObjectResolverAllowPrivateFalseExcludeNullFalseNameMutateSnakeCase" Key="$(ExposedPublicKey)" />
+    <InternalsVisibleTo Include="OpenSearch.Net.DynamicObjectResolverAllowPrivateFalseExcludeNullTrueNameMutateOriginal" Key="$(ExposedPublicKey)" />
+    <InternalsVisibleTo Include="OpenSearch.Net.DynamicObjectResolverAllowPrivateFalseExcludeNullTrueNameMutateCamelCase" Key="$(ExposedPublicKey)" />
+    <InternalsVisibleTo Include="OpenSearch.Net.DynamicObjectResolverAllowPrivateFalseExcludeNullTrueNameMutateSnakeCase" Key="$(ExposedPublicKey)" />
     <InternalsVisibleTo Include="Tests" Key="$(ExposedPublicKey)" />
     <InternalsVisibleTo Include="Tests.YamlRunner" Key="$(ExposedPublicKey)" />
   </ItemGroup>
