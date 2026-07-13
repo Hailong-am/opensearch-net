@@ -4,6 +4,7 @@ Inspired from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ## [Unreleased]
 ### ⚠️ Breaking Changes ⚠️
 ### Changed
+- Replaced the vendored Utf8Json serializer with `System.Text.Json` throughout the client ([#985](https://github.com/opensearch-project/opensearch-net/pull/985))
 ### Added
 ### Removed
 ### Fixed
