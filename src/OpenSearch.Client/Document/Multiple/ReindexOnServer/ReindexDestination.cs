@@ -54,6 +54,7 @@ namespace OpenSearch.Client
 		/// <summary>
 		/// Id of the pipeline to use to process documents
 		/// </summary>
+		[DataMember(Name = "pipeline")]
 		string Pipeline { get; set; }
 
 		/// <summary>
