@@ -42,6 +42,9 @@ namespace Tests.Configuration
 			Console.WriteLine($" - {nameof(config.Seed)}: {config.Seed}");
 			Console.WriteLine($" - {nameof(config.ForceReseed)}: {config.ForceReseed}");
 			Console.WriteLine($" - {nameof(config.TestOnlyOne)}: {config.TestOnlyOne}");
+			var useUtf8Json = Environment.GetEnvironmentVariable("OSC_USE_UTF8JSON");
+			var serializerEngine = string.IsNullOrEmpty(useUtf8Json) || useUtf8Json == "false" ? "System.Text.Json" : "Utf8Json";
+			Console.WriteLine($" - Serializer: {serializerEngine} (OSC_USE_UTF8JSON={useUtf8Json ?? "<unset>"})");
 			if (config.Mode == TestMode.Integration)
 			{
 				Console.WriteLine($" - {nameof(config.ClusterFilter)}: {config.ClusterFilter}");

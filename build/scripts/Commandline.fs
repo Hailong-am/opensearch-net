@@ -116,6 +116,10 @@ Execution hints can be provided anywhere on the command line
         NonInteractive: bool;
         SkipTests: bool;
         Seed: int;
+        // Selects the high-level serializer used by the tests: "utf8json" for the legacy Utf8Json
+        // engine, "stj" (or unset) for System.Text.Json. Passed on the command line as
+        // `serializer:utf8json`. Maps to the OSC_USE_UTF8JSON environment variable.
+        Serializer: string option;
         RandomArguments: string list;
         RemainingArguments: string list;
         MultiTarget: MultiTarget
@@ -135,8 +139,9 @@ Execution hints can be provided anywhere on the command line
             |> List.filter(fun x -> 
                x <> "--report" && 
                x <> "skiptests" && 
-               x <> "non-interactive" && 
-               not (x.StartsWith("seed:")) && 
+               x <> "non-interactive" &&
+               not (x.StartsWith("seed:")) &&
+               not (x.StartsWith("serializer:")) &&
                not (x.StartsWith("random:")))
             |> List.map(fun (s:string) ->
                 let containsSpace = s.Contains(" ")
@@ -159,7 +164,11 @@ Execution hints can be provided anywhere on the command line
                 match args |> List.tryFind (fun x -> x.StartsWith("seed:")) with
                 | Some t -> Int32.Parse (t.Replace("seed:", ""))
                 | _ -> Random().Next(1, 100_000)
-            RandomArguments = 
+            Serializer =
+                match args |> List.tryFind (fun x -> x.StartsWith("serializer:")) with
+                | Some t -> Some (t.Replace("serializer:", "").ToLowerInvariant())
+                | _ -> None
+            RandomArguments =
                 args 
                 |> List.filter (fun x -> (x.StartsWith("random:")))
                 |> List.map (fun x -> (x.Replace("random:", "")))

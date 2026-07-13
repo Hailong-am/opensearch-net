@@ -51,6 +51,15 @@ module Tests =
         let seed = Some <| args.Seed.ToString(CultureInfo.InvariantCulture)
         env "OSC_TEST_SEED" seed
 
+        // Select the high-level serializer engine for the run. `serializer:utf8json` forces the legacy
+        // Utf8Json engine; `serializer:stj` (or omitting the token) uses System.Text.Json. Maps to the
+        // OSC_USE_UTF8JSON environment variable read by ConnectionSettings.
+        match args.Serializer with
+        | Some "utf8json" | Some "utf8" -> env "OSC_USE_UTF8JSON" (Some "true")
+        | Some "stj" | Some "systemtextjson" -> env "OSC_USE_UTF8JSON" (Some "false")
+        | Some other -> failwithf "Unknown serializer '%s'. Use serializer:utf8json or serializer:stj." other
+        | None -> ignore()
+
         for random in args.RandomArguments do 
             let tokens = random.Split [|':'|]
             let key = tokens.[0].ToUpper()
