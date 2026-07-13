@@ -28,7 +28,14 @@ namespace OpenSearch.Client
 		public override bool CanConvert(Type typeToConvert)
 		{
 			var readAsAttribute = typeToConvert.GetCustomAttribute<ReadAsAttribute>();
-			return readAsAttribute != null;
+			if (readAsAttribute == null)
+				return false;
+
+			// A type may carry both [ReadAs] (for the Utf8Json engine) and an explicit [JsonConverter]
+			// (for System.Text.Json) — e.g. IBoolQuery. When an explicit STJ converter is present it must
+			// win here, otherwise this factory would shadow it and change STJ output.
+			var jsonConverterAttribute = typeToConvert.GetCustomAttribute<JsonConverterAttribute>();
+			return jsonConverterAttribute == null;
 		}
 
 		/// <inheritdoc />
