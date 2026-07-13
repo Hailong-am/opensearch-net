@@ -28,6 +28,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
@@ -42,6 +43,7 @@ namespace OpenSearch.Client
 		/// A list of common words to use.
 		/// </summary>
 		[DataMember(Name ="common_words")]
+		[JsonConverter(typeof(SingleOrManyStringConverter))]
 		IEnumerable<string> CommonWords { get; set; }
 
 		/// <summary>

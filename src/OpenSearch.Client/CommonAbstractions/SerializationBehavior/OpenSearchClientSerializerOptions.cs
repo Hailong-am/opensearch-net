@@ -92,10 +92,29 @@ namespace OpenSearch.Client
 			// --- 5. IsADictionary converters ---
 			options.Converters.Insert(0, new IsADictionaryConverterFactory(settings));
 
+			// FieldValues (hit/get "fields") needs the Inferrer injected so ValueOf/ValuesOf lookups
+			// resolve; the generic IsADictionary factory cannot call its (Inferrer, IDictionary) ctor.
+			// Must precede IsADictionaryConverterFactory since FieldValues is an IIsADictionary.
+			options.Converters.Insert(0, new FieldValuesConverter(settings));
+
+			// Field-keyed read-only dictionaries (TermVectors, GetFieldMapping, GetMapping field maps)
+			// need a settings-aware proxy so expression-path Field lookups resolve through the Inferrer.
+			// Must precede IsADictionaryConverterFactory.
+			options.Converters.Insert(0, new ResolvableReadOnlyFieldDictionaryConverterFactory(settings));
+
+			// ResolvableDictionaryProxy subclass converter (FieldCapabilitiesFields, IndicesStatsDictionary, etc.)
+			// These read-only dictionary types require IConnectionSettingsValues in their constructors.
+			// Must precede the generic IsADictionary handling since they are more specific.
+			options.Converters.Insert(0, new ResolvableDictionaryProxyConverterFactory(settings));
+
 			// Dictionary response converter (GetIndex/GetAlias/GetMapping/GetPipeline/... responses whose
 			// body is a JSON object of dictionary entries plus optional error/status fields). Replaces the
 			// Utf8Json ResolvableDictionaryResponseFormatter/DictionaryResponseFormatter [JsonFormatter]s.
 			options.Converters.Insert(0, new DictionaryResponseConverterFactory(settings));
+
+			// Dynamic response converter (ClusterState and other DynamicResponseBase types whose body is
+			// read wholesale into a DynamicDictionary). Replaces the Utf8Json DynamicResponseFormatter<T>.
+			options.Converters.Insert(0, new DynamicResponseConverterFactory(settings));
 
 			// indices_boost dictionary converter (array-of-single-key-objects wire format).
 			// Must precede the generic dictionary handling.
@@ -133,6 +152,9 @@ namespace OpenSearch.Client
 
 			// JoinField converter (parent relation string, or { name, parent } object for child)
 			options.Converters.Insert(0, new JoinFieldConverterFactory(settings));
+
+			// TaskId converter (supports dictionary key usage for task IDs in format "nodeId:taskNumber")
+			options.Converters.Insert(0, new TaskIdConverter());
 
 			// Id converter (resolves document IDs via Inferrer)
 			options.Converters.Insert(0, new IdConverterFactory(settings));

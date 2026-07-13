@@ -249,10 +249,10 @@ namespace OpenSearch.Client
 				};
 			}
 
-			// Non-numeric value = scripted metric (object or array)
-			using var doc = JsonDocument.ParseValue(ref reader);
-			var bytes = System.Text.Encoding.UTF8.GetBytes(doc.RootElement.GetRawText());
-			return new ScriptedMetricAggregate { Meta = meta };
+			// Non-numeric value = scripted metric (object or array). Capture it as a LazyDocument so
+			// ScriptedMetricAggregate.Value<T>() can materialize it via the source serializer on demand.
+			var lazyValue = JsonSerializer.Deserialize<LazyDocument>(ref reader, options);
+			return new ScriptedMetricAggregate(lazyValue) { Meta = meta };
 		}
 
 		private IAggregate GetCompositeAggregate(ref Utf8JsonReader reader, JsonSerializerOptions options, IReadOnlyDictionary<string, object> meta)
@@ -285,6 +285,7 @@ namespace OpenSearch.Client
 		{
 			var docCount = reader.TokenType == JsonTokenType.Null ? 0L : reader.GetInt64();
 			Dictionary<string, IAggregate> subAggregates = null;
+			long bgCount = 0;
 
 			while (reader.Read() && reader.TokenType == JsonTokenType.PropertyName)
 			{
@@ -293,7 +294,8 @@ namespace OpenSearch.Client
 
 				if (prop == "bg_count")
 				{
-					reader.Skip(); // bg_count in single bucket context
+					// Aggregate-level bg_count for a top-level significant_terms/significant_text aggregate.
+					bgCount = reader.TokenType == JsonTokenType.Null ? 0L : reader.GetInt64();
 					continue;
 				}
 				if (prop == "fields")
@@ -306,6 +308,7 @@ namespace OpenSearch.Client
 					var b = GetMultiBucketAggregate(ref reader, options, "buckets", meta) as BucketAggregate;
 					return new BucketAggregate
 					{
+						BgCount = bgCount,
 						DocCount = docCount,
 						Items = b?.Items ?? EmptyReadOnly<IBucket>.Collection,
 						Meta = meta
@@ -509,6 +512,7 @@ namespace OpenSearch.Client
 			// "hits" value is an object with total, max_score, hits
 			TotalHits total = null;
 			double? maxScore = null;
+			List<LazyDocument> hits = null;
 
 			if (reader.TokenType == JsonTokenType.StartObject)
 			{
@@ -525,8 +529,9 @@ namespace OpenSearch.Client
 							maxScore = reader.TokenType == JsonTokenType.Null ? null : reader.GetDouble();
 							break;
 						case "hits":
-							// Skip hits array - they will be deserialized lazily
-							reader.Skip();
+							// Capture each hit as a LazyDocument so TopHitsAggregate.Hits<T>()/Documents<T>()
+							// can materialize the typed documents on demand via the source serializer.
+							hits = JsonSerializer.Deserialize<List<LazyDocument>>(ref reader, options);
 							break;
 						default:
 							reader.Skip();
@@ -537,7 +542,7 @@ namespace OpenSearch.Client
 			else
 				reader.Skip();
 
-			return new TopHitsAggregate
+			return new TopHitsAggregate(hits, options)
 			{
 				Total = total,
 				MaxScore = maxScore,

@@ -47,6 +47,9 @@ namespace OpenSearch.Client
 		public SourceConverterFactory(IConnectionSettingsValues settings) =>
 			_settings = settings ?? throw new ArgumentNullException(nameof(settings));
 
+		/// <summary>The connection settings (and thus the configured SourceSerializer) this factory is bound to.</summary>
+		internal IConnectionSettingsValues Settings => _settings;
+
 		/// <inheritdoc />
 		/// <remarks>
 		/// Returns <c>true</c> for types that should be serialized by the SourceSerializer.
@@ -369,11 +372,25 @@ namespace OpenSearch.Client
 				// settings-aware serialization even on the terminal source path.
 				options.Converters.Add(new JoinFieldConverter(s));
 
+				// Id support so a JoinField child's parent id (and any Id-typed user-document property)
+				// (de)serializes on the terminal source path. JoinFieldConverter.Read resolves the child
+				// "parent" via JsonSerializer.Deserialize<Id>, which otherwise falls through to STJ's
+				// default object converter and throws ("cannot convert to OpenSearch.Client.Id").
+				options.Converters.Add(new IdConverterFactory(s));
+
 				// Settings-aware Field converter so a Field-typed property (or a Fields collection, whose
 				// FieldsConverter resolves each element via options.GetConverter(typeof(Field))) reachable
 				// from a user type (e.g. SourceFilter.Includes on a Union<bool, ISourceFilter> document
 				// property) serializes to its resolved field-name string rather than a Field POCO object.
 				options.Converters.Add(new FieldConverterFactory(s));
+
+				// OpenSearch.Client domain types (QueryContainer, mappings, aggregations, etc.) that appear as
+				// members of a user document must serialize through the full high-level domain machinery, not
+				// the POCO-oriented terminal options — otherwise e.g. a percolator query stored on
+				// ProjectPercolation.Query would emit an empty object (QueryContainer exposes only explicit
+				// interface members) and its inner query bodies would lose their field-name-query wrapping.
+				// This factory detects such domain-contract types and delegates them to the domain options.
+				options.Converters.Add(new EmbeddedDomainTypeConverterFactory(s));
 				return options;
 			});
 	}

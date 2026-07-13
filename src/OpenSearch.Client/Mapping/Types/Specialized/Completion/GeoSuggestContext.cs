@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
@@ -41,6 +42,7 @@ namespace OpenSearch.Client
 		/// Only the first value will be serialized.
 		/// </summary>
 		[DataMember(Name = "precision")]
+		[JsonConverter(typeof(SingleOrEnumerableStringConverter))]
 		IEnumerable<string> Precision { get; set; }
 	}
 

@@ -91,20 +91,67 @@ namespace OpenSearch.Client
 
 			writer.WriteStartObject();
 
-			foreach (var kvp in (IEnumerable<KeyValuePair<TKey, TValue>>)value)
-			{
-				var keyString = ResolveKey(kvp.Key);
-				if (keyString == null)
-					continue;
+			// Deduplicate entries whose keys resolve to the same wire-format string. This mirrors
+			// the Utf8Json PropertiesFormatter behavior where AutoMap-generated PropertyName keys
+			// (with _type set from reflection) and explicit-mapping PropertyName keys (string-only)
+			// can both resolve to the same JSON property name. The last entry wins (override semantics).
+			HashSet<string> seenKeys = null;
+			List<KeyValuePair<string, TValue>> deduplicatedEntries = null;
+			var entries = (IEnumerable<KeyValuePair<TKey, TValue>>)value;
 
-				writer.WritePropertyName(keyString);
-				// Serialize by the value's runtime type so polymorphic values (e.g. ITokenFilter,
-				// IAnalyzer, IProperty) emit their full concrete contract rather than the (often empty)
-				// declared-interface contract. STJ resolves the runtime type's converter/contract.
-				if (kvp.Value is null)
-					writer.WriteNullValue();
-				else
-					JsonSerializer.Serialize(writer, kvp.Value, kvp.Value.GetType(), options);
+			// First pass: check if deduplication is needed (only for PropertyName-keyed dictionaries
+			// where AutoMap + explicit mapping can produce duplicates).
+			if (typeof(TKey) == typeof(PropertyName))
+			{
+				seenKeys = new HashSet<string>(StringComparer.Ordinal);
+				deduplicatedEntries = new List<KeyValuePair<string, TValue>>();
+				foreach (var kvp in entries)
+				{
+					var keyString = ResolveKey(kvp.Key);
+					if (keyString == null)
+						continue;
+
+					// Find and remove any existing entry with the same resolved key (last-wins)
+					if (!seenKeys.Add(keyString))
+					{
+						for (var i = deduplicatedEntries.Count - 1; i >= 0; i--)
+						{
+							if (string.Equals(deduplicatedEntries[i].Key, keyString, StringComparison.Ordinal))
+							{
+								deduplicatedEntries.RemoveAt(i);
+								break;
+							}
+						}
+					}
+					deduplicatedEntries.Add(new KeyValuePair<string, TValue>(keyString, kvp.Value));
+				}
+
+				foreach (var entry in deduplicatedEntries)
+				{
+					writer.WritePropertyName(entry.Key);
+					if (entry.Value is null)
+						writer.WriteNullValue();
+					else
+						JsonSerializer.Serialize(writer, entry.Value, entry.Value.GetType(), options);
+				}
+			}
+			else
+			{
+				foreach (var kvp in entries)
+				{
+					var keyString = ResolveKey(kvp.Key);
+					if (keyString == null)
+						continue;
+
+					writer.WritePropertyName(keyString);
+					// Serialize by the value's runtime type so polymorphic values (e.g. ITokenFilter,
+					// IAnalyzer, IProperty) emit their full concrete contract rather than the (often empty)
+					// declared-interface contract. STJ resolves the runtime type's converter/contract.
+					if (kvp.Value is null)
+						writer.WriteNullValue();
+					else
+						JsonSerializer.Serialize(writer, kvp.Value, kvp.Value.GetType(), options);
+				}
 			}
 
 			writer.WriteEndObject();
@@ -176,7 +223,7 @@ namespace OpenSearch.Client
 			return (TKey)Convert.ChangeType(keyString, typeof(TKey));
 		}
 
-		private static TDictionary CreateInstance(Dictionary<TKey, TValue> dict)
+		private TDictionary CreateInstance(Dictionary<TKey, TValue> dict)
 		{
 			var type = typeof(TDictionary);
 			if (type.IsInterface || type.IsAbstract)
@@ -201,6 +248,27 @@ namespace OpenSearch.Client
 			}
 
 			var genericDictionaryInterface = typeof(IDictionary<TKey, TValue>);
+
+			// Prefer a settings-aware constructor when available (e.g. Properties(IConnectionSettingsValues)):
+			// these dictionaries resolve their keys through the Inferrer on Add and on lookup, so they must
+			// be built settings-first and populated via Add (which sanitizes the key). Without this, keys are
+			// stored raw and an expression-path lookup (e.g. p => p.LeadDeveloper) never matches.
+			var settingsCtor = _settings == null
+				? null
+				: type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+					.FirstOrDefault(c =>
+					{
+						var ps = c.GetParameters();
+						return ps.Length == 1 && typeof(IConnectionSettingsValues).IsAssignableFrom(ps[0].ParameterType);
+					});
+
+			if (settingsCtor != null)
+			{
+				var settingsInstance = (TDictionary)settingsCtor.Invoke(new object[] { _settings });
+				foreach (var kvp in dict)
+					((IDictionary<TKey, TValue>)settingsInstance).Add(kvp.Key, kvp.Value);
+				return settingsInstance;
+			}
 
 			var ctor = type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
 				.Select(c => new { Constructor = c, Parameters = c.GetParameters() })

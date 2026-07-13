@@ -46,6 +46,10 @@ namespace OpenSearch.Net
 			};
 
 			// Converters registered in precedence order (first match wins).
+			// Lenient bool converters: accept string "true"/"false" in addition to native
+			// JSON booleans. OpenSearch may return boolean fields as strings in some responses.
+			options.Converters.Add(new LenientBoolConverter());
+			options.Converters.Add(new NullableLenientBoolConverter());
 			// Fractional number converters: emit integral doubles/floats/decimals with a
 			// trailing ".0" (e.g. 1.0 not 1), matching the client's historical wire format.
 			options.Converters.Add(new DoubleConverter());

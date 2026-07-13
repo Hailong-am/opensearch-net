@@ -181,7 +181,8 @@ namespace OpenSearch.Client
 
 			// Extract known dynamic index settings
 			SetValue<int?>(settings, NumberOfReplicas, v => s.NumberOfReplicas = v);
-			SetValue<Time>(settings, RefreshInterval, v => s.RefreshInterval = v);
+			SetValue<AutoExpandReplicas>(settings, UpdatableIndexSettings.AutoExpandReplicas, v => s.AutoExpandReplicas = v, options);
+			SetValue<Time>(settings, RefreshInterval, v => s.RefreshInterval = v, options);
 			SetValue<string>(settings, DefaultPipeline, v => s.DefaultPipeline = v);
 			SetValue<string>(settings, FinalPipeline, v => s.FinalPipeline = v);
 			SetValue<bool?>(settings, BlocksReadOnly, v => s.BlocksReadOnly = v);
@@ -198,6 +199,26 @@ namespace OpenSearch.Client
 			SetValue<int?>(settings, NumberOfRoutingShards, v => s.NumberOfRoutingShards = v);
 			SetValue<int?>(settings, RoutingPartitionSize, v => s.RoutingPartitionSize = v);
 			SetValue<bool?>(settings, Hidden, v => s.Hidden = v);
+			SetValue<FileSystemStorageImplementation?>(settings, StoreType, v => s.FileSystemStorageImplementation = v, options);
+
+			// Reconstruct the nested settings objects from their flattened dotted keys, mirroring the pre-STJ
+			// IndexSettingsFormatter. The typed extraction is additive (SetValue keeps the entry in the flat
+			// dictionary), so the raw keys still land in the backing dictionary below.
+			var queries = new QueriesSettings();
+			var queriesCache = new QueriesCacheSettings();
+			var queriesCacheSet = false;
+			SetValue<bool?>(settings, QueriesCacheEnabled, v => { queriesCache.Enabled = v; queriesCacheSet = true; });
+			if (queriesCacheSet)
+			{
+				queries.Cache = queriesCache;
+				s.Queries = queries;
+			}
+
+			var softDeletesRetention = new SoftDeleteRetentionSettings();
+			var softDeletesSet = false;
+			SetValue<long?>(settings, SoftDeletesEnabled, v => { softDeletesRetention.Operations = v; softDeletesSet = true; });
+			if (softDeletesSet)
+				s.SoftDeletes = new SoftDeleteSettings { Retention = softDeletesRetention };
 
 			// Extract the analysis and similarity sub-objects into their typed properties. These are left
 			// un-flattened by Flatten (see below) so they arrive as nested objects under either the bare or
@@ -300,7 +321,7 @@ namespace OpenSearch.Client
 			}
 		}
 
-		private static void SetValue<T>(Dictionary<string, object> settings, string key, Action<T> assign)
+		private static void SetValue<T>(Dictionary<string, object> settings, string key, Action<T> assign, JsonSerializerOptions settingsOptions = null)
 		{
 			if (!settings.TryGetValue(key, out var raw))
 				return;
@@ -324,13 +345,25 @@ namespace OpenSearch.Client
 				{
 					value = (T)(object)Convert.ToBoolean(raw);
 				}
+				else if (raw != null && settingsOptions != null)
+				{
+					// Round-trip through the options so string/scalar wire values convert to a typed setting
+					// via its registered converter (e.g. "0-all" -> AutoExpandReplicas, "1s" -> Time). STJ
+					// cannot deserialize a bare string token to these types otherwise.
+					var json = JsonSerializer.Serialize(raw, raw.GetType(), settingsOptions);
+					value = JsonSerializer.Deserialize<T>(json, settingsOptions);
+				}
 				else
 				{
 					value = default;
 				}
 
 				assign(value);
-				settings.Remove(key);
+				// Do NOT remove the key: the typed extraction is additive. The original wire entry must
+				// remain in the flattened dictionary so it is copied into the settings backing dictionary
+				// (IIsADictionary), matching the pre-STJ formatter (which both assigned the property and
+				// kept the entry). Otherwise a template whose only setting is e.g. number_of_shards would
+				// deserialize to an empty Settings dictionary.
 			}
 			catch
 			{

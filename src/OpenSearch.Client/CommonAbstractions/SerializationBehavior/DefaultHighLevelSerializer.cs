@@ -84,28 +84,55 @@ namespace OpenSearch.Client
 
 		public T Deserialize<T>(Stream stream)
 		{
-			if (stream == null || stream.CanSeek && stream.Length == 0) return default;
+			if (IsNullOrEmpty(ref stream)) return default;
 			return JsonSerializer.Deserialize<T>(stream, OptionsForRoot(typeof(T), _serializerOptions.Options));
 		}
 
 		public object Deserialize(Type type, Stream stream)
 		{
-			if (stream == null || stream.CanSeek && stream.Length == 0) return null;
+			if (IsNullOrEmpty(ref stream)) return type is { IsValueType: true } ? Activator.CreateInstance(type) : null;
 			return JsonSerializer.Deserialize(stream, type, OptionsForRoot(type, _serializerOptions.Options));
 		}
 
-		public Task<T> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
+		public async Task<T> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
 		{
-			if (stream == null || stream.CanSeek && stream.Length == 0)
-				return Task.FromResult(default(T));
-			return JsonSerializer.DeserializeAsync<T>(stream, OptionsForRoot(typeof(T), _serializerOptions.Options), cancellationToken).AsTask();
+			var empty = await IsNullOrEmptyAsync(stream, cancellationToken).ConfigureAwait(false);
+			if (empty.IsEmpty) return default;
+			return await JsonSerializer.DeserializeAsync<T>(empty.Stream, OptionsForRoot(typeof(T), _serializerOptions.Options), cancellationToken).ConfigureAwait(false);
 		}
 
-		public Task<object> DeserializeAsync(Type type, Stream stream, CancellationToken cancellationToken = default)
+		public async Task<object> DeserializeAsync(Type type, Stream stream, CancellationToken cancellationToken = default)
 		{
-			if (stream == null || stream.CanSeek && stream.Length == 0)
-				return Task.FromResult((object)null);
-			return JsonSerializer.DeserializeAsync(stream, type, OptionsForRoot(type, _serializerOptions.Options), cancellationToken).AsTask();
+			var empty = await IsNullOrEmptyAsync(stream, cancellationToken).ConfigureAwait(false);
+			if (empty.IsEmpty) return type is { IsValueType: true } ? Activator.CreateInstance(type) : null;
+			return await JsonSerializer.DeserializeAsync(empty.Stream, type, OptionsForRoot(type, _serializerOptions.Options), cancellationToken).ConfigureAwait(false);
+		}
+
+		// A response with no body (e.g. a HEAD request such as Ping, or a 200 with an empty payload) can
+		// arrive as an empty, possibly non-seekable, network stream. STJ throws "The input does not contain
+		// any JSON tokens" on such input, so short-circuit to default. For a seekable stream we can check the
+		// length directly; for a non-seekable stream we peek a single byte and, if present, splice it back in
+		// front of the remaining data so deserialization sees the full body.
+		private static bool IsNullOrEmpty(ref Stream stream)
+		{
+			if (stream == null) return true;
+			if (stream.CanSeek) return stream.Length == 0 || stream.Position >= stream.Length;
+
+			var first = stream.ReadByte();
+			if (first == -1) return true;
+			stream = new PrependByteStream((byte)first, stream);
+			return false;
+		}
+
+		private static async Task<(bool IsEmpty, Stream Stream)> IsNullOrEmptyAsync(Stream stream, CancellationToken cancellationToken)
+		{
+			if (stream == null) return (true, null);
+			if (stream.CanSeek) return (stream.Length == 0 || stream.Position >= stream.Length, stream);
+
+			var buffer = new byte[1];
+			var read = await stream.ReadAsync(buffer, 0, 1, cancellationToken).ConfigureAwait(false);
+			if (read == 0) return (true, stream);
+			return (false, new PrependByteStream(buffer[0], stream));
 		}
 
 		public virtual void Serialize<T>(T data, Stream writableStream, SerializationFormatting formatting = SerializationFormatting.None)
@@ -123,6 +150,65 @@ namespace OpenSearch.Client
 				? _serializerOptions.Indented
 				: _serializerOptions.Options;
 			return JsonSerializer.SerializeAsync(stream, data, OptionsForRoot(typeof(T), options), cancellationToken);
+		}
+
+		/// <summary>
+		/// A read-only forward-only stream that yields a single already-read "peek" byte before delegating
+		/// to the underlying stream. Used to non-destructively test a non-seekable response stream for
+		/// emptiness while still allowing the full body to be deserialized.
+		/// </summary>
+		private sealed class PrependByteStream : Stream
+		{
+			private readonly byte _first;
+			private readonly Stream _inner;
+			private bool _firstConsumed;
+
+			public PrependByteStream(byte first, Stream inner)
+			{
+				_first = first;
+				_inner = inner;
+			}
+
+			public override bool CanRead => true;
+			public override bool CanSeek => false;
+			public override bool CanWrite => false;
+			public override long Length => throw new NotSupportedException();
+			public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+
+			public override int Read(byte[] buffer, int offset, int count)
+			{
+				if (count <= 0) return 0;
+				if (!_firstConsumed)
+				{
+					_firstConsumed = true;
+					buffer[offset] = _first;
+					return 1;
+				}
+				return _inner.Read(buffer, offset, count);
+			}
+
+			public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+			{
+				if (count <= 0) return 0;
+				if (!_firstConsumed)
+				{
+					_firstConsumed = true;
+					buffer[offset] = _first;
+					return 1;
+				}
+				return await _inner.ReadAsync(buffer, offset, count, cancellationToken).ConfigureAwait(false);
+			}
+
+			public override void Flush() => throw new NotSupportedException();
+			public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+			public override void SetLength(long value) => throw new NotSupportedException();
+			public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+
+			protected override void Dispose(bool disposing)
+			{
+				if (disposing) _inner.Dispose();
+				base.Dispose(disposing);
+			}
 		}
 	}
 }

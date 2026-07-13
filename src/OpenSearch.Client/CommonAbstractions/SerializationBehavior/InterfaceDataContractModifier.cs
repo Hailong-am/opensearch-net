@@ -132,6 +132,16 @@ namespace OpenSearch.Client
 							jsonProp.Get = obj => capturedSource.GetValue(obj);
 						if (capturedSource.CanWrite)
 							jsonProp.Set = (obj, value) => capturedSource.SetValue(obj, value);
+						else
+						{
+							// Getter-only interface member (e.g. IInlineGet.Source): use the concrete
+							// implementation's internal setter so the embedded document deserializes.
+							var concreteSourceProp = type.GetProperty(ifaceProp.Name,
+								BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+							var concreteSourceSetter = concreteSourceProp?.GetSetMethod(true);
+							if (concreteSourceSetter != null)
+								jsonProp.Set = (obj, value) => concreteSourceSetter.Invoke(obj, new[] { value });
+						}
 
 						rebuilt.Add(jsonProp);
 						continue;
@@ -211,6 +221,19 @@ namespace OpenSearch.Client
 						jsonProp.Get = obj => captured.GetValue(obj);
 					if (captured.CanWrite)
 						jsonProp.Set = (obj, value) => captured.SetValue(obj, value);
+					else
+					{
+						// The contract interface commonly declares getter-only properties (e.g.
+						// IInlineGet.Found/Source/Fields) whose concrete implementation has an internal setter.
+						// Resolve the concrete property on the target type and use its (possibly non-public)
+						// setter so the member can deserialize — otherwise it stays at its default (Found=false,
+						// Source=null).
+						var concreteProp = type.GetProperty(ifaceProp.Name,
+							BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+						var concreteSetter = concreteProp?.GetSetMethod(true);
+						if (concreteSetter != null)
+							jsonProp.Set = (obj, value) => concreteSetter.Invoke(obj, new[] { value });
+					}
 
 					// A QueryContainer that is conditionless (e.g. an empty bool query) must be
 					// omitted entirely rather than emitted as "prop": null. Utf8Json achieved this
@@ -270,6 +293,41 @@ namespace OpenSearch.Client
 				ApplyTypeLevelShouldSerialize(jsonProp, clrProp.PropertyType);
 
 				rebuilt.Add(jsonProp);
+			}
+
+			// Inherited non-public [DataMember] members (e.g. ResponseBase.Error / StatusCode, which carry
+			// the "error"/"status" wire fields) are surfaced by neither the interface loop nor the public
+			// CLR loop above. STJ's default resolver would also drop them (non-public), so a response whose
+			// contract is rebuilt here (e.g. GetResponse<T>, an [InterfaceDataContract] type) would lose its
+			// ServerError. Re-add any non-public instance [DataMember] property that has not already been
+			// collected and whose wire name does not collide with a property already present.
+			for (var baseType = type; baseType != null && baseType != typeof(object); baseType = baseType.BaseType)
+			{
+				foreach (var nonPublic in baseType.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+				{
+					if (ignoredMemberNames.Contains(nonPublic.Name))
+						continue;
+
+					var dataMemberAttr = nonPublic.GetCustomAttribute<DataMemberAttribute>();
+					if (dataMemberAttr == null || nonPublic.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
+						continue;
+
+					var jsonName = dataMemberAttr.Name ?? JsonNamingPolicy.CamelCase.ConvertName(nonPublic.Name);
+					if (!seen.Add(jsonName))
+						continue;
+
+					var jsonProp = typeInfo.CreateJsonPropertyInfo(nonPublic.PropertyType, jsonName);
+
+					var getter = nonPublic.GetGetMethod(true);
+					if (getter != null)
+						jsonProp.Get = obj => getter.Invoke(obj, null);
+
+					var setter = nonPublic.GetSetMethod(true);
+					if (setter != null)
+						jsonProp.Set = (obj, value) => setter.Invoke(obj, new[] { value });
+
+					rebuilt.Add(jsonProp);
+				}
 			}
 
 			// If the rebuilt contract has no properties, decide between two cases:

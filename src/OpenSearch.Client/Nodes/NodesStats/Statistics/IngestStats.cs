@@ -28,6 +28,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net;
 
 namespace OpenSearch.Client
@@ -64,6 +65,7 @@ namespace OpenSearch.Client
 			EmptyReadOnly<KeyedProcessorStats>.Collection;
 	}
 
+	[JsonConverter(typeof(KeyedProcessorStatsConverter))]
 	public class KeyedProcessorStats
 	{
 		/// <summary> The type of the processor </summary>

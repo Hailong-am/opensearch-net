@@ -29,10 +29,12 @@
 using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[JsonConverter(typeof(ISuggestContextConverter))]
 	public interface ISuggestContext
 	{
 		[DataMember(Name = "name")]

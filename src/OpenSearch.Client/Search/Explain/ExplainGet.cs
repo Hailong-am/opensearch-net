@@ -41,6 +41,7 @@ namespace OpenSearch.Client
 		bool Found { get; }
 
 		[DataMember(Name = "_source")]
+		[SourceSerialization]
 		TDocument Source { get; }
 	}
 
