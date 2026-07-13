@@ -42,22 +42,25 @@ environment variable. STJ stays the default; Utf8Json is a rollback safety net.
    IBoolQuery does not support deserialize" on every query-container round-trip. Re-added
    `[ReadAs]` alongside `[JsonConverter]`. **-10 failures.**
 
-## Status (net10.0 test run)
-- **STJ (default): green** — full suite unchanged from before this work.
-- **Utf8Json (`OSC_USE_UTF8JSON=true`): 3235 / 3254 passing (99.4%).**
-  Serialization (the production direction) verified correct via standalone probes.
+## Status (net10.0 test run) — BOTH MODES GREEN
+- **STJ (default): 3249 passed / 0 failed / 5 skipped.**
+- **Utf8Json (`OSC_USE_UTF8JSON=true`): 3249 passed / 0 failed / 5 skipped.**
 
-## Remaining 19 Utf8Json-mode failures (3 root causes)
-1. **Request round-trip deserialize NRE** (~15 tests: CreateIndex/Clone/Shrink/Split,
-   ReindexOnServer, BulkInvalid). Deserializing a *request* type (e.g. `ICreateIndexRequest`)
-   throws `NullReferenceException` even for `{}`. The emitted Utf8Json formatter builds the
-   request via `RuntimeHelpers.GetUninitializedObject` (no parameterless ctor), leaving request
-   base state null. STJ round-trips these fine. Deserializing requests is a test-only scenario
-   (requests are only ever serialized in production).
-2. **Conditionless query serialization** (`SearchApiNullQueryContainerTests`): Utf8Json emits
-   `{"query":{"bool":{}}}` where STJ (and the expectation) omit the empty query.
-3. **Source-serializer bulk ordering/content** (`SendsUsingSourceSerializer.BulkRequest`,
-   `MultiTermVectorsRequest`): a small diff in one of several compared items.
+## Additional root-cause fixes to reach parity (all "dual attribute / dual signature")
+4. **`SerializationConstructorAttribute` also exists twice** (client + Utf8Json). Request types'
+   non-public parameterless ctors bind to the client one, so Utf8Json `MetaType` missed them,
+   fell back to `GetUninitializedObject`, and NRE'd deserializing requests. `MetaType` now
+   recognizes the client attribute by name. **Fixed the ~15 request round-trip failures.**
+5. **`IReindexDestination.Pipeline`** had no `[DataMember]` but the migration added
+   `[InterfaceDataContract]`; under DataMember-only serialization the pipeline id was dropped.
+   Added `[DataMember(Name = "pipeline")]`.
+6. **Type-level `ShouldSerialize` hooks** (`QueryContainer`, `Routing`) were changed to STJ
+   signatures (parameterless / `IConnectionSettingsValues`); Utf8Json only discovers a hook
+   taking a single `IJsonFormatterResolver`. Added that overload to both, so conditionless
+   queries and empty routing are omitted instead of emitted as `{"bool":{}}` / `"routing": null`.
+7. **`ReadAsConverterFactory` (STJ) shadowed explicit `[JsonConverter]`**: adding `[ReadAs]` back
+   to `IBoolQuery` made the STJ factory hijack it and regress STJ output. `CanConvert` now skips
+   types that carry their own `[JsonConverter]`.
 
 ## How to reproduce a run
 ```
