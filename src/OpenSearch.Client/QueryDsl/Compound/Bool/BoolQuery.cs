@@ -35,6 +35,7 @@ using System.Text.Json.Serialization;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(BoolQuery))]
 	[JsonConverter(typeof(BoolQueryConverter))]
 	public interface IBoolQuery : IQuery
 	{
