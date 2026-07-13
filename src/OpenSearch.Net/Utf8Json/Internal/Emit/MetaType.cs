@@ -101,7 +101,12 @@ namespace OpenSearch.Net.Utf8Json.Internal.Emit
 		{
 			var isClass = type.IsClass || type.IsInterface || type.IsAbstract;
 			var dataContractPresent = type.GetCustomAttribute<DataContractAttribute>(true) != null ||
-									  type.GetCustomAttribute<InterfaceDataContractAttribute>(true) != null;
+									  type.GetCustomAttribute<InterfaceDataContractAttribute>(true) != null ||
+									  // The high-level client (OpenSearch.Client) declares its own
+									  // InterfaceDataContractAttribute, which we cannot reference from here without a
+									  // circular dependency. Recognize it by name so DataMember-only serialization is
+									  // still honored for OSC domain interfaces on the Utf8Json path.
+									  type.GetCustomAttributes(true).Any(a => a.GetType().Name == "InterfaceDataContractAttribute");
 
 			Type = type;
 
