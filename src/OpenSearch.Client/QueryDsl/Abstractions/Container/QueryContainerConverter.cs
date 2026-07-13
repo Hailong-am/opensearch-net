@@ -41,6 +41,7 @@ namespace OpenSearch.Client
 		private static readonly JsonEncodedText DisMaxProp = JsonEncodedText.Encode("dis_max");
 		private static readonly JsonEncodedText FunctionScoreProp = JsonEncodedText.Encode("function_score");
 		private static readonly JsonEncodedText MultiMatchProp = JsonEncodedText.Encode("multi_match");
+		private static readonly JsonEncodedText CombinedFieldsProp = JsonEncodedText.Encode("combined_fields");
 		private static readonly JsonEncodedText MatchPhraseProp = JsonEncodedText.Encode("match_phrase");
 		private static readonly JsonEncodedText MatchPhrasePrefixProp = JsonEncodedText.Encode("match_phrase_prefix");
 		private static readonly JsonEncodedText MatchBoolPrefixProp = JsonEncodedText.Encode("match_bool_prefix");
@@ -197,6 +198,9 @@ namespace OpenSearch.Client
 					break;
 				case "multi_match":
 					((IQueryContainer)container).MultiMatch = JsonSerializer.Deserialize<IMultiMatchQuery>(ref reader, options);
+					break;
+				case "combined_fields":
+					((IQueryContainer)container).CombinedFields = JsonSerializer.Deserialize<ICombinedFieldsQuery>(ref reader, options);
 					break;
 				case "nested":
 					((IQueryContainer)container).Nested = JsonSerializer.Deserialize<INestedQuery>(ref reader, options);
@@ -428,6 +432,11 @@ namespace OpenSearch.Client
 			{
 				writer.WritePropertyName(MultiMatchProp);
 				JsonSerializer.Serialize(writer, value.MultiMatch, options);
+			}
+			else if (value.CombinedFields != null)
+			{
+				writer.WritePropertyName(CombinedFieldsProp);
+				JsonSerializer.Serialize(writer, value.CombinedFields, options);
 			}
 			else if (value.Nested != null)
 			{
