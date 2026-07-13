@@ -47,9 +47,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Text.Json.Serialization;
 using OpenSearch.Net;
 using OpenSearch.Net.Specification.IngestApi;
-using System.Text.Json.Serialization;
 
 // ReSharper disable RedundantBaseConstructorCall
 // ReSharper disable UnusedTypeParameter

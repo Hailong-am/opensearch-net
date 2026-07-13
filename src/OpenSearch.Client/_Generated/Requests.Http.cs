@@ -21,8 +21,8 @@
 //
 // -----------------------------------------------
 
-using OpenSearch.Net.Specification.HttpApi;
 using System.Text.Json.Serialization;
+using OpenSearch.Net.Specification.HttpApi;
 
 namespace OpenSearch.Client;
 
