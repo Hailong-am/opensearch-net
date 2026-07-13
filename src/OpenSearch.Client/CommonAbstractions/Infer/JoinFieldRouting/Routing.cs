@@ -182,5 +182,12 @@ namespace OpenSearch.Client
 			var resolved = settings.Inferrer.Resolve(this);
 			return !resolved.IsNullOrEmpty();
 		}
+
+		// Utf8Json discovers a type-level ShouldSerialize hook by looking for a method taking a single
+		// IJsonFormatterResolver parameter (see ReflectionExtensions.GetShouldSerializeMethod). Provide that
+		// overload so a Routing that resolves to empty is omitted on the Utf8Json path rather than emitted
+		// as "routing": null.
+		internal bool ShouldSerialize(OpenSearch.Net.Utf8Json.IJsonFormatterResolver formatterResolver) =>
+			ShouldSerialize(formatterResolver.GetConnectionSettings());
 	}
 }
