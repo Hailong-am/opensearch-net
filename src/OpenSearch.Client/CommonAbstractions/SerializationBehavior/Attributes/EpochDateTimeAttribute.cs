@@ -7,6 +7,7 @@
 
 using System;
 using OpenSearch.Net.Utf8Json;
+using OpenSearch.Net.Utf8Json.Formatters;
 
 namespace OpenSearch.Client
 {

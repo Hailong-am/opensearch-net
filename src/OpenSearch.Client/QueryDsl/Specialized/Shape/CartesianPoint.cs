@@ -33,6 +33,7 @@ using OpenSearch.Client;
 using OpenSearch.Net.Extensions;
 
 using OpenSearch.Net.Utf8Json;
+using OpenSearch.Net.Utf8Json.Internal;
 namespace OpenSearch.Client
 {
 	internal enum ShapeFormat

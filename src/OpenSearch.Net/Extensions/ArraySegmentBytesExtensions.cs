@@ -32,6 +32,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net.Utf8Json.Formatters;
+using OpenSearch.Net.Utf8Json.Internal;
 
 namespace OpenSearch.Net.Extensions
 {

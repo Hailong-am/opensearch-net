@@ -34,6 +34,8 @@ using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net;
 using OpenSearch.Net.Extensions;
+using OpenSearch.Net.Utf8Json.Internal;
+using OpenSearch.Net.Utf8Json.Resolvers;
 
 
 namespace OpenSearch.Client

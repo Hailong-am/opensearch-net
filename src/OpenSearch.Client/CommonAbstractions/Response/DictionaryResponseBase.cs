@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
 using OpenSearch.Net.Utf8Json;
+using OpenSearch.Net.Utf8Json.Internal;
 
 namespace OpenSearch.Client
 {
