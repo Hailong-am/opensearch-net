@@ -84,25 +84,14 @@ namespace OpenSearch.Client
 
 		protected override string ValidateKey(string key)
 		{
-			if (AggregateFormatter.AllReservedAggregationNames.Contains(key))
+			if (AggregateConverter.AllReservedAggregationNames.Contains(key))
 				throw new ArgumentException(
-					string.Format(AggregateFormatter.UsingReservedAggNameFormat, key), nameof(key));
+					string.Format(AggregateConverter.UsingReservedAggNameFormat, key), nameof(key));
 
 			return key;
 		}
 	}
 
-	internal class AggregationDictionaryFormatter : IJsonFormatter<AggregationDictionary>
-	{
-		private static readonly VerbatimDictionaryInterfaceKeysFormatter<string, IAggregationContainer> DictionaryKeysFormatter =
-			new VerbatimDictionaryInterfaceKeysFormatter<string, IAggregationContainer>();
-
-		public AggregationDictionary Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver) =>
-			new AggregationDictionary(DictionaryKeysFormatter.Deserialize(ref reader, formatterResolver));
-
-		public void Serialize(ref JsonWriter writer, AggregationDictionary value, IJsonFormatterResolver formatterResolver) =>
-			DictionaryKeysFormatter.Serialize(ref writer, value, formatterResolver);
-	}
 
 	[InterfaceDataContract]
 	[ReadAs(typeof(AggregationContainer))]
@@ -955,4 +944,17 @@ namespace OpenSearch.Client
 			return d;
 		}
 	}
+	internal class AggregationDictionaryFormatter : IJsonFormatter<AggregationDictionary>
+	{
+		private static readonly VerbatimDictionaryInterfaceKeysFormatter<string, IAggregationContainer> DictionaryKeysFormatter =
+			new VerbatimDictionaryInterfaceKeysFormatter<string, IAggregationContainer>();
+
+		public AggregationDictionary Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver) =>
+			new AggregationDictionary(DictionaryKeysFormatter.Deserialize(ref reader, formatterResolver));
+
+		public void Serialize(ref JsonWriter writer, AggregationDictionary value, IJsonFormatterResolver formatterResolver) =>
+			DictionaryKeysFormatter.Serialize(ref writer, value, formatterResolver);
+	}
+
+
 }

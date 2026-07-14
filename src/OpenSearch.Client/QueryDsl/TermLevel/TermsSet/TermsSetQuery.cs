@@ -43,6 +43,7 @@ namespace OpenSearch.Client
 	/// field or computed per document in a minimum should match script.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(TermsSetQuery))]
 	[JsonFormatter(typeof(FieldNameQueryFormatter<TermsSetQuery, ITermsSetQuery>))]
 	public interface ITermsSetQuery : IFieldNameQuery
 	{

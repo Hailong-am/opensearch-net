@@ -86,4 +86,6 @@ namespace OpenSearch.Client
 		public void Serialize(ref JsonWriter writer, Like value, IJsonFormatterResolver formatterResolver) =>
 			UnionFormatter.Serialize(ref writer, value, formatterResolver);
 	}
+
+
 }

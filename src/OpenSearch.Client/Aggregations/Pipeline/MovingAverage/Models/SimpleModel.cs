@@ -31,6 +31,7 @@ using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(SimpleModel))]
 	public interface ISimpleModel : IMovingAverageModel { }
 
 	public class SimpleModel : ISimpleModel

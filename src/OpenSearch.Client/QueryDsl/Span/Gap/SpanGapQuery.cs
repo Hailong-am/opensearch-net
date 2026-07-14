@@ -29,11 +29,13 @@
 using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[JsonConverter(typeof(SpanGapQueryConverter))]
 	[JsonFormatter(typeof(SpanGapQueryFormatter))]
 	public interface ISpanGapQuery : ISpanSubQuery
 	{
@@ -111,4 +113,6 @@ namespace OpenSearch.Client
 			return query;
 		}
 	}
+
+
 }

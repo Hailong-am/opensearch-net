@@ -173,6 +173,41 @@ namespace OpenSearch.Client
 			// Indices (a Union<AllIndicesMarker, ManyIndices>) and emit a nested object.
 			options.Converters.Insert(0, new IndicesConverterFactory(settings));
 
+			// Query DSL converters
+			options.Converters.Insert(0, new QueryContainerConverter());
+			options.Converters.Insert(0, new QueryContainerConcretConverter());
+			options.Converters.Insert(0, new QueryContainerCollectionConverter());
+			options.Converters.Insert(0, new TermsQueryConverter(settings));
+			options.Converters.Insert(0, new RangeQueryConverter(settings));
+
+			// Field-name query wrapping (term, match, prefix, wildcard, fuzzy, regexp, span_term, etc.).
+			// Adds the { "<resolved-field>": { ...body... } } wrapping around concrete field-name queries
+			// that do not already have a dedicated converter. Inserted last so it takes precedence over
+			// the InterfaceDataContractModifier's default object handling for these concrete types.
+			options.Converters.Insert(0, new FieldNameQueryConverterFactory(settings));
+
+			// Fuzzy query converter (polymorphic dispatch string/numeric/date + field-name wrapping).
+			options.Converters.Insert(0, new FuzzyQueryConverter(settings));
+
+			// Score function converter (polymorphic function_score functions: decay, field_value_factor,
+			// random_score, script_score, weight).
+			options.Converters.Insert(0, new ScoreFunctionConverter(settings));
+
+			// Geo query converters (dedicated field-name-wrapping shapes). Inserted after the
+			// field-name query factory so they take precedence for their specific interfaces
+			// (the factory would otherwise claim them and emit the generic { field: { body } } wrapping).
+			options.Converters.Insert(0, new GeoShapeQueryConverter(settings));
+			options.Converters.Insert(0, new GeoBoundingBoxQueryConverter(settings));
+			options.Converters.Insert(0, new GeoDistanceQueryConverter(settings));
+			options.Converters.Insert(0, new GeoPolygonQueryConverter(settings));
+
+			// Aggregation converters
+			options.Converters.Insert(0, new AggregationContainerConverter());
+			options.Converters.Insert(0, new AggregationContainerInterfaceConverter());
+			options.Converters.Insert(0, new AggregationDictionaryConverter());
+			options.Converters.Insert(0, new AggregateDictionaryResponseConverter());
+			options.Converters.Insert(0, new AggregateConverter());
+
 			return options;
 		}
 	}

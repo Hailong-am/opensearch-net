@@ -57,7 +57,7 @@ namespace OpenSearch.Client
 		/// The score above which documents will be returned
 		/// </summary>
 		[DataMember(Name = "min_score")]
-        double? MinScore { get; set; }
+		double? MinScore { get; set; }
 	}
 
 	/// <inheritdoc cref="IScriptScoreQuery" />
