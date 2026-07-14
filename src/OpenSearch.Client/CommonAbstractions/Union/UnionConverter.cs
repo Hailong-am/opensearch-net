@@ -43,11 +43,9 @@ namespace OpenSearch.Client
 			var args = GetUnionGenericArgs(typeToConvert);
 			if (args == null)
 				throw new JsonException($"{typeToConvert} is not a Union<,> type.");
-		var args = GetUnionGenericArgs(typeToConvert);
-		if (args == null)
-			throw new InvalidOperationException($"Type {typeToConvert.Name} is not a Union<,> type.");
-		var converterType = typeof(UnionConverter<,>).MakeGenericType(args[0], args[1]);
-		return (JsonConverter)Activator.CreateInstance(converterType, typeToConvert);
+
+			var converterType = typeof(UnionConverter<,>).MakeGenericType(args[0], args[1]);
+			return (JsonConverter)Activator.CreateInstance(converterType, typeToConvert);
 		}
 
 		/// <summary>
