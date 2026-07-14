@@ -122,22 +122,6 @@ namespace OpenSearch.Net.Extensions
 			return true;
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool ContainsDateMathSeparator(this ref ArraySegment<byte> segment)
-		{
-			var i = 0;
-			while (i < segment.Count)
-			{
-				if (segment.Array != null && (segment.Array[segment.Offset + i] == DateMathSeparator &&
-					i + 1 < segment.Count && segment.Array[segment.Offset + i + 1] == DateMathSeparator))
-					return true;
-
-				i++;
-			}
-
-			return false;
-		}
-
 		// Used by the restored Utf8Json date-math formatters to detect whether a raw JSON string segment holds
 		// an ISO8601 date-time. Only referenced on the legacy Utf8Json serialization path.
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -155,6 +139,22 @@ namespace OpenSearch.Net.Extensions
 			{
 				return false;
 			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool ContainsDateMathSeparator(this ref ArraySegment<byte> segment)
+		{
+			var i = 0;
+			while (i < segment.Count)
+			{
+				if (segment.Array != null && (segment.Array[segment.Offset + i] == DateMathSeparator &&
+					i + 1 < segment.Count && segment.Array[segment.Offset + i + 1] == DateMathSeparator))
+					return true;
+
+				i++;
+			}
+
+			return false;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
