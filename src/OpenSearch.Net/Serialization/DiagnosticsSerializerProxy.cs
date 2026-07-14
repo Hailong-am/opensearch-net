@@ -33,6 +33,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenSearch.Net.Diagnostics;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Net
 {

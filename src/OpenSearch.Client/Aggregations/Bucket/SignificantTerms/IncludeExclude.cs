@@ -32,7 +32,7 @@ using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using JsonFormatterAttribute = OpenSearch.Net.Utf8Json.JsonFormatterAttribute;
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[JsonConverter(typeof(IncludeExcludeConverter))]
@@ -60,7 +60,7 @@ namespace OpenSearch.Client
 					reader.Skip();
 					return null;
 				case JsonTokenType.StartArray:
-					var values = JsonSerializer.Deserialize<IEnumerable<string>>(ref reader, options);
+					var values = System.Text.Json.JsonSerializer.Deserialize<IEnumerable<string>>(ref reader, options);
 					return new IncludeExclude(values);
 				case JsonTokenType.String:
 					return new IncludeExclude(reader.GetString());
@@ -74,7 +74,7 @@ namespace OpenSearch.Client
 			if (value == null)
 				writer.WriteNullValue();
 			else if (value.Values != null)
-				JsonSerializer.Serialize(writer, value.Values, options);
+				System.Text.Json.JsonSerializer.Serialize(writer, value.Values, options);
 			else
 				writer.WriteStringValue(value.Pattern);
 		}

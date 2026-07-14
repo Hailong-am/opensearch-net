@@ -30,7 +30,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using JsonFormatterAttribute = OpenSearch.Net.Utf8Json.JsonFormatterAttribute;
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[JsonConverter(typeof(AutoExpandReplicasConverter))]

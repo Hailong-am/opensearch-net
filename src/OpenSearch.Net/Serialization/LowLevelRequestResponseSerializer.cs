@@ -30,6 +30,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using OpenSearch.Net.Utf8Json;
 using StjSerializer = System.Text.Json.JsonSerializer;
 
 namespace OpenSearch.Net

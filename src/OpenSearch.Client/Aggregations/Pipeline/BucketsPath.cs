@@ -31,7 +31,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using JsonFormatterAttribute = OpenSearch.Net.Utf8Json.JsonFormatterAttribute;
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[JsonConverter(typeof(BucketsPathConverter))]
@@ -84,7 +84,7 @@ namespace OpenSearch.Client
 				case JsonTokenType.String:
 					return new SingleBucketsPath(reader.GetString());
 				case JsonTokenType.StartObject:
-					var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(ref reader, options);
+					var dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(ref reader, options);
 					return new MultiBucketsPath(dict);
 				default:
 					reader.Skip();

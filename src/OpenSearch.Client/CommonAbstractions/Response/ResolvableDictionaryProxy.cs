@@ -30,6 +30,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using OpenSearch.Net;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {

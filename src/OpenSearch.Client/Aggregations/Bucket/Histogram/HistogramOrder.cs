@@ -29,7 +29,7 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using JsonFormatterAttribute = OpenSearch.Net.Utf8Json.JsonFormatterAttribute;
+using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net;
 
 namespace OpenSearch.Client
@@ -64,7 +64,7 @@ namespace OpenSearch.Client
 					continue;
 				sortOrder.Key = reader.GetString();
 				reader.Read();
-				sortOrder.Order = JsonSerializer.Deserialize<SortOrder>(ref reader, options);
+				sortOrder.Order = System.Text.Json.JsonSerializer.Deserialize<SortOrder>(ref reader, options);
 			}
 
 			return sortOrder;
@@ -80,7 +80,7 @@ namespace OpenSearch.Client
 
 			writer.WriteStartObject();
 			writer.WritePropertyName(value.Key);
-			JsonSerializer.Serialize(writer, value.Order, options);
+			System.Text.Json.JsonSerializer.Serialize(writer, value.Order, options);
 			writer.WriteEndObject();
 		}
 	}

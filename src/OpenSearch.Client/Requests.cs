@@ -57,6 +57,7 @@ using OpenSearch.Net.Specification.IngestApi;
 using OpenSearch.Net.Specification.NodesApi;
 using OpenSearch.Net.Specification.SnapshotApi;
 using OpenSearch.Net.Specification.TasksApi;
+using OpenSearch.Net.Utf8Json;
 
 // ReSharper disable UnusedTypeParameter
 namespace OpenSearch.Client

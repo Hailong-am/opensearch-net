@@ -10,7 +10,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using JsonFormatterAttribute = OpenSearch.Net.Utf8Json.JsonFormatterAttribute;
+using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client;
 
 [JsonConverter(typeof(TrackTotalHitsConverter))]
@@ -47,7 +47,7 @@ internal sealed class TrackTotalHitsConverter : JsonConverter<TrackTotalHits>
 		if (reader.TokenType == JsonTokenType.Null)
 			return null;
 
-		var union = JsonSerializer.Deserialize<Union<bool, long>>(ref reader, options);
+		var union = System.Text.Json.JsonSerializer.Deserialize<Union<bool, long>>(ref reader, options);
 		if (union == null)
 			return null;
 
@@ -67,6 +67,6 @@ internal sealed class TrackTotalHitsConverter : JsonConverter<TrackTotalHits>
 			return;
 		}
 
-		JsonSerializer.Serialize(writer, value, typeof(Union<bool, long>), options);
+		System.Text.Json.JsonSerializer.Serialize(writer, value, typeof(Union<bool, long>), options);
 	}
 }

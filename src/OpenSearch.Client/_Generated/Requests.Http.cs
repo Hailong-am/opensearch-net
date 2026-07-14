@@ -23,6 +23,7 @@
 
 using System.Text.Json.Serialization;
 using OpenSearch.Net.Specification.HttpApi;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client;
 
