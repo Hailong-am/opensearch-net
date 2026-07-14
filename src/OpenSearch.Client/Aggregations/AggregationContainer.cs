@@ -944,4 +944,17 @@ namespace OpenSearch.Client
 			return d;
 		}
 	}
+	internal class AggregationDictionaryFormatter : IJsonFormatter<AggregationDictionary>
+	{
+		private static readonly VerbatimDictionaryInterfaceKeysFormatter<string, IAggregationContainer> DictionaryKeysFormatter =
+			new VerbatimDictionaryInterfaceKeysFormatter<string, IAggregationContainer>();
+
+		public AggregationDictionary Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver) =>
+			new AggregationDictionary(DictionaryKeysFormatter.Deserialize(ref reader, formatterResolver));
+
+		public void Serialize(ref JsonWriter writer, AggregationDictionary value, IJsonFormatterResolver formatterResolver) =>
+			DictionaryKeysFormatter.Serialize(ref writer, value, formatterResolver);
+	}
+
+
 }

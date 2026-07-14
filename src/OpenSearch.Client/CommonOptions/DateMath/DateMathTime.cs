@@ -382,4 +382,16 @@ namespace OpenSearch.Client
 		public override int GetHashCode() => _approximateSeconds.GetHashCode();
 	}
 
+	internal class DateMathTimeFormatter: IJsonFormatter<DateMathTime>
+	{
+		public void Serialize(ref JsonWriter writer, DateMathTime value, IJsonFormatterResolver formatterResolver)
+		{
+			if (value is null) writer.WriteNull();
+			else writer.WriteString(value.ToString());
+		}
+
+		public DateMathTime Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver) => reader.ReadString();
+	}
+
+
 }

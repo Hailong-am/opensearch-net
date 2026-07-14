@@ -54,4 +54,28 @@ namespace OpenSearch.Client
 			Assign(settings, (a, v) => a.IndexSettings = v?.Invoke(new DynamicIndexSettingsDescriptor())?.Value);
 	}
 
+	internal class UpdateIndexSettingsRequestFormatter : IJsonFormatter<IUpdateIndexSettingsRequest>
+	{
+		private static readonly DynamicIndexSettingsFormatter DynamicIndexSettingsFormatter =
+			new DynamicIndexSettingsFormatter();
+
+		public IUpdateIndexSettingsRequest Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+		{
+			var dynamicSettings = DynamicIndexSettingsFormatter.Deserialize(ref reader, formatterResolver);
+			return new UpdateIndexSettingsRequest { IndexSettings = dynamicSettings };
+		}
+
+		public void Serialize(ref JsonWriter writer, IUpdateIndexSettingsRequest value, IJsonFormatterResolver formatterResolver)
+		{
+			if (value == null)
+			{
+				writer.WriteNull();
+				return;
+			}
+
+			DynamicIndexSettingsFormatter.Serialize(ref writer, value.IndexSettings, formatterResolver);
+		}
+	}
+
+
 }

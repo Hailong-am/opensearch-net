@@ -85,4 +85,29 @@ namespace OpenSearch.Client
 			System.Text.Json.JsonSerializer.Serialize(writer, value, typeof(Union<string, GeoLocation>), options);
 		}
 	}
+	internal class ContextFormatter : IJsonFormatter<Context>
+	{
+		public Context Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+		{
+			var formatter = formatterResolver.GetFormatter<Union<string, GeoLocation>>();
+			var union = formatter.Deserialize(ref reader, formatterResolver);
+			switch (union.Tag)
+			{
+				case 0:
+					return new Context(union.Item1);
+				case 1:
+					return new Context(union.Item2);
+				default:
+					return null;
+			}
+		}
+
+		public void Serialize(ref JsonWriter writer, Context value, IJsonFormatterResolver formatterResolver)
+		{
+			var formatter = formatterResolver.GetFormatter<Union<string, GeoLocation>>();
+			formatter.Serialize(ref writer, value, formatterResolver);
+		}
+	}
+
+
 }

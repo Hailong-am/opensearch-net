@@ -244,4 +244,26 @@ namespace OpenSearch.Client
 		}
 	}
 
+	internal class DateMathFormatter : IJsonFormatter<DateMath>
+	{
+		public DateMath Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+		{
+			var token = reader.GetCurrentJsonToken();
+			if (token != JsonToken.String)
+				return null;
+
+			var segment = reader.ReadStringSegmentUnsafe();
+
+			if (!segment.ContainsDateMathSeparator() && segment.IsDateTime(formatterResolver, out var dateTime))
+				return DateMath.Anchored(dateTime);
+
+			var value = segment.Utf8String();
+			return DateMath.FromString(value);
+		}
+
+		public void Serialize(ref JsonWriter writer, DateMath value, IJsonFormatterResolver formatterResolver) =>
+			writer.WriteString(value.ToString());
+	}
+
+
 }
