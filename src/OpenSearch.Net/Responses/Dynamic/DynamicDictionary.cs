@@ -35,6 +35,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using OpenSearch.Net.Utf8Json;
 
@@ -47,6 +48,7 @@ namespace OpenSearch.Net
 	/// <summary>
 	/// A dictionary that supports dynamic access.
 	/// </summary>
+	[JsonConverter(typeof(DynamicDictionaryConverter))]
 	[JsonFormatter(typeof(DynamicDictionaryFormatter))]
 	public class DynamicDictionary
 		: DynamicObject,
