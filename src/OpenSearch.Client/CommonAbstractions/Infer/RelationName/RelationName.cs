@@ -33,8 +33,8 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(RelationNameFormatter))]
 	[DebuggerDisplay("{DebugDisplay,nq}")]
+	[JsonFormatter(typeof(RelationNameFormatter))]
 	public class RelationName : IEquatable<RelationName>, IUrlParameter
 	{
 		private RelationName(string type) => Name = type;

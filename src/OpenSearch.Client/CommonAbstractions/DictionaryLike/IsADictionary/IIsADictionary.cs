@@ -33,4 +33,13 @@ namespace OpenSearch.Client
 	public interface IIsADictionary { }
 
 	public interface IIsADictionary<TKey, TValue> : IDictionary<TKey, TValue>, IIsADictionary { }
+
+	/// <summary>
+	/// Marker for <see cref="IIsADictionary"/> types whose string keys are user-provided names
+	/// (e.g. suggester names) that must be serialized verbatim, without being run through the
+	/// <c>DefaultFieldNameInferrer</c>. Mirrors the historical Utf8Json <c>VerbatimDictionaryKeysFormatter</c>.
+	/// Only affects plain <see cref="string"/> keys; typed keys (Field/PropertyName/IndexName/RelationName)
+	/// are always resolved by the <c>Inferrer</c>.
+	/// </summary>
+	public interface IVerbatimDictionaryKeys { }
 }

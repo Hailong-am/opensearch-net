@@ -34,8 +34,8 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(IdFormatter))]
 	[DebuggerDisplay("{DebugDisplay,nq}")]
+	[JsonFormatter(typeof(IdFormatter))]
 	public class Id : IEquatable<Id>, IUrlParameter
 	{
 		public Id(string id)

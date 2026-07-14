@@ -27,11 +27,13 @@
 */
 
 using System;
-using OpenSearch.Net.Extensions;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
+using OpenSearch.Net.Extensions;
 
 namespace OpenSearch.Client
 {
+	[JsonConverter(typeof(DateMathConverter))]
 	[JsonFormatter(typeof(DateMathExpressionFormatter))]
 	public class DateMathExpression : DateMath
 	{
@@ -93,4 +95,6 @@ namespace OpenSearch.Client
 		public void Serialize(ref JsonWriter writer, DateMathExpression value, IJsonFormatterResolver formatterResolver) =>
 			writer.WriteString(value.ToString());
 	}
+
+
 }
