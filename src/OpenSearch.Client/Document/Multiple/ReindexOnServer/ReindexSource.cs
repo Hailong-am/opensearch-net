@@ -29,12 +29,14 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// Configures the source for a reindex API request
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IReindexSource
 	{
 		/// <summary>

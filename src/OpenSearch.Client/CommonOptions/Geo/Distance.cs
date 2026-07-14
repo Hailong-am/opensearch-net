@@ -28,12 +28,42 @@
 
 using System;
 using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using OpenSearch.Net.Utf8Json;
 using System.Text.RegularExpressions;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
+	/// <summary>Serializes <see cref="Distance"/> as its string form (e.g. <c>"200m"</c>) and parses it back.</summary>
+	internal sealed class DistanceConverter : JsonConverter<Distance>
+	{
+		public override Distance Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			switch (reader.TokenType)
+			{
+				case JsonTokenType.String:
+					var s = reader.GetString();
+					return s == null ? null : new Distance(s);
+				case JsonTokenType.Number:
+					return new Distance(reader.GetDouble());
+				default:
+					reader.Skip();
+					return null;
+			}
+		}
+
+		public override void Write(Utf8JsonWriter writer, Distance value, JsonSerializerOptions options)
+		{
+			if (value == null)
+				writer.WriteNullValue();
+			else
+				writer.WriteStringValue(value.ToString());
+		}
+	}
+
+	[JsonConverter(typeof(DistanceConverter))]
 	[JsonFormatter(typeof(DistanceFormatter))]
 	public class Distance
 	{

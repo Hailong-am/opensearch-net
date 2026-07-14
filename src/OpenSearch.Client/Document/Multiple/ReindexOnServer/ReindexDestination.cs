@@ -27,6 +27,7 @@
 */
 
 using OpenSearch.Net;
+using OpenSearch.Net.Utf8Json;
 using System.Runtime.Serialization;
 
 
@@ -35,6 +36,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Configures the destination for a reindex API request
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IReindexDestination
 	{
 		/// <summary>
@@ -54,6 +56,7 @@ namespace OpenSearch.Client
 		/// <summary>
 		/// Id of the pipeline to use to process documents
 		/// </summary>
+		[DataMember(Name = "pipeline")]
 		string Pipeline { get; set; }
 
 		/// <summary>
