@@ -32,6 +32,7 @@ using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(MatchPhraseQuery))]
 	[JsonFormatter(typeof(FieldNameQueryFormatter<MatchPhraseQuery, IMatchPhraseQuery>))]
 	public interface IMatchPhraseQuery : IFieldNameQuery
 	{

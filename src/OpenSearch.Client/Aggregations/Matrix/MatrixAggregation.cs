@@ -29,9 +29,11 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
+	[InterfaceDataContract]
 	public interface IMatrixAggregation : IAggregation
 	{
 		[DataMember(Name ="fields")]

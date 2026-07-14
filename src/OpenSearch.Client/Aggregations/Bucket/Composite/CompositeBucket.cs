@@ -112,7 +112,7 @@ namespace OpenSearch.Client
 				return false;
 			}
 
-			value = DateTimeUtil.UnixEpoch.AddMilliseconds(l);
+			value = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero).AddMilliseconds(l);
 			return true;
 		}
 
@@ -154,4 +154,6 @@ namespace OpenSearch.Client
 			return new CompositeKey(dictionary);
 		}
 	}
+
+
 }

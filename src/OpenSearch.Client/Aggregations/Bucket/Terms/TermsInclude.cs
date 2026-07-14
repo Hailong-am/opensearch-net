@@ -28,6 +28,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
@@ -35,6 +36,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Filters which terms to include in the response
 	/// </summary>
+	[JsonConverter(typeof(TermsIncludeConverter))]
 	[JsonFormatter(typeof(TermsIncludeFormatter))]
 	public class TermsInclude
 	{

@@ -32,6 +32,7 @@ using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(FuzzyQuery))]
 	[JsonFormatter(typeof(FuzzyQueryFormatter))]
 	public interface IFuzzyQuery : IFieldNameQuery
 	{
@@ -48,6 +49,7 @@ namespace OpenSearch.Client
 		bool? Transpositions { get; set; }
 	}
 
+	[InterfaceDataContract]
 	public interface IFuzzyQuery<TValue, TFuzziness> : IFuzzyQuery
 	{
 		[DataMember(Name ="fuzziness")]

@@ -43,6 +43,7 @@ namespace OpenSearch.Client
 		/// A document to find other documents like
 		/// </summary>
 		[DataMember(Name = "doc")]
+		[SourceSerialization]
 		[JsonFormatter(typeof(SourceFormatter<object>))]
 		object Document { get; set; }
 

@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -37,6 +38,7 @@ namespace OpenSearch.Client
 	/// An aggregation that computes metrics based on values extracted in
 	/// one way or another from the documents that are being aggregated.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IMetricAggregation : IAggregation
 	{
 		/// <summary>
@@ -61,6 +63,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A metric aggregation that can accept a format to use for the output of the aggregation
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IFormattableMetricAggregation : IMetricAggregation
 	{
 		/// <summary>
