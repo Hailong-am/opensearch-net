@@ -29,6 +29,7 @@
 using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Text;
 using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net.Utf8Json.Formatters;
 using OpenSearch.Net.Utf8Json.Internal;
@@ -58,9 +59,9 @@ namespace OpenSearch.Net.Extensions
 			return false;
 		}
 
-		private static readonly byte[] LongMaxValue = StringEncoding.UTF8.GetBytes(long.MaxValue.ToString(CultureInfo.InvariantCulture));
+		private static readonly byte[] LongMaxValue = Encoding.UTF8.GetBytes(long.MaxValue.ToString(CultureInfo.InvariantCulture));
 
-		private static readonly byte[] LongMinValue = StringEncoding.UTF8.GetBytes(long.MinValue.ToString(CultureInfo.InvariantCulture));
+		private static readonly byte[] LongMinValue = Encoding.UTF8.GetBytes(long.MinValue.ToString(CultureInfo.InvariantCulture));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsLong(this ref ArraySegment<byte> arraySegment)
@@ -82,7 +83,7 @@ namespace OpenSearch.Net.Extensions
 			while (i < arraySegment.Count)
 			{
 				var b = arraySegment.Array[arraySegment.Offset + i];
-				if (!NumberConverter.IsNumber(b))
+				if (b < (byte)'0' || b > (byte)'9')
 					return false;
 
 				// only compare to long.MinValue or long.MaxValue if we're dealing with same number of bytes
@@ -121,12 +122,13 @@ namespace OpenSearch.Net.Extensions
 			return true;
 		}
 
+		// Used by the restored Utf8Json date-math formatters to detect whether a raw JSON string segment holds
+		// an ISO8601 date-time. Only referenced on the legacy Utf8Json serialization path.
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsDateTime(this ref ArraySegment<byte> arraySegment, IJsonFormatterResolver formatterResolver, out DateTime dateTime)
 		{
 			dateTime = default;
 
-			// TODO: Nicer way to do this
 			var reader = new JsonReader(arraySegment.Array, arraySegment.Offset - 1); // include opening quote "
 			try
 			{
@@ -159,6 +161,6 @@ namespace OpenSearch.Net.Extensions
 		internal static string Utf8String(this ref ArraySegment<byte> segment) =>
 			// segment.Array is never null
 			// ReSharper disable once AssignNullToNotNullAttribute
-			StringEncoding.UTF8.GetString(segment.Array, segment.Offset, segment.Count);
+			Encoding.UTF8.GetString(segment.Array, segment.Offset, segment.Count);
 	}
 }
