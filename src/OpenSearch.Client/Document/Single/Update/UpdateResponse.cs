@@ -27,9 +27,11 @@
 */
 
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
+	[InterfaceDataContract]
 	public interface IUpdateResponse<out TDocument> : IResponse where TDocument : class
 	{
 		IInlineGet<TDocument> Get { get; }

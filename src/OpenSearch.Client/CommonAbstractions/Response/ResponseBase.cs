@@ -97,9 +97,11 @@ namespace OpenSearch.Client
 		private int? _statusCode;
 
 		/// <summary> Returns useful information about the request(s) that were part of this API call. </summary>
+		[IgnoreDataMember]
 		public virtual IApiCallDetails ApiCall => _originalApiCall;
 
 		/// <inheritdoc />
+		[IgnoreDataMember]
 		public string DebugInformation
 		{
 			get
@@ -114,6 +116,7 @@ namespace OpenSearch.Client
 		}
 
 		/// <inheritdoc />
+		[IgnoreDataMember]
 		public virtual bool IsValid
 		{
 			get
@@ -125,9 +128,11 @@ namespace OpenSearch.Client
 
 
 		/// <inheritdoc />
+		[IgnoreDataMember]
 		public Exception OriginalException => ApiCall?.OriginalException;
 
 		/// <inheritdoc />
+		[IgnoreDataMember]
 		public ServerError ServerError
 		{
 			get
