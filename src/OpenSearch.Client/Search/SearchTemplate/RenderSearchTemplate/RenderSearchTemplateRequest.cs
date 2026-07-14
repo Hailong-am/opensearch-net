@@ -29,8 +29,8 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-
 using OpenSearch.Net.Utf8Json;
+
 namespace OpenSearch.Client
 {
 	[MapsApi("render_search_template.json")]

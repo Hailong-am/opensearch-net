@@ -27,8 +27,8 @@
 */
 
 using System.Collections.Generic;
-
 using OpenSearch.Net.Utf8Json;
+
 namespace OpenSearch.Client
 {
 	[JsonFormatter(typeof(StopWordsFormatter))]

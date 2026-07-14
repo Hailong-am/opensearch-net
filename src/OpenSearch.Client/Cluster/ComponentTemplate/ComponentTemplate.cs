@@ -7,8 +7,8 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-
 using OpenSearch.Net.Utf8Json;
+
 namespace OpenSearch.Client;
 
 [ReadAs(typeof(ComponentTemplate))]

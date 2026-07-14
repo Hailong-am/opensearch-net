@@ -30,8 +30,8 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
 using OpenSearch.Net.Utf8Json;
+
 namespace OpenSearch.Client
 {
 	[JsonConverter(typeof(ContextConverter))]

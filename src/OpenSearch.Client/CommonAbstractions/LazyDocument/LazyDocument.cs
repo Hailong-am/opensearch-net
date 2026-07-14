@@ -30,8 +30,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenSearch.Net;
-
 using OpenSearch.Net.Utf8Json;
+
 namespace OpenSearch.Client
 {
 	/// <summary>

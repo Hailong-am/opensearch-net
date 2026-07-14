@@ -29,8 +29,8 @@
 using System.Collections.Generic;
 using OpenSearch.Net;
 using System.Text.Json.Serialization;
-
 using OpenSearch.Net.Utf8Json;
+
 namespace OpenSearch.Client
 {
 

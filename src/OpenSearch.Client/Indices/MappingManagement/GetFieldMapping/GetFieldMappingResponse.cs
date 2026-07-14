@@ -32,8 +32,8 @@ using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
 using static OpenSearch.Client.Infer;
-
 using OpenSearch.Net.Utf8Json;
+
 namespace OpenSearch.Client
 {
 	[JsonFormatter(typeof(ResolvableDictionaryResponseFormatter<GetFieldMappingResponse, IndexName, TypeFieldMappings>))]

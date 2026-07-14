@@ -32,8 +32,8 @@ using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
 using OpenSearch.Net;
-
 using OpenSearch.Net.Utf8Json;
+
 namespace OpenSearch.Client
 {
 	[DebuggerDisplay("{DebugDisplay,nq}")]

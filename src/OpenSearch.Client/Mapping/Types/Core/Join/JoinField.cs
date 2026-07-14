@@ -27,8 +27,8 @@
 */
 
 using System;
-
 using OpenSearch.Net.Utf8Json;
+
 namespace OpenSearch.Client
 {
 	// This does not extend from Union because its intended to be used on folk's _source's

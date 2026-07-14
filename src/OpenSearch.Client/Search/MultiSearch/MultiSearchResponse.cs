@@ -31,8 +31,8 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using OpenSearch.Net;
-
 using OpenSearch.Net.Utf8Json;
+
 namespace OpenSearch.Client
 {
 	[DataContract]

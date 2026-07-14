@@ -29,8 +29,8 @@
 using System;
 using System.Diagnostics;
 using OpenSearch.Net;
-
 using OpenSearch.Net.Utf8Json;
+
 namespace OpenSearch.Client
 {
 	[DebuggerDisplay("{DebugDisplay,nq}")]
