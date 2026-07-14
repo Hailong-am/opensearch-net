@@ -28,7 +28,6 @@
 
 using System.Collections.Generic;
 using OpenSearch.Net;
-using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
@@ -51,7 +50,7 @@ namespace OpenSearch.Client
 	public class SuggestDictionary<T> : IsAReadOnlyDictionaryBase<string, ISuggest<T>[]>, ISuggestDictionary<T>
 		where T : class
 	{
-		[SerializationConstructor, JsonConstructor]
+		[SerializationConstructor]
 		public SuggestDictionary(IReadOnlyDictionary<string, ISuggest<T>[]> backingDictionary) : base(backingDictionary) { }
 
 		public static SuggestDictionary<T> Default { get; } = new SuggestDictionary<T>(EmptyReadOnly<string, ISuggest<T>[]>.Dictionary);

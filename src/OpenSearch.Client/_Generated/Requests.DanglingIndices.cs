@@ -48,7 +48,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.Json.Serialization;
 using OpenSearch.Net;
 using OpenSearch.Net.Specification.DanglingIndicesApi;
 using OpenSearch.Net.Utf8Json;
@@ -81,7 +80,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index_uuid", indexUuid)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected DeleteDanglingIndexRequest()
             : base() { }
 
@@ -146,7 +145,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index_uuid", indexUuid)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected ImportDanglingIndexRequest()
             : base() { }
 

@@ -49,7 +49,6 @@ using System.Linq.Expressions;
 using System.Text;
 using OpenSearch.Net;
 using OpenSearch.Net.Specification.IndicesApi;
-using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 // ReSharper disable RedundantBaseConstructorCall
@@ -85,7 +84,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index).Required("type", type)) { }
 
         ///<summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected TypeExistsDescriptor()
             : base() { }
 

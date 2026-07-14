@@ -48,7 +48,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.Json.Serialization;
 using OpenSearch.Net;
 using OpenSearch.Net.Specification.ClusterApi;
 using OpenSearch.Net.Utf8Json;
@@ -114,7 +113,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("name", name)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected DeleteComponentTemplateRequest()
             : base() { }
 
@@ -207,7 +206,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("name", name)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected ComponentTemplateExistsRequest()
             : base() { }
 
@@ -653,7 +652,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("name", name)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected PutComponentTemplateRequest()
             : base() { }
 

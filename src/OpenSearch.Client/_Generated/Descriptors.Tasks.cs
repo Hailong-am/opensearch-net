@@ -47,7 +47,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Text.Json.Serialization;
 using OpenSearch.Net;
 using OpenSearch.Net.Specification.TasksApi;
 using OpenSearch.Net.Utf8Json;
@@ -114,7 +113,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("task_id", taskId)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected GetTaskDescriptor()
             : base() { }
 

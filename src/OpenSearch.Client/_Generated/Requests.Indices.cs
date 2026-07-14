@@ -48,7 +48,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.Json.Serialization;
 using OpenSearch.Net;
 using OpenSearch.Net.Specification.IndicesApi;
 using OpenSearch.Net.Utf8Json;
@@ -84,7 +83,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index).Required("block", block)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected AddIndexBlockRequest()
             : base() { }
 
@@ -296,7 +295,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index).Required("target", target)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected CloneIndexRequest()
             : base() { }
 
@@ -383,7 +382,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected CloseIndexRequest()
             : base() { }
 
@@ -480,7 +479,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected CreateIndexRequest()
             : base() { }
 
@@ -549,7 +548,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected DeleteIndexRequest()
             : base() { }
 
@@ -640,7 +639,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index).Required("name", name)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected DeleteAliasRequest()
             : base() { }
 
@@ -703,7 +702,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("name", name)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected DeleteComposableIndexTemplateRequest()
             : base() { }
 
@@ -763,7 +762,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("name", name)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected DeleteIndexTemplateRequest()
             : base() { }
 
@@ -822,7 +821,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected IndexExistsRequest()
             : base() { }
 
@@ -919,7 +918,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("name", name)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected AliasExistsRequest()
             : base() { }
 
@@ -989,7 +988,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("name", name)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected ComposableIndexTemplateExistsRequest()
             : base() { }
 
@@ -1056,7 +1055,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("name", name)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected IndexTemplateExistsRequest()
             : base() { }
 
@@ -1286,7 +1285,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected GetIndexRequest()
             : base() { }
 
@@ -1481,7 +1480,7 @@ namespace OpenSearch.Client
             : base(r => r.Optional("index", index).Required("fields", fields)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected GetFieldMappingRequest()
             : base() { }
 
@@ -1897,7 +1896,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected OpenIndexRequest()
             : base() { }
 
@@ -2085,7 +2084,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("name", name)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected PutComposableIndexTemplateRequest()
             : base() { }
 
@@ -2150,7 +2149,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected PutMappingRequest()
             : base() { }
 
@@ -2361,7 +2360,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("name", name)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected PutIndexTemplateRequest()
             : base() { }
 
@@ -2478,7 +2477,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("name", name)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected ResolveIndexRequest()
             : base() { }
 
@@ -2529,7 +2528,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("alias", alias).Optional("new_index", newIndex)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected RolloverIndexRequest()
             : base() { }
 
@@ -2612,7 +2611,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index).Required("target", target)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected ShrinkIndexRequest()
             : base() { }
 
@@ -2703,7 +2702,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index).Required("target", target)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected SplitIndexRequest()
             : base() { }
 

@@ -5,7 +5,6 @@
 }
 @{ await IncludeGeneratorNotice(); }
 
-using System.Text.Json.Serialization;
 using OpenSearch.Net.@(CsharpNames.ApiNamespace).@ns@(CsharpNames.ApiNamespaceSuffix);
 using OpenSearch.Net.Utf8Json;
 
@@ -19,7 +18,7 @@ namespace OpenSearch.Client;
 
 	public class @m.Request : @Raw($"Arbitrary{(m.TakesBody ? "Body" : string.Empty)}HttpRequestBase<{m.RequestParameters}>"), @m.IRequest
 	{
-		[SerializationConstructor, JsonConstructor]
+		[SerializationConstructor]
 		protected @(m.Request)() { }
 
 		public @(m.Request)(string path) : base(path) { }

@@ -48,7 +48,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.Json.Serialization;
 using OpenSearch.Net;
 using OpenSearch.Net.Specification.IngestApi;
 using OpenSearch.Net.Utf8Json;
@@ -80,7 +79,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("id", id)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected DeletePipelineRequest()
             : base() { }
 
@@ -213,7 +212,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("id", id)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected PutPipelineRequest()
             : base() { }
 

@@ -30,7 +30,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenSearch.Net;
-using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
@@ -44,7 +43,7 @@ namespace OpenSearch.Client
 	{
 		internal static readonly char[] TypedKeysSeparator = { '#' };
 
-		[SerializationConstructor, JsonConstructor]
+		[SerializationConstructor]
 		public AggregateDictionary(IReadOnlyDictionary<string, IAggregate> backingDictionary) : base(backingDictionary) { }
 
 		public static AggregateDictionary Default { get; } = new AggregateDictionary(EmptyReadOnly<string, IAggregate>.Dictionary);

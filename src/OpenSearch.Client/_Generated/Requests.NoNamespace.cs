@@ -48,7 +48,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.Json.Serialization;
 using OpenSearch.Net;
 using OpenSearch.Net.Utf8Json;
 
@@ -391,7 +390,7 @@ namespace OpenSearch.Client
         partial void DocumentFromPath(TDocument document);
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected CreateRequest()
             : base() { }
 
@@ -495,7 +494,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected CreatePitRequest()
             : base() { }
 
@@ -572,7 +571,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index).Required("id", id)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected DeleteRequest()
             : base() { }
 
@@ -682,7 +681,7 @@ namespace OpenSearch.Client
         partial void DocumentFromPath(TDocument document);
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected DeleteRequest()
             : base() { }
     }
@@ -725,7 +724,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected DeleteByQueryRequest()
             : base() { }
 
@@ -1013,7 +1012,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("task_id", taskId)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected DeleteByQueryRethrottleRequest()
             : base() { }
 
@@ -1066,7 +1065,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("id", id)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected DeleteScriptRequest()
             : base() { }
 
@@ -1131,7 +1130,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index).Required("id", id)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected DocumentExistsRequest()
             : base() { }
 
@@ -1253,7 +1252,7 @@ namespace OpenSearch.Client
         partial void DocumentFromPath(TDocument document);
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected DocumentExistsRequest()
             : base() { }
     }
@@ -1285,7 +1284,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index).Required("id", id)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected SourceExistsRequest()
             : base() { }
 
@@ -1397,7 +1396,7 @@ namespace OpenSearch.Client
         partial void DocumentFromPath(TDocument document);
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected SourceExistsRequest()
             : base() { }
     }
@@ -1432,7 +1431,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index).Required("id", id)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected ExplainRequest()
             : base() { }
 
@@ -1553,7 +1552,7 @@ namespace OpenSearch.Client
         partial void DocumentFromPath(TDocument document);
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected ExplainRequest()
             : base() { }
     }
@@ -1656,7 +1655,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index).Required("id", id)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected GetRequest()
             : base() { }
 
@@ -1779,7 +1778,7 @@ namespace OpenSearch.Client
         partial void DocumentFromPath(TDocument document);
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected GetRequest()
             : base() { }
     }
@@ -1820,7 +1819,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("id", id)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected GetScriptRequest()
             : base() { }
 
@@ -1873,7 +1872,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index).Required("id", id)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected SourceRequest()
             : base() { }
 
@@ -1986,7 +1985,7 @@ namespace OpenSearch.Client
         partial void DocumentFromPath(TDocument document);
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected SourceRequest()
             : base() { }
     }
@@ -2581,7 +2580,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("id", id).Optional("context", context)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected PutScriptRequest()
             : base() { }
 
@@ -2712,7 +2711,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("task_id", taskId)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected ReindexRethrottleRequest()
             : base() { }
 
@@ -3602,7 +3601,7 @@ namespace OpenSearch.Client
         partial void DocumentFromPath(TDocument document);
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected UpdateRequest()
             : base() { }
 
@@ -3725,7 +3724,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("index", index)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected UpdateByQueryRequest()
             : base() { }
 
@@ -4024,7 +4023,7 @@ namespace OpenSearch.Client
             : base(r => r.Required("task_id", taskId)) { }
 
         /// <summary>Used for serialization purposes, making sure we have a parameterless constructor</summary>
-        [SerializationConstructor, JsonConstructor]
+        [SerializationConstructor]
         protected UpdateByQueryRethrottleRequest()
             : base() { }
 
