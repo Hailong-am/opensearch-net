@@ -42,8 +42,14 @@ namespace OpenSearch.Client
 	/// Builds a <see cref="MultiGetResponse"/> from the <c>{ "docs": [ ... ] }</c> envelope.
 	/// The order of the returned documents mirrors the order of the operations in the request, so each
 	/// hit is deserialized as a <see cref="MultiGetHit{T}"/> using the CLR type of the corresponding
-	/// operation (matching the pre-STJ stateful <c>MultiGetResponseFormatter</c>).
+	/// operation.
 	/// </summary>
+	/// <remarks>
+	/// Dual-engine: when the built-in serializer exposes a Utf8Json formatter resolver (the current
+	/// default), delegates to the stateful <see cref="MultiGetResponseFormatter"/> — the same path
+	/// <c>main</c> uses. Only when the serializer exposes STJ options (once the default engine switches
+	/// in a later PR of #388) does this builder parse and dispatch the STJ way below.
+	/// </remarks>
 	internal class MultiGetResponseBuilder : CustomResponseBuilderBase
 	{
 		private static readonly ConcurrentDictionary<Type, MethodInfo> DeserializeHitMethods = new();
@@ -57,7 +63,13 @@ namespace OpenSearch.Client
 
 		public override object DeserializeResponse(IOpenSearchSerializer builtInSerializer, IApiCallDetails response, Stream stream)
 		{
-			if (!response.Success || IsEmpty(stream))
+			if (!response.Success)
+				return new MultiGetResponse();
+
+			if (builtInSerializer is IInternalSerializer internalSerializer && internalSerializer.TryGetJsonFormatter(out var formatterResolver))
+				return builtInSerializer.CreateStateful(new MultiGetResponseFormatter(Request)).Deserialize<MultiGetResponse>(stream);
+
+			if (IsEmpty(stream))
 				return new MultiGetResponse();
 
 			using var doc = JsonDocument.Parse(stream);
@@ -71,7 +83,15 @@ namespace OpenSearch.Client
 			CancellationToken ctx = default
 		)
 		{
-			if (!response.Success || IsEmpty(stream))
+			if (!response.Success)
+				return new MultiGetResponse();
+
+			if (builtInSerializer is IInternalSerializer internalSerializer && internalSerializer.TryGetJsonFormatter(out var formatterResolver))
+				return await builtInSerializer.CreateStateful(new MultiGetResponseFormatter(Request))
+					.DeserializeAsync<MultiGetResponse>(stream, ctx)
+					.ConfigureAwait(false);
+
+			if (IsEmpty(stream))
 				return new MultiGetResponse();
 
 			using var doc = await JsonDocument.ParseAsync(stream, cancellationToken: ctx).ConfigureAwait(false);
