@@ -32,8 +32,8 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[MapsApi("index.json")]
 	[JsonFormatter(typeof(IndexRequestFormatter<>))]
+	[MapsApi("index.json")]
 	public partial interface IIndexRequest<TDocument> : IProxyRequest, IDocumentRequest where TDocument : class
 	{
 		TDocument Document { get; set; }

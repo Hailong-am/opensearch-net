@@ -35,8 +35,8 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[DebuggerDisplay("{DebugDisplay,nq}")]
 	[JsonFormatter(typeof(PropertyNameFormatter))]
+	[DebuggerDisplay("{DebugDisplay,nq}")]
 	public class PropertyName : IEquatable<PropertyName>, IUrlParameter
 	{
 		private readonly object _comparisonValue;

@@ -392,6 +392,4 @@ namespace OpenSearch.Client
 
 		public DateMathTime Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver) => reader.ReadString();
 	}
-
-
 }

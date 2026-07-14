@@ -51,21 +51,11 @@ namespace OpenSearch.Client
 
 	internal class ResponseFormatterHelpers
 	{
-		internal static readonly Dictionary<string, int> ServerErrorFields = new Dictionary<string, int>
-		{
-			{ "error", 0 },
-			{ "status", 1 }
-		};
-
-		// Byte-segment keyed variant used by the restored Utf8Json response formatters, which match raw
-		// property-name segments (ArraySegment&lt;byte&gt;) rather than decoded strings. Only used on the
-		// legacy Utf8Json serialization path.
-		internal static readonly OpenSearch.Net.Utf8Json.Internal.AutomataDictionary ServerErrorFieldsAutomata =
-			new OpenSearch.Net.Utf8Json.Internal.AutomataDictionary
-			{
-				{ "error", 0 },
-				{ "status", 1 }
-			};
+        internal static readonly AutomataDictionary ServerErrorFields = new AutomataDictionary
+        {
+            { "error", 0 },
+            { "status", 1 }
+        };
 	}
 
 	internal class DictionaryResponseFormatter<TResponse, TKey, TValue> : IJsonFormatter<TResponse>
@@ -82,7 +72,7 @@ namespace OpenSearch.Client
 			while (reader.ReadIsInObject(ref count))
 			{
 				var property = reader.ReadPropertyNameSegmentRaw();
-				if (ResponseFormatterHelpers.ServerErrorFieldsAutomata.TryGetValue(property, out var errorValue))
+				if (ResponseFormatterHelpers.ServerErrorFields.TryGetValue(property, out var errorValue))
 				{
 					switch (errorValue)
 					{
@@ -119,6 +109,4 @@ namespace OpenSearch.Client
 
 		public void Serialize(ref JsonWriter writer, TResponse value, IJsonFormatterResolver formatterResolver) => throw new NotSupportedException();
 	}
-
-
 }

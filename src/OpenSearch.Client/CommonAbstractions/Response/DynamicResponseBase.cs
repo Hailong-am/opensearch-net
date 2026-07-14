@@ -72,7 +72,7 @@ namespace OpenSearch.Client
 			while (reader.ReadIsInObject(ref count))
 			{
 				var property = reader.ReadPropertyNameSegmentRaw();
-				if (ResponseFormatterHelpers.ServerErrorFieldsAutomata.TryGetValue(property, out var errorValue))
+				if (ResponseFormatterHelpers.ServerErrorFields.TryGetValue(property, out var errorValue))
 				{
 					switch (errorValue)
 					{
@@ -109,6 +109,4 @@ namespace OpenSearch.Client
 
 		public void Serialize(ref JsonWriter writer, TResponse value, IJsonFormatterResolver formatterResolver) => throw new NotSupportedException();
 	}
-
-
 }
