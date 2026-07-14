@@ -29,6 +29,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenSearch.Net.Diagnostics;
@@ -66,18 +67,32 @@ namespace OpenSearch.Net
 	internal class DiagnosticsSerializerProxy : IOpenSearchSerializer, IInternalSerializer
 	{
 		private readonly IOpenSearchSerializer _serializer;
-		private readonly bool _wrapsUtf8JsonSerializer;
 		private readonly SerializerRegistrationInformation _state;
+		private readonly JsonSerializerOptions _jsonSerializerOptions;
+		private readonly bool _wrapsStjSerializer;
 		private readonly IJsonFormatterResolver _formatterResolver;
+		private readonly bool _wrapsUtf8JsonSerializer;
 		private static DiagnosticSource DiagnosticSource { get; } = new DiagnosticListener(DiagnosticSources.Serializer.SourceName);
 
 		public DiagnosticsSerializerProxy(IOpenSearchSerializer serializer, string purpose = "request/response")
 		{
 			_serializer = serializer;
 			_state = new SerializerRegistrationInformation(serializer.GetType(), purpose);
-			if (serializer is IInternalSerializer s && s.TryGetJsonFormatter(out var formatterResolver))
+
+			if (serializer is IInternalSerializer s2 && s2.TryGetJsonSerializerOptions(out var jsonOptions))
 			{
-				_formatterResolver = formatterResolver;
+				_jsonSerializerOptions = jsonOptions;
+				_wrapsStjSerializer = true;
+			}
+			else
+			{
+				_jsonSerializerOptions = null;
+				_wrapsStjSerializer = false;
+			}
+
+			if (serializer is IInternalSerializer s3 && s3.TryGetJsonFormatter(out var resolver))
+			{
+				_formatterResolver = resolver;
 				_wrapsUtf8JsonSerializer = true;
 			}
 			else
@@ -85,6 +100,12 @@ namespace OpenSearch.Net
 				_formatterResolver = null;
 				_wrapsUtf8JsonSerializer = false;
 			}
+		}
+
+		public bool TryGetJsonSerializerOptions(out JsonSerializerOptions options)
+		{
+			options = _jsonSerializerOptions;
+			return _wrapsStjSerializer;
 		}
 
 		public bool TryGetJsonFormatter(out IJsonFormatterResolver formatterResolver)

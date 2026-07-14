@@ -32,6 +32,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using OpenSearch.Net;
 using OpenSearch.Net.Utf8Json;
+using JsonSerializerOptions = System.Text.Json.JsonSerializerOptions;
 
 namespace OpenSearch.Client
 {
@@ -46,6 +47,12 @@ namespace OpenSearch.Client
 		{
 			formatterResolver = FormatterResolver;
 			return true;
+		}
+
+		bool IInternalSerializer.TryGetJsonSerializerOptions(out JsonSerializerOptions options)
+		{
+			options = null;
+			return false;
 		}
 
 		public T Deserialize<T>(Stream stream) =>
