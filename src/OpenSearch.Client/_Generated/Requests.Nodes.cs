@@ -48,7 +48,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.Json.Serialization;
 using OpenSearch.Net;
 using OpenSearch.Net.Specification.NodesApi;
 using OpenSearch.Net.Utf8Json;
