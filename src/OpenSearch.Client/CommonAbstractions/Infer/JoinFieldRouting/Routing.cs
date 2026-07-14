@@ -35,8 +35,8 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(RoutingFormatter))]
 	[DebuggerDisplay("{DebugDisplay,nq}")]
+	[JsonFormatter(typeof(RoutingFormatter))]
 	public class Routing : IEquatable<Routing>, IUrlParameter
 	{
 		private static readonly char[] Separator = { ',' };
@@ -177,11 +177,17 @@ namespace OpenSearch.Client
 			}
 		}
 
-		internal bool ShouldSerialize(IJsonFormatterResolver formatterResolver)
+		internal bool ShouldSerialize(IConnectionSettingsValues settings)
 		{
-			var inferrer = formatterResolver.GetConnectionSettings().Inferrer;
-			var resolved = inferrer.Resolve(this);
+			var resolved = settings.Inferrer.Resolve(this);
 			return !resolved.IsNullOrEmpty();
 		}
+
+		// Utf8Json discovers a type-level ShouldSerialize hook by looking for a method taking a single
+		// IJsonFormatterResolver parameter (see ReflectionExtensions.GetShouldSerializeMethod). Provide that
+		// overload so a Routing that resolves to empty is omitted on the Utf8Json path rather than emitted
+		// as "routing": null.
+		internal bool ShouldSerialize(OpenSearch.Net.Utf8Json.IJsonFormatterResolver formatterResolver) =>
+			ShouldSerialize(formatterResolver.GetConnectionSettings());
 	}
 }

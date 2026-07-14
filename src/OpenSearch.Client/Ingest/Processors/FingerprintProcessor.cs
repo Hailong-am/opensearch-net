@@ -34,6 +34,7 @@ using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(FingerprintProcessor))]
 	public interface IFingerprintProcessor : IProcessor
 	{
 		[DataMember(Name = "fields")]

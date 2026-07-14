@@ -33,6 +33,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[ReadAs(typeof(FieldLookup))]
+	[InterfaceDataContract]
 	public interface IFieldLookup
 	{
 		[DataMember(Name ="id")]

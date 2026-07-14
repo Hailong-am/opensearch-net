@@ -38,6 +38,7 @@ namespace OpenSearch.Client
 	/// You can use the index-prefixes option in the field mapping to avoid this limit.
 	/// </summary>
 	[ReadAs(typeof(IntervalsPrefix))]
+	[InterfaceDataContract]
 	public interface IIntervalsPrefix : IIntervalsNoFilter
 	{
 		/// <summary>

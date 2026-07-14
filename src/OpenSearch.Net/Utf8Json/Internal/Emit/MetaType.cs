@@ -101,7 +101,12 @@ namespace OpenSearch.Net.Utf8Json.Internal.Emit
 		{
 			var isClass = type.IsClass || type.IsInterface || type.IsAbstract;
 			var dataContractPresent = type.GetCustomAttribute<DataContractAttribute>(true) != null ||
-									  type.GetCustomAttribute<InterfaceDataContractAttribute>(true) != null;
+									  type.GetCustomAttribute<InterfaceDataContractAttribute>(true) != null ||
+									  // The high-level client (OpenSearch.Client) declares its own
+									  // InterfaceDataContractAttribute, which we cannot reference from here without a
+									  // circular dependency. Recognize it by name so DataMember-only serialization is
+									  // still honored for OSC domain interfaces on the Utf8Json path.
+									  type.GetCustomAttributes(true).Any(a => a.GetType().Name == "InterfaceDataContractAttribute");
 
 			Type = type;
 
@@ -213,9 +218,15 @@ namespace OpenSearch.Net.Utf8Json.Internal.Emit
 				}
 			}
 
-			// GetConstructor
+			// GetConstructor. Recognize both the vendored Utf8Json SerializationConstructorAttribute and the
+			// high-level client's own OpenSearch.Client.SerializationConstructorAttribute (which we cannot
+			// reference here without a circular dependency, so match by name). The latter marks the non-public
+			// parameterless constructor on request types (e.g. CreateIndexRequest); without honoring it the
+			// public-only fallback below misses that ctor, builds the object via GetUninitializedObject, and
+			// NREs because request base state is left uninitialized.
 			var ctor = type.GetDeclaredConstructors()
-				.SingleOrDefault(x => x.GetCustomAttribute<SerializationConstructorAttribute>(false) != null);
+				.SingleOrDefault(x => x.GetCustomAttribute<SerializationConstructorAttribute>(false) != null
+					|| x.GetCustomAttributes(false).Any(a => a.GetType().Name == "SerializationConstructorAttribute"));
 			var constructorParameters = new List<MetaMember>();
 			{
 				IEnumerator<ConstructorInfo> ctorEnumerator = null;

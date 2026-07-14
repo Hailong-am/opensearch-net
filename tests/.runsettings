@@ -1,6 +1,11 @@
 <RunSettings>
 	<RunConfiguration>
 		<MaxCpuCount>0</MaxCpuCount>
+		<!-- Test assemblies that contain only unit ([U]/[TU]) tests discover zero tests under the
+		     integration cluster filter (and vice versa). Do not treat such an empty run as an error;
+		     otherwise the newer `dotnet test` runner fails the build with "No test is available" even
+		     though no test actually failed. -->
+		<TreatNoTestsAsError>false</TreatNoTestsAsError>
 	</RunConfiguration>
 	<LoggerRunSettings>
 		<Loggers>

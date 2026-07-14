@@ -34,8 +34,8 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(BulkRequestFormatter))]
 	[MapsApi("bulk.json")]
+	[JsonFormatter(typeof(BulkRequestFormatter))]
 	public partial interface IBulkRequest
 	{
 		[IgnoreDataMember]

@@ -29,12 +29,14 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary> Ingest pipelines are composed of one or more processors </summary>
 	[InterfaceDataContract]
+	[JsonConverter(typeof(ProcessorConverter))]
 	[JsonFormatter(typeof(ProcessorFormatter))]
 	public interface IProcessor
 	{

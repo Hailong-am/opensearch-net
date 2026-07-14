@@ -37,6 +37,7 @@ namespace OpenSearch.Client
 	/// <remarks>
 	/// Requires analysis-icu plugin to be installed
 	/// </remarks>
+	[InterfaceDataContract]
 	public interface IIcuTransformTokenFilter : ITokenFilter
 	{
 		/// <summary>

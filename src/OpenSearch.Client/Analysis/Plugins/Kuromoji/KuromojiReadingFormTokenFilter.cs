@@ -35,6 +35,7 @@ namespace OpenSearch.Client
 	/// The kuromoji_readingform token filter replaces the token with its reading form in either katakana or romaji.
 	/// Part of the `analysis-kuromoji` plugin:
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IKuromojiReadingFormTokenFilter : ITokenFilter
 	{
 		/// <summary>

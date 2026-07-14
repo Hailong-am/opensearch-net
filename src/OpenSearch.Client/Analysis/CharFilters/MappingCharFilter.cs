@@ -34,6 +34,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A char filter of type mapping replacing characters of an analyzed text with given mapping.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IMappingCharFilter : ICharFilter
 	{
 		[DataMember(Name = "mappings")]

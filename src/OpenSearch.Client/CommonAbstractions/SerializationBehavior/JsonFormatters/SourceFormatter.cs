@@ -46,7 +46,7 @@ namespace OpenSearch.Client
 		private static bool AttemptFastPath(IOpenSearchSerializer serializer, out IJsonFormatterResolver formatter)
 		{
 			formatter = null;
-			return serializer is IInternalSerializer s && s.TryGetJsonFormatter(out formatter);
+			return serializer is IInternalSerializer s && s.TryGetFormatterResolver(out formatter);
 		}
 
 

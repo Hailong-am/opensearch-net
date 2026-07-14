@@ -32,6 +32,7 @@ using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(GeoPointFielddata))]
 	public interface IGeoPointFielddata : IFielddata
 	{
 		[DataMember(Name ="format")]

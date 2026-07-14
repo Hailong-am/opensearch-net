@@ -78,20 +78,9 @@ namespace OpenSearch.Client
 		private string Sanitize(TKey key) => key?.GetString(_connectionSettings);
 	}
 
-	internal abstract class ResolvableDictionaryFormatterBase<TDictionary, TKey, TValue> : IJsonFormatter<TDictionary>
+
+	internal abstract class ResolvableDictionaryFormatterBase<TDictionary, TKey, TValue>
 	{
-		public TDictionary Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
-		{
-			var formatter = formatterResolver.GetFormatter<Dictionary<TKey, TValue>>();
-			var d = formatter.Deserialize(ref reader, formatterResolver);
-			var settings = formatterResolver.GetConnectionSettings();
-			var dict = Create(settings, d);
-			return dict;
-		}
-
-		public void Serialize(ref JsonWriter writer, TDictionary value, IJsonFormatterResolver formatterResolver) =>
-			throw new NotSupportedException();
-
 		protected abstract TDictionary Create(IConnectionSettingsValues settings, Dictionary<TKey, TValue> dictionary);
 	}
 
@@ -118,7 +107,7 @@ namespace OpenSearch.Client
 			while (reader.ReadIsInObject(ref count))
 			{
 				var property = reader.ReadPropertyNameSegmentRaw();
-				if (ResponseFormatterHelpers.ServerErrorFields.TryGetValue(property, out var errorValue))
+				if (ResponseFormatterHelpers.ServerErrorFieldsAutomata.TryGetValue(property, out var errorValue))
 				{
 					switch (errorValue)
 					{
@@ -158,4 +147,6 @@ namespace OpenSearch.Client
 		public void Serialize(ref JsonWriter writer, TResponse value, IJsonFormatterResolver formatterResolver) =>
 			throw new NotSupportedException();
 	}
+
+
 }

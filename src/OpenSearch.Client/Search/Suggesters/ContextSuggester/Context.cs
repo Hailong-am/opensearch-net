@@ -26,10 +26,15 @@
 *  under the License.
 */
 
+
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
+	[JsonConverter(typeof(ContextConverter))]
 	[JsonFormatter(typeof(ContextFormatter))]
 	public class Context : Union<string, GeoLocation>
 	{
@@ -45,6 +50,41 @@ namespace OpenSearch.Client
 		public static implicit operator Context(GeoLocation context) => new Context(context);
 	}
 
+	/// <summary>
+	/// (De)serializes <see cref="Context"/> (a <see cref="Union{String, GeoLocation}"/> subtype).
+	/// Reads via the underlying union and wraps the resulting member in a <see cref="Context"/>;
+	/// writes whichever member is set. Replaces the Utf8Json <c>ContextFormatter</c>.
+	/// </summary>
+	internal sealed class ContextConverter : JsonConverter<Context>
+	{
+		public override Context Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			if (reader.TokenType == JsonTokenType.Null)
+				return null;
+
+			var union = System.Text.Json.JsonSerializer.Deserialize<Union<string, GeoLocation>>(ref reader, options);
+			if (union == null)
+				return null;
+
+			return union.Tag switch
+			{
+				0 => new Context(union.Item1),
+				1 => new Context(union.Item2),
+				_ => null
+			};
+		}
+
+		public override void Write(Utf8JsonWriter writer, Context value, JsonSerializerOptions options)
+		{
+			if (value == null)
+			{
+				writer.WriteNullValue();
+				return;
+			}
+
+			System.Text.Json.JsonSerializer.Serialize(writer, value, typeof(Union<string, GeoLocation>), options);
+		}
+	}
 	internal class ContextFormatter : IJsonFormatter<Context>
 	{
 		public Context Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
@@ -68,4 +108,6 @@ namespace OpenSearch.Client
 			formatter.Serialize(ref writer, value, formatterResolver);
 		}
 	}
+
+
 }

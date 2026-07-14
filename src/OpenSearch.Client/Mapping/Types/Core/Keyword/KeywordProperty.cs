@@ -39,6 +39,7 @@ namespace OpenSearch.Client
 	/// Keyword fields are only searchable by their exact value.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(KeywordProperty))]
 	public interface IKeywordProperty : IDocValuesProperty
 	{
 		[DataMember(Name ="boost")]

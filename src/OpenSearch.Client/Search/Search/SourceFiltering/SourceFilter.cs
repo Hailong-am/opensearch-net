@@ -33,6 +33,8 @@ using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(SourceFilter))]
+	[System.Text.Json.Serialization.JsonConverter(typeof(SourceFilterConverter))]
 	[JsonFormatter(typeof(SourceFilterFormatter))]
 	public interface ISourceFilter
 	{

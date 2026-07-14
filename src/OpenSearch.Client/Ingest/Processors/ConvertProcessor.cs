@@ -41,6 +41,7 @@ namespace OpenSearch.Client
 	/// If the field value is an array, all members will be converted.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(ConvertProcessor))]
 	public interface IConvertProcessor : IProcessor
 	{
 		/// <summary>

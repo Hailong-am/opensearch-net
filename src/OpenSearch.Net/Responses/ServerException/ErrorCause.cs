@@ -31,14 +31,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Extensions;
 using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net.Utf8Json.Internal;
-
 namespace OpenSearch.Net
 {
-	[JsonFormatter(typeof(ErrorCauseFormatter))]
+	[JsonConverter(typeof(ErrorCauseConverter))]
 	[DataContract]
+	[JsonFormatter(typeof(ErrorCauseFormatter))]
 	public class ErrorCause
 	{
 		private static readonly IReadOnlyCollection<string> DefaultCollection =
@@ -98,7 +99,6 @@ namespace OpenSearch.Net
 			? $"Type: {Type} Reason: \"{Reason}\""
 			: $"Type: {Type} Reason: \"{Reason}\" CausedBy: \"{CausedBy}\"";
 	}
-
 	internal static class ErrorCauseFormatterStatics
 	{
 		public static readonly AutomataDictionary Fields = new AutomataDictionary
@@ -454,4 +454,6 @@ namespace OpenSearch.Net
 	}
 
 	internal class ErrorCauseFormatter : ErrorCauseFormatter<ErrorCause> {}
+
+
 }

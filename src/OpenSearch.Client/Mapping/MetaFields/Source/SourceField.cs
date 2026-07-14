@@ -32,6 +32,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[ReadAs(typeof(SourceField))]
+	[InterfaceDataContract]
 	public interface ISourceField : IFieldMapping
 	{
 		[DataMember(Name ="compress")]

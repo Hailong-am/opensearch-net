@@ -35,6 +35,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A suggester that suggests similar looking terms based on a provided text
 	/// </summary>
+	[InterfaceDataContract]
 	public interface ISuggester
 	{
 		/// <summary>

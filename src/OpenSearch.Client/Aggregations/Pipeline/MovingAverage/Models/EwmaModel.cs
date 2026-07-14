@@ -32,6 +32,7 @@ using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(EwmaModel))]
 	public interface IEwmaModel : IMovingAverageModel
 	{
 		[DataMember(Name ="alpha")]

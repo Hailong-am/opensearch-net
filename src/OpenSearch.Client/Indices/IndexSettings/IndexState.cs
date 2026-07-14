@@ -31,6 +31,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[ReadAs(typeof(IndexState))]
+	[InterfaceDataContract]
 	public interface IIndexState
 	{
 		[DataMember(Name ="aliases")]

@@ -29,8 +29,9 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
+using OpenSearch.Net;
 
 namespace OpenSearch.Client
 {
@@ -38,6 +39,7 @@ namespace OpenSearch.Client
 	/// A script to execute to provide custom computation
 	/// </summary>
 	[InterfaceDataContract]
+	[JsonConverter(typeof(ScriptConverter))]
 	[JsonFormatter(typeof(ScriptFormatter))]
 	public interface IScript
 	{

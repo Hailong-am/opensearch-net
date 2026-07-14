@@ -34,6 +34,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A tokenizer of type pattern that can flexibly separate text into terms via a regular expression.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IPatternTokenizer : ITokenizer
 	{
 		/// <summary>

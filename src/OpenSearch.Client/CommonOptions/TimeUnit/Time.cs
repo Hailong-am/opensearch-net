@@ -28,15 +28,17 @@
 
 using System;
 using System.Globalization;
+using System.Text.Json.Serialization;
+using OpenSearch.Net.Utf8Json;
 using System.Text.RegularExpressions;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// Represents a time value
 	/// </summary>
+	[JsonConverter(typeof(TimeConverter))]
 	[JsonFormatter(typeof(TimeFormatter))]
 	public class Time : IComparable<Time>, IEquatable<Time>, IUrlParameter
 	{

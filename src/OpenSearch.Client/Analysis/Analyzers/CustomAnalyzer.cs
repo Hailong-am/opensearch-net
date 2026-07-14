@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
@@ -41,12 +42,14 @@ namespace OpenSearch.Client
 	/// logical/registered names of token filters.
 	/// </para>
 	/// </summary>
+	[InterfaceDataContract]
 	public interface ICustomAnalyzer : IAnalyzer
 	{
 		/// <summary>
 		/// The logical / registered name of the tokenizer to use.
 		/// </summary>
 		[DataMember(Name ="char_filter")]
+		[JsonConverter(typeof(SingleOrManyStringConverter))]
 		[JsonFormatter(typeof(SingleOrEnumerableFormatter<string>))]
 		IEnumerable<string> CharFilter { get; set; }
 
@@ -54,6 +57,7 @@ namespace OpenSearch.Client
 		/// An optional list of logical / registered name of token filters.
 		/// </summary>
 		[DataMember(Name ="filter")]
+		[JsonConverter(typeof(SingleOrManyStringConverter))]
 		[JsonFormatter(typeof(SingleOrEnumerableFormatter<string>))]
 		IEnumerable<string> Filter { get; set; }
 

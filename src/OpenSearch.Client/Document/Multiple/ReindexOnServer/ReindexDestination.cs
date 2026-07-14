@@ -35,6 +35,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Configures the destination for a reindex API request
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IReindexDestination
 	{
 		/// <summary>
@@ -48,12 +49,12 @@ namespace OpenSearch.Client
 		/// create missing documents in the destination index.
 		/// </summary>
 		[DataMember(Name ="op_type")]
-
 		OpType? OpType { get; set; }
 
 		/// <summary>
 		/// Id of the pipeline to use to process documents
 		/// </summary>
+		[DataMember(Name = "pipeline")]
 		string Pipeline { get; set; }
 
 		/// <summary>
@@ -69,7 +70,6 @@ namespace OpenSearch.Client
 		/// than they do in the source index
 		/// </summary>
 		[DataMember(Name ="version_type")]
-
 		VersionType? VersionType { get; set; }
 	}
 

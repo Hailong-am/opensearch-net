@@ -33,6 +33,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// The pattern_replace token filter allows to easily handle string replacements based on a regular expression.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IPatternReplaceTokenFilter : ITokenFilter
 	{
 		/// <summary>

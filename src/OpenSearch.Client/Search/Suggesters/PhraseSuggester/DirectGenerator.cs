@@ -69,7 +69,6 @@ namespace OpenSearch.Client
 		int? Size { get; set; }
 
 		[DataMember(Name = "suggest_mode")]
-
 		SuggestMode? SuggestMode { get; set; }
 	}
 

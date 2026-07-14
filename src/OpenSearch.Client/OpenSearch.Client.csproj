@@ -20,6 +20,9 @@
   </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Tests" Key="$(ExposedPublicKey)" />
+    <!-- Grant the runtime-emitted Utf8Json dynamic-resolver assemblies access to internal OSC formatters
+         (e.g. IndicesBoostFormatter referenced by the generated ISearchRequest formatter). Required by the
+         legacy Utf8Json serialization path (opt-in via UseUtf8Json / OSC_USE_UTF8JSON). -->
     <InternalsVisibleTo Include="OpenSearch.Net.CustomDynamicObjectResolver" Key="$(ExposedPublicKey)" />
     <InternalsVisibleTo Include="OpenSearch.Net.DynamicCompositeResolver" Key="$(ExposedPublicKey)" />
     <InternalsVisibleTo Include="OpenSearch.Net.DynamicObjectResolverAllowPrivateFalseExcludeNullFalseNameMutateOriginal" Key="$(ExposedPublicKey)" />

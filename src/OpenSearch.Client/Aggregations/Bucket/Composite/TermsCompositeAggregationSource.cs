@@ -35,6 +35,7 @@ namespace OpenSearch.Client
 	/// A values source that is equivalent to a simple terms aggregation.
 	/// The values are extracted from a field or a script exactly like the terms aggregation.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface ITermsCompositeAggregationSource : ICompositeAggregationSource
 	{
 		/// <summary>
@@ -47,6 +48,8 @@ namespace OpenSearch.Client
 	/// <inheritdoc cref="ITermsCompositeAggregationSource" />
 	public class TermsCompositeAggregationSource : CompositeAggregationSourceBase, ITermsCompositeAggregationSource
 	{
+		internal TermsCompositeAggregationSource() { }
+
 		public TermsCompositeAggregationSource(string name) : base(name) { }
 
 		/// <inheritdoc />

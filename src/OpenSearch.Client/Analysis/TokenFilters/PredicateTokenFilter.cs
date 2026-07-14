@@ -35,6 +35,7 @@ namespace OpenSearch.Client
 	/// The predicate_token_filter token filter takes a predicate script, and removes tokens that do
 	/// not match the predicate.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IPredicateTokenFilter : ITokenFilter
 	{
 		/// <summary>

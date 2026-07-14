@@ -30,6 +30,7 @@ using System.Runtime.Serialization;
 
 namespace OpenSearch.Client
 {
+	[InterfaceDataContract]
 	public interface IExecutePainlessScriptResponse<out TResult> : IResponse
 	{
 		TResult Result { get; }

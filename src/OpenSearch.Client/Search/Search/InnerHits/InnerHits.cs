@@ -33,6 +33,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[ReadAs(typeof(InnerHits))]
+	[InterfaceDataContract]
 	public interface IInnerHits
 	{
 		/// <summary>

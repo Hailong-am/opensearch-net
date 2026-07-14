@@ -31,6 +31,7 @@ using System.Runtime.Serialization;
 namespace OpenSearch.Client
 {
 	[ReadAs(typeof(SizeField))]
+	[InterfaceDataContract]
 	public interface ISizeField : IFieldMapping
 	{
 		[DataMember(Name ="enabled")]

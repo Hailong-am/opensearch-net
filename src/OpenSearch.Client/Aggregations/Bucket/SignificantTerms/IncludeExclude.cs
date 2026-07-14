@@ -29,10 +29,13 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
+	[JsonConverter(typeof(IncludeExcludeConverter))]
 	[JsonFormatter(typeof(IncludeExcludeFormatter))]
 	public class IncludeExclude
 	{
@@ -47,6 +50,35 @@ namespace OpenSearch.Client
 		public IEnumerable<string> Values { get; set; }
 	}
 
+	internal sealed class IncludeExcludeConverter : JsonConverter<IncludeExclude>
+	{
+		public override IncludeExclude Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			switch (reader.TokenType)
+			{
+				case JsonTokenType.Null:
+					reader.Skip();
+					return null;
+				case JsonTokenType.StartArray:
+					var values = System.Text.Json.JsonSerializer.Deserialize<IEnumerable<string>>(ref reader, options);
+					return new IncludeExclude(values);
+				case JsonTokenType.String:
+					return new IncludeExclude(reader.GetString());
+				default:
+					throw new JsonException($"Unexpected token {reader.TokenType} when deserializing {nameof(IncludeExclude)}");
+			}
+		}
+
+		public override void Write(Utf8JsonWriter writer, IncludeExclude value, JsonSerializerOptions options)
+		{
+			if (value == null)
+				writer.WriteNullValue();
+			else if (value.Values != null)
+				System.Text.Json.JsonSerializer.Serialize(writer, value.Values, options);
+			else
+				writer.WriteStringValue(value.Pattern);
+		}
+	}
 	internal class IncludeExcludeFormatter : IJsonFormatter<IncludeExclude>
 	{
 		public void Serialize(ref JsonWriter writer, IncludeExclude value, IJsonFormatterResolver formatterResolver)
@@ -90,4 +122,6 @@ namespace OpenSearch.Client
 			return termsInclude;
 		}
 	}
+
+
 }

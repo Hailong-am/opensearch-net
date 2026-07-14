@@ -37,6 +37,7 @@ namespace OpenSearch.Client
 	/// For instance an interval set to 5 will translate any numeric values to its closest interval,
 	/// a value of 101 would be translated to 100 which is the key for the interval between 100 and 105.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IHistogramCompositeAggregationSource : ICompositeAggregationSource
 	{
 		/// <summary>
@@ -55,6 +56,8 @@ namespace OpenSearch.Client
 	/// <inheritdoc cref="IHistogramCompositeAggregationSource" />
 	public class HistogramCompositeAggregationSource : CompositeAggregationSourceBase, IHistogramCompositeAggregationSource
 	{
+		internal HistogramCompositeAggregationSource() { }
+
 		public HistogramCompositeAggregationSource(string name) : base(name) { }
 
 		/// <inheritdoc />

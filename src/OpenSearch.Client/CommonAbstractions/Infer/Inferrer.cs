@@ -48,6 +48,8 @@ namespace OpenSearch.Client
 			FieldResolver = new FieldResolver(connectionSettings);
 			RoutingResolver = new RoutingResolver(connectionSettings, IdResolver);
 
+			// Per-type delegate caches used by the restored Utf8Json MultiGet/MultiSearch response formatters
+			// to build strongly-typed hits from the loosely-typed wire tuples. Only used on the Utf8Json path.
 			CreateMultiHitDelegates =
 				new ConcurrentDictionary<Type,
 					Action<MultiGetResponseFormatter.MultiHitTuple, IJsonFormatterResolver, ICollection<IMultiGetHit<object>>>>();

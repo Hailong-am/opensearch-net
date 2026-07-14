@@ -27,9 +27,32 @@
 */
 
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace OpenSearch.Net
 {
+	/// <summary>
+	/// Marks an enum (or a property) as serializing to its <see cref="System.Runtime.Serialization.EnumMemberAttribute"/>
+	/// string form. By inheriting <see cref="JsonConverterAttribute"/>, the enum-member converter is attached via
+	/// the System.Text.Json attribute/contract channel, so it is honored in every nesting context — including
+	/// collection elements and union members — where an options-registered converter factory would be skipped.
+	/// </summary>
 	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Enum)]
-	public class StringEnumAttribute : Attribute { }
+	public class StringEnumAttribute : JsonConverterAttribute
+	{
+		private static readonly EnumMemberConverterFactory Factory = new EnumMemberConverterFactory(useVerbatimName: true);
+
+		public override JsonConverter CreateConverter(Type typeToConvert)
+		{
+			// The attribute's presence is the explicit opt-in to string-enum serialization, so build
+			// the converter for ANY enum (or nullable enum) type — even framework enums like
+			// HttpStatusCode that the factory's type-level CanConvert heuristic would not claim on
+			// its own. Returning null here would make STJ throw "converter not compatible".
+			var underlying = Nullable.GetUnderlyingType(typeToConvert) ?? typeToConvert;
+			return underlying.IsEnum
+				? Factory.CreateConverter(typeToConvert, JsonSerializerOptions.Default)
+				: null;
+		}
+	}
 }

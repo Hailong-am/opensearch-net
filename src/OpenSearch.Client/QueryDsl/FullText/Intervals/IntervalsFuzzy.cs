@@ -37,6 +37,7 @@ namespace OpenSearch.Client
 	/// If the fuzzy expansion matches more than 128 terms, OpenSearch returns an error.
 	/// </summary>
 	[ReadAs(typeof(IntervalsFuzzy))]
+	[InterfaceDataContract]
 	public interface IIntervalsFuzzy : IIntervalsNoFilter
 	{
 		/// <summary>

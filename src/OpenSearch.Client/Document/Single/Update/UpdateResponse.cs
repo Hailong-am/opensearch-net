@@ -30,6 +30,7 @@ using System.Runtime.Serialization;
 
 namespace OpenSearch.Client
 {
+	[InterfaceDataContract]
 	public interface IUpdateResponse<out TDocument> : IResponse where TDocument : class
 	{
 		IInlineGet<TDocument> Get { get; }

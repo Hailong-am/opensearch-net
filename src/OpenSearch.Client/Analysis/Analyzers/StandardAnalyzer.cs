@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// An analyzer of type standard that is built of using Standard Tokenizer, with Standard Token Filter, Lower Case Token Filter, and Stop Token
 	/// Filter.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IStandardAnalyzer : IAnalyzer
 	{
 		/// <summary>

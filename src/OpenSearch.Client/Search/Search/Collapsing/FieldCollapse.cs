@@ -41,6 +41,7 @@ namespace OpenSearch.Client
 	/// </para>
 	/// </summary>
 	[ReadAs(typeof(FieldCollapse))]
+	[InterfaceDataContract]
 	public interface IFieldCollapse
 	{
 		/// <summary>

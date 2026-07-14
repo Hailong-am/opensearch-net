@@ -38,6 +38,7 @@ namespace OpenSearch.Client
 	/// snowball.tartarus.org.
 	/// </para>
 	/// </summary>
+	[InterfaceDataContract]
 	public interface ISnowballAnalyzer : IAnalyzer
 	{
 		[DataMember(Name ="language")]

@@ -29,8 +29,8 @@
 using System;
 using System.Globalization;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
+using OpenSearch.Net.Utf8Json;
 /*
  * Taken from SolrNet https://github.com/mausch/SolrNet/blob/master/SolrNet/Location.cs
  */
@@ -40,6 +40,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Represents a Latitude/Longitude as a 2 dimensional point that gets serialized as { lat, lon }
 	/// </summary>
+	[System.Text.Json.Serialization.JsonConverter(typeof(GeoLocationConverter))]
 	[JsonFormatter(typeof(GeoLocationFormatter))]
 	public class GeoLocation : IEquatable<GeoLocation>, IFormattable
 	{
@@ -144,6 +145,7 @@ namespace OpenSearch.Client
 	/// Represents a Latitude/Longitude and optional Z value as a 2 or 3 dimensional point
 	/// that gets serialized as new [] { lon, lat, [z] }
 	/// </summary>
+	[System.Text.Json.Serialization.JsonConverter(typeof(GeoCoordinateConverter))]
 	[JsonFormatter(typeof(GeoCoordinateFormatter))]
 	public class GeoCoordinate : GeoLocation
 	{

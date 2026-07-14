@@ -31,12 +31,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net.Utf8Json.Internal;
-
 namespace OpenSearch.Net
 {
 	[DataContract]
+	[JsonConverter(typeof(ErrorConverter))]
 	[JsonFormatter(typeof(ErrorFormatter))]
 	public class Error : ErrorCause
 	{
@@ -53,7 +54,6 @@ namespace OpenSearch.Net
 			? $"Type: {Type} Reason: \"{Reason}\""
 			: $"Type: {Type} Reason: \"{Reason}\" CausedBy: \"{CausedBy}\"";
 	}
-
 	internal class ErrorFormatter : ErrorCauseFormatter<Error>
 	{
 		private static readonly AutomataDictionary Fields = new AutomataDictionary
@@ -111,4 +111,6 @@ namespace OpenSearch.Net
 			return false;
 		}
 	}
+
+
 }

@@ -33,13 +33,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using OpenSearch.Net;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
+using OpenSearch.Net;
 
 namespace OpenSearch.Client
 {
-	[JsonFormatter(typeof(FieldsFormatter))]
 	[DebuggerDisplay("{DebugDisplay,nq}")]
+	[System.Text.Json.Serialization.JsonConverter(typeof(FieldsConverter))]
+	[JsonFormatter(typeof(FieldsFormatter))]
 	public class Fields : IUrlParameter, IEnumerable<Field>, IEquatable<Fields>
 	{
 		internal readonly List<Field> ListOfFields;

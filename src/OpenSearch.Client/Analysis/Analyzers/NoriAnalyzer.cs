@@ -39,6 +39,7 @@ namespace OpenSearch.Client
 	/// <para> - nori_number token filter</para>
 	/// <para> - lowercase token filter</para>
 	/// </summary>
+	[InterfaceDataContract]
 	public interface INoriAnalyzer : IAnalyzer
 	{
 		/// <inheritdoc cref="INoriTokenizer.DecompoundMode" />

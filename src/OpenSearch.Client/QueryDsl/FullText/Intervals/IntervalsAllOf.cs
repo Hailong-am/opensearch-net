@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// A rule that returns matches that span a combination of other rules.
 	/// </summary>
 	[ReadAs(typeof(IntervalsAllOf))]
+	[InterfaceDataContract]
 	public interface IIntervalsAllOf : IIntervals
 	{
 		/// <summary>

@@ -28,10 +28,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
+	[JsonConverter(typeof(PercentileRanksAggregationConverter))]
 	[JsonFormatter(typeof(PercentileRanksAggregationFormatter))]
 	public interface IPercentileRanksAggregation : IFormattableMetricAggregation
 	{

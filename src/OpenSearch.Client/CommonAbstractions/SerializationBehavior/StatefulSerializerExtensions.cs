@@ -36,7 +36,7 @@ namespace OpenSearch.Client
 	{
 		public static DefaultHighLevelSerializer CreateStateful<T>(this IOpenSearchSerializer serializer, IJsonFormatter<T> formatter)
 		{
-			if (!(serializer is IInternalSerializer s) || !s.TryGetJsonFormatter(out var currentFormatterResolver))
+			if (!(serializer is IInternalSerializer s) || !s.TryGetFormatterResolver(out var currentFormatterResolver))
 				throw new Exception($"Can not create a stateful serializer because {serializer.GetType()} does not yield a json formatter");
 
 			var formatterResolver = new StatefulFormatterResolver<T>(formatter, currentFormatterResolver);

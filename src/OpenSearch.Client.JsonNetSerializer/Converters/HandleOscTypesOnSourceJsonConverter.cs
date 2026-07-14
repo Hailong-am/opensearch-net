@@ -96,7 +96,23 @@ namespace OpenSearch.Client.JsonNetSerializer.Converters
 
 		public override bool CanConvert(Type objectType) =>
 			OscTypesThatCanAppearInSource.Contains(objectType) ||
+			IsUnionType(objectType) ||
 			typeof(IGeoShape).IsAssignableFrom(objectType) ||
 			typeof(IGeometryCollection).IsAssignableFrom(objectType);
+
+		// Union<TFirst,TSecond> (and derived types) have no public parameterless constructor and
+		// cannot be constructed by Json.NET. Delegate them back to the built-in serializer, which
+		// has a dedicated UnionConverter.
+		private static bool IsUnionType(Type objectType)
+		{
+			var current = objectType;
+			while (current != null)
+			{
+				if (current.IsGenericType && current.GetGenericTypeDefinition() == typeof(Union<,>))
+					return true;
+				current = current.BaseType;
+			}
+			return false;
+		}
 	}
 }

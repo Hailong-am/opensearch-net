@@ -32,6 +32,7 @@ using OpenSearch.Net;
 
 namespace OpenSearch.Client
 {
+	[InterfaceDataContract]
 	public interface ITemplateMapping
 	{
 		[DataMember(Name ="aliases")]
