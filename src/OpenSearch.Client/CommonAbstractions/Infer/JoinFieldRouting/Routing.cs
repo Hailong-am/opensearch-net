@@ -35,8 +35,8 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[DebuggerDisplay("{DebugDisplay,nq}")]
 	[JsonFormatter(typeof(RoutingFormatter))]
+	[DebuggerDisplay("{DebugDisplay,nq}")]
 	public class Routing : IEquatable<Routing>, IUrlParameter
 	{
 		private static readonly char[] Separator = { ',' };

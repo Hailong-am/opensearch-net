@@ -28,8 +28,8 @@
 
 using System;
 using System.Text.Json.Serialization;
-using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net.Extensions;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -95,6 +95,4 @@ namespace OpenSearch.Client
 		public void Serialize(ref JsonWriter writer, DateMathExpression value, IJsonFormatterResolver formatterResolver) =>
 			writer.WriteString(value.ToString());
 	}
-
-
 }

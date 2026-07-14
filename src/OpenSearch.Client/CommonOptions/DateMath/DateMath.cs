@@ -32,9 +32,9 @@ using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using OpenSearch.Net.Utf8Json;
 using System.Text.RegularExpressions;
 using OpenSearch.Net.Extensions;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -264,6 +264,4 @@ namespace OpenSearch.Client
 		public void Serialize(ref JsonWriter writer, DateMath value, IJsonFormatterResolver formatterResolver) =>
 			writer.WriteString(value.ToString());
 	}
-
-
 }

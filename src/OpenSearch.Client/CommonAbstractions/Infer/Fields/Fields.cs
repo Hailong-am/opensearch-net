@@ -40,8 +40,8 @@ using OpenSearch.Net;
 namespace OpenSearch.Client
 {
 	[DebuggerDisplay("{DebugDisplay,nq}")]
-	[System.Text.Json.Serialization.JsonConverter(typeof(FieldsConverter))]
 	[JsonFormatter(typeof(FieldsFormatter))]
+	[JsonConverter(typeof(FieldsConverter))]
 	public class Fields : IUrlParameter, IEnumerable<Field>, IEquatable<Fields>
 	{
 		internal readonly List<Field> ListOfFields;

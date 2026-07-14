@@ -32,7 +32,7 @@ using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[AttributeUsage(AttributeTargets.Property)]
-	public class PropertyNameAttribute : Attribute
+	public class PropertyNameAttribute : Attribute, IJsonProperty
 	{
 		public PropertyNameAttribute(string name) => Name = name;
 
