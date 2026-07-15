@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// A snapshot repository that can be used as an alternative read-only way to access data created by the <see cref="IFileSystemRepository"/>.
 	/// The URL specified in the url parameter should point to the root of the shared filesystem repository.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IReadOnlyUrlRepository : IRepository<IReadOnlyUrlRepositorySettings> { }
 
 	/// <inheritdoc />
@@ -51,6 +52,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Snapshot repository settings for <see cref="IReadOnlyUrlRepository"/>
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IReadOnlyUrlRepositorySettings : IRepositorySettings
 	{
 		/// <summary>

@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// A similarity that attempts to capture important patterns in the text,
 	/// while leaving out noise.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface ILMJelinekMercerSimilarity : ISimilarity
 	{
 		/// <summary>

@@ -26,15 +26,18 @@
 *  under the License.
 */
 
+
+
+using System.Text.Json.Serialization;
+
 using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net.Utf8Json.Internal;
-
-
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// Marker interface for alias operation
 	/// </summary>
+	[JsonConverter(typeof(AliasActionConverter))]
 	[JsonFormatter(typeof(AliasActionFormatter))]
 	public interface IAliasAction { }
 
@@ -124,4 +127,6 @@ namespace OpenSearch.Client
 			return formatter.Deserialize(ref reader, formatterResolver);
 		}
 	}
+
+
 }

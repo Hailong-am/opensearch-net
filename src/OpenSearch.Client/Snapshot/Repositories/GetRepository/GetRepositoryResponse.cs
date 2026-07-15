@@ -28,12 +28,14 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
+using OpenSearch.Net;
 
 namespace OpenSearch.Client
 {
 	[DataContract]
+	[JsonConverter(typeof(GetRepositoryResponseConverter))]
 	[JsonFormatter(typeof(GetRepositoryResponseFormatter))]
 	public class GetRepositoryResponse : ResponseBase
 	{

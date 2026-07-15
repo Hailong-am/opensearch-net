@@ -27,10 +27,13 @@
 */
 
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
+	[JsonConverter(typeof(AutoExpandReplicasConverter))]
 	[JsonFormatter(typeof(AutoExpandReplicasFormatter))]
 	public class AutoExpandReplicas
 	{
@@ -159,6 +162,43 @@ namespace OpenSearch.Client
 		}
 	}
 
+	/// <summary>
+	/// Serializes <see cref="AutoExpandReplicas"/> as a string (e.g. "0-all", "0-5") or
+	/// <c>false</c> when disabled. Replaces the Utf8Json AutoExpandReplicasFormatter.
+	/// </summary>
+	internal sealed class AutoExpandReplicasConverter : JsonConverter<AutoExpandReplicas>
+	{
+		public override AutoExpandReplicas Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			switch (reader.TokenType)
+			{
+				case JsonTokenType.False:
+					return AutoExpandReplicas.Disabled;
+				case JsonTokenType.String:
+					var value = reader.GetString();
+					return string.IsNullOrEmpty(value) || value.Equals("false", StringComparison.OrdinalIgnoreCase)
+						? AutoExpandReplicas.Disabled
+						: AutoExpandReplicas.Create(value);
+				case JsonTokenType.True:
+					// "true" is not a valid value but be lenient
+					return AutoExpandReplicas.Disabled;
+				default:
+					reader.Skip();
+					return AutoExpandReplicas.Disabled;
+			}
+		}
+
+		public override void Write(Utf8JsonWriter writer, AutoExpandReplicas value, JsonSerializerOptions options)
+		{
+			if (value == null || !value.Enabled)
+			{
+				writer.WriteBooleanValue(false);
+				return;
+			}
+
+			writer.WriteStringValue(value.ToString());
+		}
+	}
 	internal class AutoExpandReplicasFormatter : IJsonFormatter<AutoExpandReplicas>
 	{
 		public AutoExpandReplicas Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
@@ -184,4 +224,6 @@ namespace OpenSearch.Client
 			writer.WriteString(value.ToString());
 		}
 	}
+
+
 }

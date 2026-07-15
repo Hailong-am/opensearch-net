@@ -28,6 +28,7 @@
 
 using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
@@ -37,6 +38,7 @@ namespace OpenSearch.Client
 	/// <para />
 	/// Requires the repository-azure plugin to be installed on the cluster
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IAzureRepository : IRepository<IAzureRepositorySettings> { }
 
 	/// <inheritdoc />
@@ -54,6 +56,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Snapshot repository settings for <see cref="IAzureRepository"/>
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IAzureRepositorySettings : IRepositorySettings
 	{
 		/// <summary>
@@ -75,6 +78,7 @@ namespace OpenSearch.Client
 		/// affect index files that are already compressed by default. Defaults to <c>false</c>.
 		/// </summary>
 		[DataMember(Name ="compress")]
+		[JsonConverter(typeof(NullableStringBooleanConverter))]
 		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? Compress { get; set; }
 

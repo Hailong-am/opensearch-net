@@ -28,12 +28,14 @@
 
 using System;
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// Sets up contextual scope for the painless script the execute under.
 	/// </summary>
+	[InterfaceDataContract]
 	[ReadAs(typeof(PainlessContextSetup))]
 	public interface IPainlessContextSetup
 	{

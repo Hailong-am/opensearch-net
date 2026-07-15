@@ -27,9 +27,11 @@
 */
 
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
+	[InterfaceDataContract]
 	public interface ICancelClusterRerouteCommand : IClusterRerouteCommand
 	{
 		[DataMember(Name ="allow_primary")]

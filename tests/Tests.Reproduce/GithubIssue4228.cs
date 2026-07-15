@@ -28,6 +28,7 @@
 
 using System;
 using System.Text;
+using System.Text.Json;
 using OpenSearch.OpenSearch.Xunit.XunitPlumbing;
 using FluentAssertions;
 using Tests.Core.Client;
@@ -49,8 +50,12 @@ namespace Tests.Reproduce
 				)
 			);
 
-			Encoding.UTF8.GetString(searchResponse.ApiCall.RequestBodyInBytes)
-				.Should().Be("{\"query\":{\"range\":{\"date\":{\"gte\":\"0001-01-01T00:00:00\"}}}}");
+			// TestClient.DefaultInMemoryClient enables PrettyJson, so compare parsed structure rather
+			// than the exact (indented) byte layout, which differs by serialization engine.
+			var json = Encoding.UTF8.GetString(searchResponse.ApiCall.RequestBodyInBytes);
+			using var actual = JsonDocument.Parse(json);
+			using var expected = JsonDocument.Parse("{\"query\":{\"range\":{\"date\":{\"gte\":\"0001-01-01T00:00:00\"}}}}");
+			JsonSerializer.Serialize(actual.RootElement).Should().Be(JsonSerializer.Serialize(expected.RootElement));
 		}
 	}
 }

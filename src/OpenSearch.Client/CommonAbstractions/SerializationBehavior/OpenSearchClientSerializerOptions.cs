@@ -244,6 +244,10 @@ namespace OpenSearch.Client
 			options.Converters.Insert(0, new SuggestDictionaryConverterFactory());
 			options.Converters.Insert(0, new SearchResponseConverterFactory());
 
+			// Index settings converters (must precede IsADictionaryConverterFactory)
+			options.Converters.Insert(0, new IndexSettingsConverter());
+			options.Converters.Insert(0, new DynamicIndexSettingsConverter());
+
 			return options;
 		}
 	}
