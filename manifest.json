@@ -48926,7 +48926,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "OpenSearch.Net.StringEnumAttribute",
-      "Summary": null
+      "Summary": "<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Net.StringEnumAttribute.yml\" sourcestartlinenumber=\"1\">Marks an enum (or a property) as serializing to its <xref href=\"System.Runtime.Serialization.EnumMemberAttribute\" data-throw-if-not-resolved=\"false\"></xref>\nstring form. By inheriting <xref href=\"System.Text.Json.Serialization.JsonConverterAttribute\" data-throw-if-not-resolved=\"false\"></xref>, the enum-member converter is attached via\nthe System.Text.Json attribute/contract channel, so it is honored in every nesting context — including\ncollection elements and union members — where an options-registered converter factory would be skipped.</p>\n"
     },
     {
       "type": "ManagedReference",

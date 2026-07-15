@@ -381,7 +381,11 @@ You can always pass a simple NameValueCollection if you want.</p>
 Allows users full control over how they want to write data to the stream to OpenSearch</p>
 </section>
       <h4><a class="xref" href="OpenSearch.Net.StringEnumAttribute.html">StringEnumAttribute</a></h4>
-      <section></section>
+      <section><p>Marks an enum (or a property) as serializing to its <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.runtime.serialization.enummemberattribute">EnumMemberAttribute</a>
+string form. By inheriting <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverterattribute">JsonConverterAttribute</a>, the enum-member converter is attached via
+the System.Text.Json attribute/contract channel, so it is honored in every nesting context — including
+collection elements and union members — where an options-registered converter factory would be skipped.</p>
+</section>
       <h4><a class="xref" href="OpenSearch.Net.StringResponse.html">StringResponse</a></h4>
       <section></section>
       <h4><a class="xref" href="OpenSearch.Net.TermVectorsRequestParameters.html">TermVectorsRequestParameters</a></h4>
