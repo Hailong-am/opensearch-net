@@ -31,12 +31,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net.Utf8Json.Internal;
 
 namespace OpenSearch.Net
 {
 	[DataContract]
+	[JsonConverter(typeof(ErrorConverter))]
 	[JsonFormatter(typeof(ErrorFormatter))]
 	public class Error : ErrorCause
 	{
