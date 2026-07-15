@@ -35,7 +35,6 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A token filter of type stop that removes stop words from token streams.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IStopTokenFilter : ITokenFilter
 	{
 		/// <summary>

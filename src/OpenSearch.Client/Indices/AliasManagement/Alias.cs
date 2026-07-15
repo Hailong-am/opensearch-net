@@ -28,7 +28,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -36,7 +35,6 @@ namespace OpenSearch.Client
 	/// An alias to one or more indices
 	/// </summary>
 	[ReadAs(typeof(Alias))]
-	[InterfaceDataContract]
 	public interface IAlias
 	{
 		/// <summary>

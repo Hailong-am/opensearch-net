@@ -32,7 +32,6 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[InterfaceDataContract]
 	[JsonConverter(typeof(CharFilterConverter))]
 	[JsonFormatter(typeof(CharFilterFormatter))]
 	public interface ICharFilter

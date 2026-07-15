@@ -35,7 +35,6 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A token filter which removes elisions. For example, “l’avion” (the plane) will tokenized as “avion” (plane).
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IElisionTokenFilter : ITokenFilter
 	{
 		/// <summary>

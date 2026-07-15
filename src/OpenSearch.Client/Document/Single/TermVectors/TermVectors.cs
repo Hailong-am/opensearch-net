@@ -34,7 +34,6 @@ using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[ReadAs(typeof(TermVectorsResult))]
-	[InterfaceDataContract]
 	public interface ITermVectors
 	{
 		bool Found { get; }

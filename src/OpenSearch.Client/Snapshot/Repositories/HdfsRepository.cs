@@ -39,7 +39,6 @@ namespace OpenSearch.Client
 	/// <para />
 	/// Requires the repository-hdfs plugin to be installed on the cluster
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IHdfsRepository : IRepository<IHdfsRepositorySettings> { }
 
 	/// <inheritdoc />
@@ -55,7 +54,6 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Snapshot repository settings for <see cref="IHdfsRepository"/>
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IHdfsRepositorySettings : IRepositorySettings
 	{
 		/// <summary>

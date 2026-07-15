@@ -13,35 +13,37 @@ using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
-	/// A <see cref="DefaultJsonTypeInfoResolver"/> modifier that rebuilds the JSON contract
-	/// for any concrete type implementing an interface marked with
-	/// <see cref="InterfaceDataContractAttribute"/>.
+	/// A <see cref="DefaultJsonTypeInfoResolver"/> modifier that ADDITIVELY adjusts the JSON contract
+	/// produced by the default resolver so that types behave the way Utf8Json's
+	/// <c>[InterfaceDataContract]</c> behavior expected — <b>without</b> clearing the default property set.
 	/// <para>
-	/// This is the System.Text.Json equivalent of Utf8Json's <c>[InterfaceDataContract]</c> behavior:
-	/// the type is serialized/deserialized purely against its interface contract. Only interface
-	/// properties carrying a <see cref="DataMemberAttribute"/> are emitted, using the
-	/// <see cref="DataMemberAttribute.Name"/> as the JSON name. This works uniformly for:
+	/// The default STJ contract is kept intact (so options-registered converter factories still resolve
+	/// for every default-surfaced property, which is what lets the central converter registrations in
+	/// <see cref="OpenSearchClientSerializerOptions"/> do the heavy lifting). On top of that the modifier
+	/// only layers on:
 	/// </para>
 	/// <list type="bullet">
-	/// <item>Descriptors (explicit interface implementations, e.g. <c>IAliases IIndexState.Aliases</c>)</item>
-	/// <item>Request classes (public properties that implement interface members, where non-body
-	/// members like route values are <see cref="IgnoreDataMemberAttribute"/> on the interface)</item>
+	/// <item>interface [DataMember(Name="...")] name resolution and [IgnoreDataMember] exclusion;</item>
+	/// <item>non-public [DataMember] members (e.g. ResponseBase.Error / StatusCode);</item>
+	/// <item>parameterless-constructor selection and non-public setter support;</item>
+	/// <item>exclusion of types STJ cannot serialize (System.Type, delegates, ...);</item>
+	/// <item>type-level <c>ShouldSerialize(IConnectionSettingsValues)</c> emission guards (e.g. Routing)
+	/// and conditionless-QueryContainer omission;</item>
+	/// <item>and — critically for descriptors that implement their contract via <b>explicit interface
+	/// implementation</b> (e.g. <c>IAnalyzers IAnalysis.Analyzers { get; set; }</c>), which the default
+	/// resolver never surfaces — the ADDITION of the missing contract-interface [DataMember] members.
+	/// Those hand-built properties bypass the options converter-factory list at depth, so the settings-aware
+	/// converters (Field/IndexName/enum/source/etc.) are pinned onto them explicitly.</item>
 	/// </list>
-	/// <para>
-	/// Because it uses the interface property getters/setters, deserialization works for free —
-	/// no write-only converter is needed.
-	/// </para>
 	/// </summary>
 	internal sealed class InterfaceDataContractModifier
 	{
 		// Enum-member converter factory used to pin the correct string/numeric enum converter onto
-		// rebuilt-contract enum properties (bypassing the options factory list, whose lowest-precedence
-		// SourceConverterFactory also claims enums). Naming is verbatim, matching the base serializer.
+		// added-contract enum properties (bypassing the options factory list at depth).
 		private static readonly OpenSearch.Net.EnumMemberConverterFactory EnumMemberConverterFactoryInstance =
 			new OpenSearch.Net.EnumMemberConverterFactory(useVerbatimName: true);
 
@@ -55,57 +57,306 @@ namespace OpenSearch.Client
 			if (typeInfo.Kind != JsonTypeInfoKind.Object)
 				return;
 
-			// Never override a converter already resolved from a [JsonConverter] attribute
-			// (dedicated polymorphic/wrapper converters). Their JsonTypeInfoKind is typically
-			// None, but guard explicitly so collection-element resolution keeps the converter.
-			if (typeInfo.Converter is not null && typeInfo.Converter.GetType().Namespace?.StartsWith("System") == false)
-				return;
-
 			var type = typeInfo.Type;
 
-			if (type.IsInterface || type.IsAbstract)
+			// For interface types being serialized directly (e.g. IRenameProcessor),
+			// apply [DataMember] directly from the interface properties.
+			if (type.IsInterface)
 			{
-				// Interfaces/abstracts are not rebuilt here (their contract is produced by
-				// DataMemberPropertyNameModifier), but a value serialized against its interface type
-				// (e.g. each IMultiTermVectorOperation element of an IEnumerable<...> contract) must still
-				// honor any type-level ShouldSerialize hook declared by a property's type — otherwise a
-				// Routing that resolves to empty is emitted as "routing": null. Apply those hooks to the
-				// existing interface-contract properties.
-				foreach (var prop in typeInfo.Properties)
-					ApplyTypeLevelShouldSerialize(prop, prop.PropertyType);
+				ApplyDirectDataMemberNames(typeInfo);
+				ExcludeUnsupportedTypes(typeInfo);
+				ApplyTypeLevelShouldSerialize(typeInfo);
 				return;
 			}
 
-			// Types serialized by a dedicated converter (dictionaries, scripts, etc.) never reach here.
-			if (typeof(IIsADictionary).IsAssignableFrom(type))
+			// Apply interface DataMember name resolution for ALL types (not just [InterfaceDataContract])
+			// because many OpenSearch types have [DataMember(Name="...")] on interface properties.
+			ApplyInterfaceDataMemberNames(typeInfo, type);
+
+			// Apply [IgnoreDataMember] from interfaces.
+			ApplyInterfaceIgnoreDataMember(typeInfo, type);
+
+			// Add non-public [DataMember] properties for deserialization.
+			AddNonPublicDataMembers(typeInfo, type);
+
+			// For types that participate in an interface data contract, suppress default-surfaced public
+			// properties that are not part of that contract (e.g. query-string parameters like TypedKeys
+			// that have no [DataMember]/[PropertyName]). This mirrors the Utf8Json [InterfaceDataContract]
+			// behavior where only annotated members were emitted. Done non-destructively (ShouldSerialize)
+			// so the kept properties keep their default converter resolution.
+			SuppressNonContractDefaultMembers(typeInfo, type);
+
+			// Add contract-interface [DataMember] members that the default resolver did not surface
+			// (explicit interface implementations, e.g. descriptors). This is what makes descriptors and
+			// request classes serialize against their interface contract without a destructive rebuild.
+			AddMissingInterfaceDataMembers(typeInfo, type);
+
+			// For contract types, pin settings-aware converters onto default-surfaced (implicitly
+			// implemented) contract properties whose value type requires them (enums, Field/Index/etc.).
+			// Without this, such a property resolves through the options converter-factory list where the
+			// lowest-precedence SourceConverterFactory (a catch-all that is not excluded for a Nullable<enum>,
+			// whose own assembly is CoreLib) claims it and — under source_serializer=true — delegates a
+			// [Flags] enum to the source serializer, dropping the "AND|NEAR" formatting.
+			PinConvertersOnDefaultContractMembers(typeInfo, type);
+
+			// Pick parameterless constructor for deserialization (public or non-public).
+			ResolveConstructor(typeInfo, type);
+
+			// Support internal/private setters for deserialization.
+			SupportNonPublicSetters(typeInfo);
+
+			// Exclude properties whose types STJ cannot handle (System.Type, etc.).
+			ExcludeUnsupportedTypes(typeInfo);
+
+			// Honor type-level ShouldSerialize hooks and conditionless-QueryContainer omission.
+			ApplyTypeLevelShouldSerialize(typeInfo);
+		}
+
+		/// <summary>
+		/// For interface types serialized directly, apply [DataMember(Name="...")] from
+		/// the interface's own properties.
+		/// </summary>
+		private static void ApplyDirectDataMemberNames(JsonTypeInfo typeInfo)
+		{
+			foreach (var prop in typeInfo.Properties)
+			{
+				var member = prop.AttributeProvider;
+				if (member == null) continue;
+
+				if (member.IsDefined(typeof(IgnoreDataMemberAttribute), true))
+				{
+					prop.ShouldSerialize = static (_, _) => false;
+					continue;
+				}
+
+				var attrs = member.GetCustomAttributes(typeof(DataMemberAttribute), true);
+				if (attrs.Length > 0)
+				{
+					var dmAttr = (DataMemberAttribute)attrs[0];
+					if (!string.IsNullOrEmpty(dmAttr.Name))
+						prop.Name = dmAttr.Name;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Resolves property names from interface [DataMember(Name="...")] declarations.
+		/// When the concrete property doesn't have [DataMember] but the interface does, use the interface's name.
+		/// </summary>
+		private static void ApplyInterfaceDataMemberNames(JsonTypeInfo typeInfo, Type type)
+		{
+			if (type.IsInterface) return;
+
+			var seenNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			var toRemove = new List<JsonPropertyInfo>();
+
+			foreach (var prop in typeInfo.Properties)
+			{
+				var member = prop.AttributeProvider;
+				if (member == null) continue;
+
+				var directAttrs = member.GetCustomAttributes(typeof(DataMemberAttribute), true);
+				if (directAttrs.Length > 0)
+				{
+					var dmAttr = (DataMemberAttribute)directAttrs[0];
+					if (!string.IsNullOrEmpty(dmAttr.Name))
+						prop.Name = dmAttr.Name;
+				}
+				else if (member is PropertyInfo propInfo)
+				{
+					var interfaceName = GetInterfaceDataMemberName(type, propInfo.Name);
+					if (interfaceName != null)
+						prop.Name = interfaceName;
+				}
+
+				if (!seenNames.Add(prop.Name))
+					toRemove.Add(prop);
+			}
+
+			foreach (var dup in toRemove)
+				typeInfo.Properties.Remove(dup);
+		}
+
+		/// <summary>
+		/// Checks [IgnoreDataMember] on both the concrete property and interface declarations.
+		/// </summary>
+		private static void ApplyInterfaceIgnoreDataMember(JsonTypeInfo typeInfo, Type type)
+		{
+			if (type.IsInterface) return;
+
+			foreach (var prop in typeInfo.Properties)
+			{
+				var member = prop.AttributeProvider;
+				if (member == null) continue;
+
+				if (member.IsDefined(typeof(IgnoreDataMemberAttribute), true))
+				{
+					prop.ShouldSerialize = static (_, _) => false;
+					continue;
+				}
+
+				if (member is PropertyInfo propInfo)
+				{
+					foreach (var iface in type.GetInterfaces())
+					{
+						var ifaceProp = iface.GetProperty(propInfo.Name);
+						if (ifaceProp != null && ifaceProp.IsDefined(typeof(IgnoreDataMemberAttribute), true))
+						{
+							prop.ShouldSerialize = static (_, _) => false;
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Adds non-public properties that have [DataMember] to the type info (walking the base hierarchy),
+		/// e.g. response types with internal setters like ServerError / ResponseBase.Error.
+		/// </summary>
+		private static void AddNonPublicDataMembers(JsonTypeInfo typeInfo, Type type)
+		{
+			if (type.IsInterface) return;
+
+			var existingNames = new HashSet<string>(
+				typeInfo.Properties.Select(p => p.Name),
+				StringComparer.OrdinalIgnoreCase);
+
+			for (var baseType = type; baseType != null && baseType != typeof(object); baseType = baseType.BaseType)
+			{
+				var nonPublicProps = baseType.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+				foreach (var pi in nonPublicProps)
+				{
+					var dmAttr = pi.GetCustomAttribute<DataMemberAttribute>();
+					if (dmAttr == null) continue;
+					if (IsUnsupportedType(pi.PropertyType)) continue;
+
+					var name = !string.IsNullOrEmpty(dmAttr.Name) ? dmAttr.Name : pi.Name;
+					if (existingNames.Contains(name)) continue;
+
+					var jsonProp = typeInfo.CreateJsonPropertyInfo(pi.PropertyType, name);
+					jsonProp.AttributeProvider = pi;
+
+					var getter = pi.GetGetMethod(true);
+					if (getter != null)
+						jsonProp.Get = obj => getter.Invoke(obj, null);
+
+					var setter = pi.GetSetMethod(true);
+					if (setter != null)
+						jsonProp.Set = (obj, val) => setter.Invoke(obj, new[] { val });
+
+					typeInfo.Properties.Add(jsonProp);
+					existingNames.Add(name);
+				}
+			}
+		}
+
+		/// <summary>
+		/// For types participating in an interface data contract, suppresses (non-destructively) the
+		/// default-surfaced public properties that carry no contract annotation — i.e. neither a
+		/// [DataMember] (on the concrete member or a same-named interface member) nor a [PropertyName].
+		/// This prevents request query-string parameters (e.g. TypedKeys / typed_keys) from leaking into
+		/// the serialized request body, matching the Utf8Json [InterfaceDataContract] behavior where only
+		/// annotated members were emitted.
+		/// </summary>
+		private static void SuppressNonContractDefaultMembers(JsonTypeInfo typeInfo, Type type)
+		{
+			var contractInterfaces = GetContractInterfaces(type);
+			if (contractInterfaces.Count == 0)
 				return;
+
+			var toRemove = new List<JsonPropertyInfo>();
+
+			foreach (var prop in typeInfo.Properties)
+			{
+				if (prop.AttributeProvider is not PropertyInfo pi)
+					continue;
+
+				// Keep members explicitly annotated for serialization.
+				if (pi.GetCustomAttribute<DataMemberAttribute>() != null
+					|| pi.GetCustomAttribute<PropertyNameAttribute>() != null)
+					continue;
+
+				// Locate the same-named contract-interface [DataMember] declaration, if any.
+				PropertyInfo ifaceMember = null;
+				foreach (var iface in type.GetInterfaces())
+				{
+					var ifaceProp = iface.GetProperty(pi.Name);
+					if (ifaceProp?.GetCustomAttribute<DataMemberAttribute>() != null)
+					{
+						ifaceMember = ifaceProp;
+						break;
+					}
+				}
+
+				if (ifaceMember != null)
+				{
+					// An implicit interface implementation has the exact same property type as the
+					// interface member. If the public property's type differs (e.g. a convenience
+					// `bool Coerce` shadowing the explicit `bool? INumberProperty.Coerce`), it is a
+					// convenience shadow, not the contract member — remove it so the real (nullable,
+					// null-omitting) interface member is added by AddMissingInterfaceDataMembers.
+					if (ifaceMember.PropertyType == pi.PropertyType)
+						continue; // implicit implementation: this IS the contract member — keep it.
+
+					toRemove.Add(prop);
+					continue;
+				}
+
+				// Not part of the contract (e.g. request query-string parameters like TypedKeys) — drop it.
+				toRemove.Add(prop);
+			}
+
+			foreach (var prop in toRemove)
+				typeInfo.Properties.Remove(prop);
+		}
+
+		/// <summary>
+		/// For a contract type, pins the settings-aware converter onto each default-surfaced (implicitly
+		/// implemented) contract property whose value type needs one — mirroring the pinning applied to
+		/// hand-built members in <see cref="AddMissingInterfaceDataMembers"/>. Leaves properties that
+		/// already have a custom converter (e.g. from a [JsonConverter] attribute) untouched.
+		/// </summary>
+		private static void PinConvertersOnDefaultContractMembers(JsonTypeInfo typeInfo, Type type)
+		{
+			var contractInterfaces = GetContractInterfaces(type);
+			if (contractInterfaces.Count == 0)
+				return;
+
+			foreach (var prop in typeInfo.Properties)
+			{
+				if (prop.CustomConverter != null)
+					continue;
+
+				PinConverterIfNeeded(prop, prop.PropertyType, typeInfo.Options);
+			}
+		}
+
+		/// <summary>
+		/// Adds the contract-interface [DataMember] members that the default resolver did not surface as
+		/// public properties. This covers descriptors (explicit interface implementations) and any request
+		/// class whose interface declares body members not present on the concrete type's public surface.
+		/// The hand-built properties bypass the options converter-factory list at depth, so settings-aware
+		/// converters are pinned onto them explicitly.
+		/// </summary>
+		private void AddMissingInterfaceDataMembers(JsonTypeInfo typeInfo, Type type)
+		{
+			if (type.IsAbstract) return;
 
 			var contractInterfaces = GetContractInterfaces(type);
 			if (contractInterfaces.Count == 0)
 				return;
 
-			// User-defined analysis components (custom ITokenizer/ITokenFilter/ICharFilter/IAnalyzer/
-			// INormalizer implementations declared outside the client assembly) are serialized by their
-			// full public property set — matching the Utf8Json behavior where unknown analysis types fell
-			// through to the object formatter. Interface [DataMember]s still take precedence for naming.
-			var isUserDefinedAnalysisComponent = IsUserDefinedAnalysisComponent(type);
-
-			// Build the contract from the interface [DataMember] properties.
-			var seen = new HashSet<string>(StringComparer.Ordinal);
-			var rebuilt = new List<JsonPropertyInfo>();
-			// CLR member names that the contract interfaces declare as [IgnoreDataMember] — their concrete
-			// counterparts must never be emitted even if the concrete property carries its own annotation.
-			var ignoredMemberNames = new HashSet<string>(StringComparer.Ordinal);
+			var existingNames = new HashSet<string>(
+				typeInfo.Properties.Select(p => p.Name),
+				StringComparer.Ordinal);
 
 			foreach (var iface in contractInterfaces)
 			{
 				foreach (var ifaceProp in iface.GetProperties(BindingFlags.Public | BindingFlags.Instance))
 				{
 					if (ifaceProp.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
-					{
-						ignoredMemberNames.Add(ifaceProp.Name);
 						continue;
-					}
 
 					var dataMember = ifaceProp.GetCustomAttribute<DataMemberAttribute>();
 					if (dataMember == null)
@@ -114,43 +365,25 @@ namespace OpenSearch.Client
 					var jsonName = dataMember.Name
 						?? JsonNamingPolicy.CamelCase.ConvertName(ifaceProp.Name);
 
-					if (!seen.Add(jsonName))
+					if (!existingNames.Add(jsonName))
 						continue;
 
 					var jsonProp = typeInfo.CreateJsonPropertyInfo(ifaceProp.PropertyType, jsonName);
 
-					// Properties marked [SourceSerialization] carry an embedded user-document payload
-					// (typically typed as object) that must be (de)serialized by the SourceSerializer.
-					// STJ would otherwise handle an object-typed property with the high-level serializer.
+					// [SourceSerialization] members carry an embedded user-document payload that must be
+					// (de)serialized by the SourceSerializer rather than the high-level serializer.
 					if (ifaceProp.GetCustomAttribute<SourceSerializationAttribute>() != null)
 					{
 						var sourceConverter = GetSourceConverter(typeInfo.Options, ifaceProp.PropertyType);
 						if (sourceConverter != null)
 							jsonProp.CustomConverter = sourceConverter;
 
-						var capturedSource = ifaceProp;
-						if (capturedSource.CanRead)
-							jsonProp.Get = obj => capturedSource.GetValue(obj);
-						if (capturedSource.CanWrite)
-							jsonProp.Set = (obj, value) => capturedSource.SetValue(obj, value);
-						else
-						{
-							// Getter-only interface member (e.g. IInlineGet.Source): use the concrete
-							// implementation's internal setter so the embedded document deserializes.
-							var concreteSourceProp = type.GetProperty(ifaceProp.Name,
-								BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-							var concreteSourceSetter = concreteSourceProp?.GetSetMethod(true);
-							if (concreteSourceSetter != null)
-								jsonProp.Set = (obj, value) => concreteSourceSetter.Invoke(obj, new[] { value });
-						}
-
-						rebuilt.Add(jsonProp);
+						BindAccessors(jsonProp, ifaceProp, type);
+						typeInfo.Properties.Add(jsonProp);
 						continue;
 					}
 
-					// Honor an explicit [JsonConverter] attribute on the interface property. The
-					// manually-rebuilt JsonPropertyInfo does not inherit attribute-channel converters,
-					// so apply it here (e.g. SourceValueWriteConverter on weakly-typed query values).
+					// Honor an explicit [JsonConverter] attribute on the interface property.
 					var converterAttr = ifaceProp.GetCustomAttribute<JsonConverterAttribute>();
 					if (converterAttr != null)
 					{
@@ -161,216 +394,200 @@ namespace OpenSearch.Client
 							jsonProp.CustomConverter = converter;
 					}
 
-					// Pin the options-registered converter for leaf value types and enums.
-					// These factory converters (Field/IndexName/RelationName, enums) are skipped for
-					// properties on contracts rebuilt by this modifier when used at depth.
-					var propType = ifaceProp.PropertyType;
-					var underlying = Nullable.GetUnderlyingType(propType) ?? propType;
-					// Enums (including Nullable<enum>) that serialize to a string form ([StringEnum],
-					// [Flags], or any [EnumMember] value) must be pinned to the enum-member converter.
-					// The lowest-precedence SourceConverterFactory (a catch-all for non-framework types)
-					// also claims enums — and a nullable enum's own assembly is CoreLib, so it is not
-					// excluded as a framework type. Resolving through the options factory list would
-					// therefore hand back a SourceConverter that delegates the enum to the source
-					// serializer, dropping the [StringEnum]/[Flags] "AND|NEAR" formatting. Build the
-					// enum-member converter directly instead of asking the options. Enums that serialize
-					// numerically (e.g. GeoHashPrecision) are not claimed by the factory and are left to
-					// STJ's numeric default.
-					if (underlying.IsEnum && EnumMemberConverterFactoryInstance.CanConvert(propType))
-					{
-						try
-						{
-							var conv = EnumMemberConverterFactoryInstance.CreateConverter(propType, typeInfo.Options);
-							if (conv != null)
-								jsonProp.CustomConverter = conv;
-						}
-						catch { /* leave unset — STJ will resolve normally */ }
-					}
-					else if (!propType.IsGenericType && !propType.IsInterface && !propType.IsAbstract
-						&& ConverterBackedValueTypes.Contains(underlying))
-					{
-						try
-						{
-							var conv = typeInfo.Options.GetConverter(propType);
-							if (conv != null && conv.GetType().Namespace?.StartsWith("System", StringComparison.Ordinal) != true)
-								jsonProp.CustomConverter = conv;
-						}
-						catch { /* If GetConverter throws, leave it unset — STJ will resolve normally */ }
-					}
-					// Dictionaries keyed by Field need settings-aware key inference. STJ skips the
-					// options-registered Field converter factory for dictionary keys at depth, so pin a
-					// dedicated converter that resolves each key through the Field converter.
-					else if (TryGetFieldKeyedDictionaryValueType(propType, out var dictValueType))
-					{
-						try
-						{
-							var convType = typeof(FieldKeyedDictionaryConverter<>).MakeGenericType(dictValueType);
-							jsonProp.CustomConverter = (System.Text.Json.Serialization.JsonConverter)Activator.CreateInstance(convType);
-						}
-						catch { /* If construction fails, leave it unset — STJ will resolve normally */ }
-					}
-					// IEnumerable<double> properties must keep the client's trailing-".0" wire format for
-					// integral values. STJ skips the options-registered DoubleConverter for collection
-					// elements at depth, so pin a converter that routes each element through it.
-					else if (propType == typeof(IEnumerable<double>))
-					{
-						jsonProp.CustomConverter = new DoubleEnumerableConverter();
-					}
+					PinConverterIfNeeded(jsonProp, ifaceProp.PropertyType, typeInfo.Options);
 
-					var captured = ifaceProp;
-					if (captured.CanRead)
-						jsonProp.Get = obj => captured.GetValue(obj);
-					if (captured.CanWrite)
-						jsonProp.Set = (obj, value) => captured.SetValue(obj, value);
-					else
-					{
-						// The contract interface commonly declares getter-only properties (e.g.
-						// IInlineGet.Found/Source/Fields) whose concrete implementation has an internal setter.
-						// Resolve the concrete property on the target type and use its (possibly non-public)
-						// setter so the member can deserialize — otherwise it stays at its default (Found=false,
-						// Source=null).
-						var concreteProp = type.GetProperty(ifaceProp.Name,
-							BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-						var concreteSetter = concreteProp?.GetSetMethod(true);
-						if (concreteSetter != null)
-							jsonProp.Set = (obj, value) => concreteSetter.Invoke(obj, new[] { value });
-					}
+					BindAccessors(jsonProp, ifaceProp, type);
 
-					// A QueryContainer that is conditionless (e.g. an empty bool query) must be
-					// omitted entirely rather than emitted as "prop": null. Utf8Json achieved this
-					// by not writing conditionless queries; mirror it with a ShouldSerialize guard.
-					if (propType == typeof(QueryContainer))
+					// Conditionless QueryContainer omission and type-level ShouldSerialize hooks.
+					if (ifaceProp.PropertyType == typeof(QueryContainer))
 						jsonProp.ShouldSerialize = (_, value) => value is QueryContainer qc && qc.IsWritable;
 					else
-						ApplyTypeLevelShouldSerialize(jsonProp, propType);
+						ApplyTypeLevelShouldSerialize(jsonProp, ifaceProp.PropertyType);
 
-					rebuilt.Add(jsonProp);
+					typeInfo.Properties.Add(jsonProp);
 				}
 			}
-
-			// Custom (e.g. plugin) implementations may declare additional public properties that carry
-			// their own [PropertyName]/[DataMember] annotation but are not part of the contract interface.
-			// Emit those too (honoring the interface-declared [IgnoreDataMember] exclusions), matching the
-			// Utf8Json behavior where any [PropertyName]/[DataMember]-marked property is serialized.
-			foreach (var clrProp in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
-			{
-				if (ignoredMemberNames.Contains(clrProp.Name))
-					continue;
-
-				var propertyNameAttr = clrProp.GetCustomAttribute<PropertyNameAttribute>();
-				var dataMemberAttr = clrProp.GetCustomAttribute<DataMemberAttribute>();
-				// For user-defined analysis components emit every readable/writable public property, even
-				// unannotated ones (e.g. a plugin tokenizer's custom setting). Otherwise, only emit
-				// properties carrying their own [PropertyName]/[DataMember] annotation.
-				if (propertyNameAttr == null && dataMemberAttr == null && !isUserDefinedAnalysisComponent)
-					continue;
-
-				if (propertyNameAttr?.Ignore == true)
-					continue;
-
-				if (clrProp.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
-					continue;
-
-				// Skip indexers and non-public accessors for the unannotated fallback path.
-				if (isUserDefinedAnalysisComponent && propertyNameAttr == null && dataMemberAttr == null
-					&& clrProp.GetIndexParameters().Length > 0)
-					continue;
-
-				var jsonName = propertyNameAttr?.Name
-					?? dataMemberAttr?.Name
-					?? JsonNamingPolicy.CamelCase.ConvertName(clrProp.Name);
-
-				if (!seen.Add(jsonName))
-					continue;
-
-				var jsonProp = typeInfo.CreateJsonPropertyInfo(clrProp.PropertyType, jsonName);
-
-				var captured = clrProp;
-				if (captured.CanRead)
-					jsonProp.Get = obj => captured.GetValue(obj);
-				if (captured.CanWrite)
-					jsonProp.Set = (obj, value) => captured.SetValue(obj, value);
-
-				ApplyTypeLevelShouldSerialize(jsonProp, clrProp.PropertyType);
-
-				rebuilt.Add(jsonProp);
-			}
-
-			// Inherited non-public [DataMember] members (e.g. ResponseBase.Error / StatusCode, which carry
-			// the "error"/"status" wire fields) are surfaced by neither the interface loop nor the public
-			// CLR loop above. STJ's default resolver would also drop them (non-public), so a response whose
-			// contract is rebuilt here (e.g. GetResponse<T>, an [InterfaceDataContract] type) would lose its
-			// ServerError. Re-add any non-public instance [DataMember] property that has not already been
-			// collected and whose wire name does not collide with a property already present.
-			for (var baseType = type; baseType != null && baseType != typeof(object); baseType = baseType.BaseType)
-			{
-				foreach (var nonPublic in baseType.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly))
-				{
-					if (ignoredMemberNames.Contains(nonPublic.Name))
-						continue;
-
-					var dataMemberAttr = nonPublic.GetCustomAttribute<DataMemberAttribute>();
-					if (dataMemberAttr == null || nonPublic.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
-						continue;
-
-					var jsonName = dataMemberAttr.Name ?? JsonNamingPolicy.CamelCase.ConvertName(nonPublic.Name);
-					if (!seen.Add(jsonName))
-						continue;
-
-					var jsonProp = typeInfo.CreateJsonPropertyInfo(nonPublic.PropertyType, jsonName);
-
-					var getter = nonPublic.GetGetMethod(true);
-					if (getter != null)
-						jsonProp.Get = obj => getter.Invoke(obj, null);
-
-					var setter = nonPublic.GetSetMethod(true);
-					if (setter != null)
-						jsonProp.Set = (obj, value) => setter.Invoke(obj, new[] { value });
-
-					rebuilt.Add(jsonProp);
-				}
-			}
-
-			// If the rebuilt contract has no properties, decide between two cases:
-			//  - The concrete class itself declares [DataMember] properties (e.g. response types such as
-			//    GetResponse<T> whose members live on the class, not the interface). Leave the default
-			//    contract intact so those class properties still (de)serialize.
-			//  - Neither the interface nor the concrete class declares [DataMember] properties on their
-			//    own members (e.g. GlobalAggregation, whose only inherited property Aggregations is not a
-			//    [DataMember] and is emitted by the aggregation container, not inline). Fall through to
-			//    rebuild the contract to an empty object so it serializes as {}.
-			if (rebuilt.Count == 0 && ConcreteTypeDeclaresDataMember(type))
-				return;
-
-			// These types are (de)serialized purely by their property contract. Many define a
-			// public convenience constructor (e.g. AverageAggregation(string name, Field field))
-			// that STJ would otherwise treat as the deserialization constructor and fail to bind.
-			// Force construction through a parameterless constructor instead.
-			var ctor = type.GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
-				binder: null, Type.EmptyTypes, modifiers: null);
-			if (ctor != null)
-				typeInfo.CreateObject = () => ctor.Invoke(null);
-
-			// Rebuild the contract deterministically from the collected properties.
-			typeInfo.Properties.Clear();
-			foreach (var jsonProp in rebuilt)
-				typeInfo.Properties.Add(jsonProp);
 		}
 
 		/// <summary>
-		/// Cache of the type-level <c>bool ShouldSerialize(IConnectionSettingsValues)</c> method (if any)
-		/// declared by a property type. This mirrors Utf8Json's per-type <c>ShouldSerialize</c> hook
-		/// (see <c>ReflectionExtensions.GetShouldSerializeMethod</c>): any property whose <em>type</em>
-		/// declares such a method had it invoked to decide whether the property is emitted at all.
+		/// Binds a hand-built <see cref="JsonPropertyInfo"/> to the interface member's getter/setter,
+		/// falling back to the concrete type's (possibly non-public) setter for getter-only interface members.
 		/// </summary>
+		private static void BindAccessors(JsonPropertyInfo jsonProp, PropertyInfo ifaceProp, Type type)
+		{
+			var captured = ifaceProp;
+			if (captured.CanRead)
+				jsonProp.Get = obj => captured.GetValue(obj);
+			if (captured.CanWrite)
+			{
+				jsonProp.Set = (obj, value) => captured.SetValue(obj, value);
+			}
+			else
+			{
+				var concreteProp = type.GetProperty(ifaceProp.Name,
+					BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+				var concreteSetter = concreteProp?.GetSetMethod(true);
+				if (concreteSetter != null)
+					jsonProp.Set = (obj, value) => concreteSetter.Invoke(obj, new[] { value });
+			}
+		}
+
+		/// <summary>
+		/// Pins the options-registered converter for leaf value types, enums, Field-keyed dictionaries and
+		/// IEnumerable&lt;double&gt; onto a hand-built property (these are skipped by the options factory list
+		/// when a property is resolved at depth on a modified contract).
+		/// </summary>
+		private static void PinConverterIfNeeded(JsonPropertyInfo jsonProp, Type propType, JsonSerializerOptions options)
+		{
+			var underlying = Nullable.GetUnderlyingType(propType) ?? propType;
+
+			if (underlying.IsEnum && EnumMemberConverterFactoryInstance.CanConvert(propType))
+			{
+				try
+				{
+					var conv = EnumMemberConverterFactoryInstance.CreateConverter(propType, options);
+					if (conv != null)
+						jsonProp.CustomConverter = conv;
+				}
+				catch { /* leave unset — STJ will resolve normally */ }
+			}
+			else if (!propType.IsGenericType && !propType.IsInterface && !propType.IsAbstract
+				&& ConverterBackedValueTypes.Contains(underlying))
+			{
+				try
+				{
+					var conv = options.GetConverter(propType);
+					if (conv != null && conv.GetType().Namespace?.StartsWith("System", StringComparison.Ordinal) != true)
+						jsonProp.CustomConverter = conv;
+				}
+				catch { /* leave unset */ }
+			}
+			else if (TryGetFieldKeyedDictionaryValueType(propType, out var dictValueType))
+			{
+				try
+				{
+					var convType = typeof(FieldKeyedDictionaryConverter<>).MakeGenericType(dictValueType);
+					jsonProp.CustomConverter = (JsonConverter)Activator.CreateInstance(convType);
+				}
+				catch { /* leave unset */ }
+			}
+			else if (propType == typeof(IEnumerable<double>))
+			{
+				jsonProp.CustomConverter = new DoubleEnumerableConverter();
+			}
+		}
+
+		/// <summary>
+		/// Picks the parameterless constructor (public or non-public) for deserialization.
+		/// </summary>
+		private static void ResolveConstructor(JsonTypeInfo typeInfo, Type type)
+		{
+			if (type.IsAbstract || type.IsInterface) return;
+
+			var ctor = type.GetConstructor(
+				BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+				null, Type.EmptyTypes, null);
+
+			if (ctor != null)
+				typeInfo.CreateObject = () => ctor.Invoke(null);
+		}
+
+		/// <summary>
+		/// Enables non-public setters for deserialization.
+		/// </summary>
+		private static void SupportNonPublicSetters(JsonTypeInfo typeInfo)
+		{
+			foreach (var prop in typeInfo.Properties)
+			{
+				if (prop.Set != null) continue;
+
+				if (prop.AttributeProvider is PropertyInfo propertyInfo && propertyInfo.CanWrite)
+				{
+					var setter = propertyInfo.GetSetMethod(true);
+					if (setter != null)
+						prop.Set = (obj, val) => setter.Invoke(obj, new[] { val });
+				}
+			}
+		}
+
+		/// <summary>
+		/// Excludes properties whose types cannot be serialized by System.Text.Json.
+		/// </summary>
+		private static void ExcludeUnsupportedTypes(JsonTypeInfo typeInfo)
+		{
+			foreach (var prop in typeInfo.Properties)
+			{
+				if (IsUnsupportedType(prop.PropertyType))
+				{
+					prop.ShouldSerialize = static (_, _) => false;
+					continue;
+				}
+
+				if (prop.Name == "TypeId" || prop.Name == "typeId")
+				{
+					if (typeof(Attribute).IsAssignableFrom(typeInfo.Type))
+					{
+						prop.ShouldSerialize = static (_, _) => false;
+						continue;
+					}
+				}
+
+				if (prop.PropertyType == typeof(object) && typeof(Attribute).IsAssignableFrom(typeInfo.Type))
+				{
+					if (prop.AttributeProvider is PropertyInfo pi && pi.Name == "TypeId")
+						prop.ShouldSerialize = static (_, _) => false;
+				}
+			}
+		}
+
+		private static bool IsUnsupportedType(Type t) =>
+			t == typeof(Type)
+			|| typeof(Type).IsAssignableFrom(t)
+			|| typeof(MemberInfo).IsAssignableFrom(t)
+			|| typeof(Delegate).IsAssignableFrom(t);
+
+		private static string GetInterfaceDataMemberName(Type type, string propertyName)
+		{
+			foreach (var iface in type.GetInterfaces())
+			{
+				var ifaceProp = iface.GetProperty(propertyName);
+				if (ifaceProp == null) continue;
+
+				var attr = ifaceProp.GetCustomAttribute<DataMemberAttribute>();
+				if (attr != null && !string.IsNullOrEmpty(attr.Name))
+					return attr.Name;
+			}
+			return null;
+		}
+
 		private static readonly System.Collections.Concurrent.ConcurrentDictionary<Type, MethodInfo> ShouldSerializeMethods = new();
 
 		/// <summary>
+		/// Applies type-level <c>ShouldSerialize(IConnectionSettingsValues)</c> emission guards to every
+		/// default-surfaced property whose type declares one, and conditionless-query omission to
+		/// QueryContainer properties. Preserves any existing predicate (e.g. an [IgnoreDataMember] exclusion).
+		/// </summary>
+		private void ApplyTypeLevelShouldSerialize(JsonTypeInfo typeInfo)
+		{
+			foreach (var prop in typeInfo.Properties)
+			{
+				var propType = prop.PropertyType;
+				if (propType == typeof(QueryContainer))
+				{
+					var existing = prop.ShouldSerialize;
+					prop.ShouldSerialize = (obj, value) =>
+						(existing == null || existing(obj, value))
+						&& value is QueryContainer qc && qc.IsWritable;
+					continue;
+				}
+
+				ApplyTypeLevelShouldSerialize(prop, propType);
+			}
+		}
+
+		/// <summary>
 		/// Applies the type-level <c>ShouldSerialize(IConnectionSettingsValues)</c> hook (if the property
-		/// type declares one) as a STJ <see cref="JsonPropertyInfo.ShouldSerialize"/> predicate. This is the
-		/// System.Text.Json equivalent of Utf8Json's per-type <c>ShouldSerialize</c> emission guard, used by
-		/// e.g. <see cref="Routing"/> so that a routing value that resolves to empty is omitted entirely
-		/// rather than written as <c>"routing": null</c>.
+		/// type declares one) as a STJ ShouldSerialize predicate, preserving any existing predicate.
 		/// </summary>
 		private void ApplyTypeLevelShouldSerialize(JsonPropertyInfo jsonProp, Type propType)
 		{
@@ -386,85 +603,27 @@ namespace OpenSearch.Client
 				return;
 
 			var settings = _settings;
-			jsonProp.ShouldSerialize = (_, value) =>
-				value != null && (bool)method.Invoke(value, new object[] { settings });
+			var existing = jsonProp.ShouldSerialize;
+			jsonProp.ShouldSerialize = (obj, value) =>
+				(existing == null || existing(obj, value))
+				&& value != null && (bool)method.Invoke(value, new object[] { settings });
 		}
 
-		/// <summary>
-		/// Resolves a <see cref="System.Text.Json.Serialization.JsonConverter"/> that delegates to the
-		/// SourceSerializer for the given property type, by locating the <c>SourceConverterFactory</c>
-		/// registered on the options. Returns <c>null</c> if it cannot be resolved.
-		/// </summary>
-		private static System.Text.Json.Serialization.JsonConverter GetSourceConverter(JsonSerializerOptions options, Type propertyType)
+		private static JsonConverter GetSourceConverter(JsonSerializerOptions options, Type propertyType)
 		{
 			foreach (var converter in options.Converters)
 			{
 				if (converter is SourceConverterFactory factory)
 				{
-					try
-					{
-						return factory.CreateSourceConverter(propertyType, options);
-					}
-					catch
-					{
-						return null;
-					}
+					try { return factory.CreateSourceConverter(propertyType, options); }
+					catch { return null; }
 				}
 			}
-
 			return null;
 		}
 
 		/// <summary>
-		/// Analysis component base interfaces. A concrete type implementing one of these but defined
-		/// outside the OpenSearch.Client assembly is a user-defined (plugin) analysis component whose
-		/// full public property set must be serialized (matching the Utf8Json object-formatter fallback).
-		/// </summary>
-		private static readonly Type[] AnalysisComponentInterfaces =
-		{
-			typeof(IAnalyzer),
-			typeof(INormalizer),
-			typeof(ITokenizer),
-			typeof(ITokenFilter),
-			typeof(ICharFilter),
-		};
-
-		private static bool IsUserDefinedAnalysisComponent(Type type)
-		{
-			// Types shipped in the client assembly are handled by their explicit contracts.
-			if (type.Assembly == typeof(InterfaceDataContractModifier).Assembly)
-				return false;
-
-			foreach (var iface in AnalysisComponentInterfaces)
-			{
-				if (iface.IsAssignableFrom(type))
-					return true;
-			}
-
-			return false;
-		}
-
-		/// <summary>
-		/// Returns true if the concrete type (or a base class) declares at least one instance property
-		/// carrying a <see cref="DataMemberAttribute"/>. Used to distinguish response-style types whose
-		/// contract lives on the class from parameterless marker types (e.g. GlobalAggregation).
-		/// </summary>
-		private static bool ConcreteTypeDeclaresDataMember(Type type)
-		{
-			foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
-			{
-				if (prop.GetCustomAttribute<DataMemberAttribute>() != null)
-					return true;
-			}
-			return false;
-		}
-
-		/// <summary>
-		/// Concrete non-generic value types whose serialization depends on settings-aware converter
-		/// factories registered on the options. STJ skips options-registered factories for properties
-		/// on rebuilt contracts at depth, so we pin the converter explicitly via CustomConverter.
-		/// Only leaf (non-collection, non-interface) types are included to avoid interfering with
-		/// STJ's built-in collection/interface resolution.
+		/// Concrete non-generic value types whose serialization depends on settings-aware converter factories.
 		/// </summary>
 		private static readonly HashSet<Type> ConverterBackedValueTypes = new()
 		{
@@ -479,14 +638,9 @@ namespace OpenSearch.Client
 			typeof(TaskId),
 		};
 
-		/// <summary>
-		/// Determines whether <paramref name="propType"/> is an <see cref="IDictionary{TKey,TValue}"/>
-		/// (or a type implementing it) whose key type is <see cref="Field"/>, returning the value type.
-		/// </summary>
 		private static bool TryGetFieldKeyedDictionaryValueType(Type propType, out Type valueType)
 		{
 			valueType = null;
-
 			if (!propType.IsGenericType)
 				return false;
 
@@ -502,26 +656,58 @@ namespace OpenSearch.Client
 			return true;
 		}
 
+		private static readonly System.Collections.Concurrent.ConcurrentDictionary<Type, bool> ContractInterfaceCache = new();
+
 		/// <summary>
-		/// Returns all interfaces in <paramref name="type"/>'s hierarchy that participate in the
-		/// interface data contract — i.e. reachable from an interface marked
-		/// <see cref="InterfaceDataContractAttribute"/> — most-derived first so that overriding
-		/// [DataMember] names win.
+		/// Returns whether <paramref name="iface"/> participates in an interface data contract, recognizing
+		/// (1) an explicit <c>InterfaceDataContractAttribute</c> matched by simple name — so both the
+		/// OpenSearch.Client-native <see cref="InterfaceDataContractAttribute"/> and the legacy Utf8Json
+		/// attribute are honored — and (2), as a marker-agnostic fallback, any OpenSearch.Client-assembly
+		/// interface that declares at least one <see cref="DataMemberAttribute"/> property. The fallback lets
+		/// the migration drop most explicit markers while still rebuilding the contract, and keeps the modifier
+		/// decoupled from the Utf8Json engine.
+		/// </summary>
+		private static bool IsContractInterface(Type iface) =>
+			ContractInterfaceCache.GetOrAdd(iface, static i =>
+			{
+				// Explicit marker (OSC-native or legacy Utf8Json, matched by simple name).
+				foreach (var attr in i.GetCustomAttributes(inherit: false))
+				{
+					if (attr.GetType().Name == nameof(InterfaceDataContractAttribute))
+						return true;
+				}
+
+				// Marker-agnostic fallback: an OpenSearch.Client-assembly interface that declares at least
+				// one [DataMember] property is a data contract. This lets domain interfaces participate in
+				// the interface-contract rebuild without an explicit [InterfaceDataContract] marker, so the
+				// migration does not have to sprinkle the attribute across the domain. Restricted to the
+				// client assembly so user/plugin interfaces are never force-rebuilt.
+				var asm = i.Assembly.GetName().Name;
+				if (asm == null || !asm.StartsWith("OpenSearch.Client", StringComparison.Ordinal))
+					return false;
+
+				foreach (var p in i.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+				{
+					if (p.GetCustomAttribute<DataMemberAttribute>() != null)
+						return true;
+				}
+				return false;
+			});
+
+		/// <summary>
+		/// Returns all interfaces in <paramref name="type"/>'s hierarchy that participate in the interface
+		/// data contract — reachable from an interface marked <see cref="InterfaceDataContractAttribute"/> —
+		/// most-derived first so overriding [DataMember] names win.
 		/// </summary>
 		private static List<Type> GetContractInterfaces(Type type)
 		{
 			var roots = type.GetInterfaces()
-				.Where(i => i.GetCustomAttribute<InterfaceDataContractAttribute>() != null)
+				.Where(IsContractInterface)
 				.ToList();
 
 			if (roots.Count == 0)
 				return roots;
 
-			// Order roots most-derived first, so a derived contract interface's [DataMember] properties
-			// are emitted before the base interface's (e.g. ICompletionSuggester's "fuzzy" before
-			// ISuggester's "field"/"size"). Type.GetInterfaces() does not guarantee this ordering.
-			// A more-derived interface implements (transitively) more interfaces than its bases, so
-			// ordering by implemented-interface count (descending) yields derived-first and is a stable sort.
 			roots = roots
 				.OrderByDescending(i => i.GetInterfaces().Length)
 				.ToList();

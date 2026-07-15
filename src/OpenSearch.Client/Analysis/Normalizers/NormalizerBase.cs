@@ -32,7 +32,6 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[InterfaceDataContract]
 	[JsonConverter(typeof(NormalizerConverter))]
 	[JsonFormatter(typeof(NormalizerFormatter))]
 	public interface INormalizer

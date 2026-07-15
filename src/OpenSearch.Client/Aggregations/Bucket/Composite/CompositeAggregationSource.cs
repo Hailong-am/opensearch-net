@@ -43,7 +43,6 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A values source for <see cref="ICompositeAggregation" />
 	/// </summary>
-	[InterfaceDataContract]
 	[JsonConverter(typeof(CompositeAggregationSourceConverter))]
 	[JsonFormatter(typeof(CompositeAggregationSourceFormatter))]
 	public interface ICompositeAggregationSource

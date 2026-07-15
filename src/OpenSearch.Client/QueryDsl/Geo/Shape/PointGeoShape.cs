@@ -32,7 +32,6 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[InterfaceDataContract]
 	[JsonFormatter(typeof(GeoShapeFormatter<IPointGeoShape>))]
 	public interface IPointGeoShape : IGeoShape
 	{

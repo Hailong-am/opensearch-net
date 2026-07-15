@@ -29,7 +29,6 @@
 using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -42,7 +41,6 @@ namespace OpenSearch.Client
 	/// </para>
 	/// </summary>
 	[ReadAs(typeof(FieldCollapse))]
-	[InterfaceDataContract]
 	public interface IFieldCollapse
 	{
 		/// <summary>

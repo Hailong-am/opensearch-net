@@ -29,14 +29,12 @@
 using System.Collections.Generic;
 using OpenSearch.Net;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// A set of analyzers aimed at analyzing specific language text.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface ILanguageAnalyzer : IAnalyzer
 	{
 		/// <summary>

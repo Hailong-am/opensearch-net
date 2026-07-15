@@ -33,7 +33,6 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[InterfaceDataContract]
 	[JsonFormatter(typeof(GeoShapeFormatter<ILineStringGeoShape>))]
 	public interface ILineStringGeoShape : IGeoShape
 	{

@@ -27,14 +27,12 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// The pattern_replace char filter allows the use of a regex to manipulate the characters in a string before analysis.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IPatternReplaceCharFilter : ICharFilter
 	{
 		[DataMember(Name ="flags")]

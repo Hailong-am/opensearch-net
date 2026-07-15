@@ -43,7 +43,6 @@ namespace OpenSearch.Client
 	/// "there are more than 1000 hits", OpenSearch has options to stop counting as soon
 	/// as a threshold has been reached in order to improve query times.
 	/// </summary>
-	[JsonConverter(typeof(TotalHitsConverter))]
 	[JsonFormatter(typeof(TotalHitsFormatter))]
 	public class TotalHits
 	{

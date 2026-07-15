@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -35,7 +34,6 @@ namespace OpenSearch.Client
 	///  A token filter of type lowercase that normalizes token text to lower case.
 	/// <para> Lowercase token filter supports Greek and Turkish lowercase token filters through the language parameter.</para>
 	/// </summary>
-	[InterfaceDataContract]
 	public interface ILowercaseTokenFilter : ITokenFilter
 	{
 		/// <summary>

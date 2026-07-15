@@ -29,7 +29,6 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -46,7 +45,6 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A token filter of type keep that only keeps tokens with text contained in a predefined set of words.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IKeepTypesTokenFilter : ITokenFilter
 	{
 		/// <summary> Whether to include or exclude the types provided on <see cref="Types" /> </summary>

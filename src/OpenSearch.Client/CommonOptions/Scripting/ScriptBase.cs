@@ -39,7 +39,6 @@ namespace OpenSearch.Client
 	/// A script to execute to provide custom computation
 	/// </summary>
 	[InterfaceDataContract]
-	[JsonConverter(typeof(ScriptConverter))]
 	[JsonFormatter(typeof(ScriptFormatter))]
 	public interface IScript
 	{

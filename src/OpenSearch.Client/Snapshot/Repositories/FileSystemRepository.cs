@@ -38,7 +38,6 @@ namespace OpenSearch.Client
 	/// The path specified in the location parameter should point to the same location in the shared
 	/// filesystem and be accessible on all data and cluster_manager nodes.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IFileSystemRepository : IRepository<IFileSystemRepositorySettings> { }
 
 	/// <inheritdoc />
@@ -54,7 +53,6 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Repository settings for <see cref="IFileSystemRepository"/>
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IFileSystemRepositorySettings : IRepositorySettings
 	{
 		/// <summary>

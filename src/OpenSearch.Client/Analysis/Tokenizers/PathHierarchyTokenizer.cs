@@ -40,7 +40,6 @@ namespace OpenSearch.Client
 	/// <para>/something/something</para>
 	/// <para>/something/something/else</para>
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IPathHierarchyTokenizer : ITokenizer
 	{
 		/// <summary>

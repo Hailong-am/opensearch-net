@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 // ReSharper disable InconsistentNaming
 
 namespace OpenSearch.Client
@@ -38,7 +37,6 @@ namespace OpenSearch.Client
 	/// is primarily determined by the repetitive usage of its basic elements.
 	/// For written texts this challenge would correspond to comparing the writing styles of different authors.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IIBSimilarity : ISimilarity
 	{
 		/// <summary>

@@ -35,7 +35,6 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A token filter of type keep that only keeps tokens with text contained in a predefined set of words.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IKeepWordsTokenFilter : ITokenFilter
 	{
 		/// <summary>

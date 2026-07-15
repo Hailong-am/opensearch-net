@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -44,7 +43,6 @@ namespace OpenSearch.Client
 	/// chosen to match the
 	/// names of their counterparts in the Terrier IR engine.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IDFRSimilarity : ISimilarity
 	{
 		/// <summary>

@@ -36,7 +36,6 @@ namespace OpenSearch.Client
 	/// A tokenizer that breaks text into terms whenever it encounters a character which is in a defined set. It is mostly useful
 	/// for cases where a simple custom tokenization is desired, and the overhead of use of <see cref="PatternTokenizer" /> is not acceptable.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface ICharGroupTokenizer : ITokenizer
 	{
 		/// <summary>

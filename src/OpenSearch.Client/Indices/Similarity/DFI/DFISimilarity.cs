@@ -27,14 +27,12 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// Similarity that implements the divergence from independence model
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IDFISimilarity : ISimilarity
 	{
 		/// <summary>

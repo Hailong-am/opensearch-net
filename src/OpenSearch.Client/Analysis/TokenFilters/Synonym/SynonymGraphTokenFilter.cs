@@ -36,7 +36,6 @@ namespace OpenSearch.Client
 	/// The synonym_graph token filter allows to easily handle synonyms,
 	/// including multi-word synonyms correctly during the analysis process.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface ISynonymGraphTokenFilter : ITokenFilter
 	{
 		[DataMember(Name ="expand")]

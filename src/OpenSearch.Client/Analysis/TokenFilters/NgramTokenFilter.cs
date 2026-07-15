@@ -34,7 +34,6 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A token filter of type nGram.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface INGramTokenFilter : ITokenFilter
 	{
 		/// <summary>

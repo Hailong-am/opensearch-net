@@ -29,14 +29,12 @@
 using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// A suggester that suggests similar looking terms based on a provided text
 	/// </summary>
-	[InterfaceDataContract]
 	public interface ISuggester
 	{
 		/// <summary>

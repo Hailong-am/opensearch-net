@@ -37,7 +37,6 @@ namespace OpenSearch.Client
 	/// clustered on. It does this by sorting the tokens, deduplicating and
 	/// then concatenating them back into a single token.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IFingerprintTokenFilter : ITokenFilter
 	{
 		/// <summary>

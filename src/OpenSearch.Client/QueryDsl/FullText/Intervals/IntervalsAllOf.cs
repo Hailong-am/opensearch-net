@@ -29,7 +29,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -37,7 +36,6 @@ namespace OpenSearch.Client
 	/// A rule that returns matches that span a combination of other rules.
 	/// </summary>
 	[ReadAs(typeof(IntervalsAllOf))]
-	[InterfaceDataContract]
 	public interface IIntervalsAllOf : IIntervals
 	{
 		/// <summary>

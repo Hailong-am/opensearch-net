@@ -27,12 +27,10 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[ReadAs(typeof(DateRangeExpression))]
-	[InterfaceDataContract]
 	public interface IDateRangeExpression
 	{
 		[DataMember(Name ="from")]
