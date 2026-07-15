@@ -215,6 +215,7 @@ namespace OpenSearch.Client
 			options.Converters.Insert(0, new GeoPolygonQueryConverter(settings));
 
 			// Aggregation converters
+			options.Converters.Insert(0, new FilterAggregationConverter());
 			options.Converters.Insert(0, new AggregationContainerConverter());
 			options.Converters.Insert(0, new AggregationContainerInterfaceConverter());
 			options.Converters.Insert(0, new AggregationDictionaryConverter());
