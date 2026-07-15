@@ -57,7 +57,13 @@ namespace OpenSearch.Client
 
 		public override object DeserializeResponse(IOpenSearchSerializer builtInSerializer, IApiCallDetails response, Stream stream)
 		{
-			if (!response.Success || IsEmpty(stream))
+			if (!response.Success)
+				return new MultiSearchResponse();
+
+			if (builtInSerializer is IInternalSerializer internalSerializer && internalSerializer.TryGetJsonFormatter(out var formatterResolver))
+				return builtInSerializer.CreateStateful(new MultiSearchResponseFormatter(Request)).Deserialize<MultiSearchResponse>(stream);
+
+			if (IsEmpty(stream))
 				return new MultiSearchResponse();
 
 			using var doc = JsonDocument.Parse(stream);
@@ -71,7 +77,15 @@ namespace OpenSearch.Client
 			CancellationToken ctx = default
 		)
 		{
-			if (!response.Success || IsEmpty(stream))
+			if (!response.Success)
+				return new MultiSearchResponse();
+
+			if (builtInSerializer is IInternalSerializer internalSerializer && internalSerializer.TryGetJsonFormatter(out var formatterResolver))
+				return await builtInSerializer.CreateStateful(new MultiSearchResponseFormatter(Request))
+					.DeserializeAsync<MultiSearchResponse>(stream, ctx)
+					.ConfigureAwait(false);
+
+			if (IsEmpty(stream))
 				return new MultiSearchResponse();
 
 			using var doc = await JsonDocument.ParseAsync(stream, cancellationToken: ctx).ConfigureAwait(false);
