@@ -97,7 +97,7 @@
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IAzureRepositorySettings_BasePath.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IAzureRepositorySettings.BasePath%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/AzureRepository.cs/#L62">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/AzureRepository.cs/#L65">View Source</a>
   </span>
   <a id="OpenSearch_Client_IAzureRepositorySettings_BasePath_" data-uid="OpenSearch.Client.IAzureRepositorySettings.BasePath*"></a>
   <h4 id="OpenSearch_Client_IAzureRepositorySettings_BasePath" data-uid="OpenSearch.Client.IAzureRepositorySettings.BasePath">BasePath</h4>
@@ -129,7 +129,7 @@ string BasePath { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IAzureRepositorySettings_ChunkSize.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IAzureRepositorySettings.ChunkSize%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/AzureRepository.cs/#L70">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/AzureRepository.cs/#L73">View Source</a>
   </span>
   <a id="OpenSearch_Client_IAzureRepositorySettings_ChunkSize_" data-uid="OpenSearch.Client.IAzureRepositorySettings.ChunkSize*"></a>
   <h4 id="OpenSearch_Client_IAzureRepositorySettings_ChunkSize" data-uid="OpenSearch.Client.IAzureRepositorySettings.ChunkSize">ChunkSize</h4>
@@ -163,7 +163,7 @@ string ChunkSize { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IAzureRepositorySettings_Compress.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IAzureRepositorySettings.Compress%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/AzureRepository.cs/#L77">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/AzureRepository.cs/#L80">View Source</a>
   </span>
   <a id="OpenSearch_Client_IAzureRepositorySettings_Compress_" data-uid="OpenSearch.Client.IAzureRepositorySettings.Compress*"></a>
   <h4 id="OpenSearch_Client_IAzureRepositorySettings_Compress" data-uid="OpenSearch.Client.IAzureRepositorySettings.Compress">Compress</h4>
@@ -174,6 +174,7 @@ affect index files that are already compressed by default. Defaults to <code>fal
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[DataMember(Name = &quot;compress&quot;)]
+[JsonConverter(typeof(NullableStringBooleanConverter))]
 bool? Compress { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -196,7 +197,7 @@ bool? Compress { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IAzureRepositorySettings_Container.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IAzureRepositorySettings.Container%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/AzureRepository.cs/#L84">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/AzureRepository.cs/#L88">View Source</a>
   </span>
   <a id="OpenSearch_Client_IAzureRepositorySettings_Container_" data-uid="OpenSearch.Client.IAzureRepositorySettings.Container*"></a>
   <h4 id="OpenSearch_Client_IAzureRepositorySettings_Container" data-uid="OpenSearch.Client.IAzureRepositorySettings.Container">Container</h4>
@@ -239,7 +240,7 @@ string Container { get; set; }</code></pre>
                     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IAzureRepositorySettings.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IAzureRepositorySettings%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/AzureRepository.cs/#L57" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/AzureRepository.cs/#L59" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

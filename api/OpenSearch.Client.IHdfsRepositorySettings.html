@@ -97,7 +97,7 @@
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IHdfsRepositorySettings_ChunkSize.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IHdfsRepositorySettings.ChunkSize%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/HdfsRepository.cs/#L63">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/HdfsRepository.cs/#L66">View Source</a>
   </span>
   <a id="OpenSearch_Client_IHdfsRepositorySettings_ChunkSize_" data-uid="OpenSearch.Client.IHdfsRepositorySettings.ChunkSize*"></a>
   <h4 id="OpenSearch_Client_IHdfsRepositorySettings_ChunkSize" data-uid="OpenSearch.Client.IHdfsRepositorySettings.ChunkSize">ChunkSize</h4>
@@ -131,7 +131,7 @@ string ChunkSize { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IHdfsRepositorySettings_Compress.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IHdfsRepositorySettings.Compress%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/HdfsRepository.cs/#L70">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/HdfsRepository.cs/#L73">View Source</a>
   </span>
   <a id="OpenSearch_Client_IHdfsRepositorySettings_Compress_" data-uid="OpenSearch.Client.IHdfsRepositorySettings.Compress*"></a>
   <h4 id="OpenSearch_Client_IHdfsRepositorySettings_Compress" data-uid="OpenSearch.Client.IHdfsRepositorySettings.Compress">Compress</h4>
@@ -142,6 +142,7 @@ affect index files that are already compressed by default. Defaults to <code>fal
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[DataMember(Name = &quot;compress&quot;)]
+[JsonConverter(typeof(NullableStringBooleanConverter))]
 bool? Compress { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -164,7 +165,7 @@ bool? Compress { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IHdfsRepositorySettings_ConcurrentStreams.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IHdfsRepositorySettings.ConcurrentStreams%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/HdfsRepository.cs/#L77">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/HdfsRepository.cs/#L81">View Source</a>
   </span>
   <a id="OpenSearch_Client_IHdfsRepositorySettings_ConcurrentStreams_" data-uid="OpenSearch.Client.IHdfsRepositorySettings.ConcurrentStreams*"></a>
   <h4 id="OpenSearch_Client_IHdfsRepositorySettings_ConcurrentStreams" data-uid="OpenSearch.Client.IHdfsRepositorySettings.ConcurrentStreams">ConcurrentStreams</h4>
@@ -196,7 +197,7 @@ int? ConcurrentStreams { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IHdfsRepositorySettings_ConfigurationLocation.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IHdfsRepositorySettings.ConfigurationLocation%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/HdfsRepository.cs/#L84">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/HdfsRepository.cs/#L88">View Source</a>
   </span>
   <a id="OpenSearch_Client_IHdfsRepositorySettings_ConfigurationLocation_" data-uid="OpenSearch.Client.IHdfsRepositorySettings.ConfigurationLocation*"></a>
   <h4 id="OpenSearch_Client_IHdfsRepositorySettings_ConfigurationLocation" data-uid="OpenSearch.Client.IHdfsRepositorySettings.ConfigurationLocation">ConfigurationLocation</h4>
@@ -228,7 +229,7 @@ string ConfigurationLocation { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IHdfsRepositorySettings_InlineHadoopConfiguration.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IHdfsRepositorySettings.InlineHadoopConfiguration%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/HdfsRepository.cs/#L90">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/HdfsRepository.cs/#L94">View Source</a>
   </span>
   <a id="OpenSearch_Client_IHdfsRepositorySettings_InlineHadoopConfiguration_" data-uid="OpenSearch.Client.IHdfsRepositorySettings.InlineHadoopConfiguration*"></a>
   <h4 id="OpenSearch_Client_IHdfsRepositorySettings_InlineHadoopConfiguration" data-uid="OpenSearch.Client.IHdfsRepositorySettings.InlineHadoopConfiguration">InlineHadoopConfiguration</h4>
@@ -260,7 +261,7 @@ Dictionary&lt;string, object&gt; InlineHadoopConfiguration { get; set; }</code><
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IHdfsRepositorySettings_LoadDefaults.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IHdfsRepositorySettings.LoadDefaults%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/HdfsRepository.cs/#L96">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/HdfsRepository.cs/#L100">View Source</a>
   </span>
   <a id="OpenSearch_Client_IHdfsRepositorySettings_LoadDefaults_" data-uid="OpenSearch.Client.IHdfsRepositorySettings.LoadDefaults*"></a>
   <h4 id="OpenSearch_Client_IHdfsRepositorySettings_LoadDefaults" data-uid="OpenSearch.Client.IHdfsRepositorySettings.LoadDefaults">LoadDefaults</h4>
@@ -270,6 +271,7 @@ Dictionary&lt;string, object&gt; InlineHadoopConfiguration { get; set; }</code><
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[DataMember(Name = &quot;load_defaults&quot;)]
+[JsonConverter(typeof(NullableStringBooleanConverter))]
 bool? LoadDefaults { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -292,7 +294,7 @@ bool? LoadDefaults { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IHdfsRepositorySettings_Path.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IHdfsRepositorySettings.Path%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/HdfsRepository.cs/#L103">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/HdfsRepository.cs/#L108">View Source</a>
   </span>
   <a id="OpenSearch_Client_IHdfsRepositorySettings_Path_" data-uid="OpenSearch.Client.IHdfsRepositorySettings.Path*"></a>
   <h4 id="OpenSearch_Client_IHdfsRepositorySettings_Path" data-uid="OpenSearch.Client.IHdfsRepositorySettings.Path">Path</h4>
@@ -324,7 +326,7 @@ string Path { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IHdfsRepositorySettings_Uri.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IHdfsRepositorySettings.Uri%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/HdfsRepository.cs/#L109">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/HdfsRepository.cs/#L114">View Source</a>
   </span>
   <a id="OpenSearch_Client_IHdfsRepositorySettings_Uri_" data-uid="OpenSearch.Client.IHdfsRepositorySettings.Uri*"></a>
   <h4 id="OpenSearch_Client_IHdfsRepositorySettings_Uri" data-uid="OpenSearch.Client.IHdfsRepositorySettings.Uri">Uri</h4>
@@ -367,7 +369,7 @@ string Uri { get; set; }</code></pre>
                     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IHdfsRepositorySettings.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IHdfsRepositorySettings%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/HdfsRepository.cs/#L56" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Snapshot/Repositories/HdfsRepository.cs/#L58" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
