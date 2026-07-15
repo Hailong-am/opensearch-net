@@ -4,6 +4,7 @@ Inspired from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ## [Unreleased]
 ### ⚠️ Breaking Changes ⚠️
 - As part of [efforts to re-generate the client](https://github.com/opensearch-project/opensearch-net/pulls?q=is%3Apr+label%3Acode-gen+is%3Aclosed) from our [OpenAPI specification](https://github.com/opensearch-project/opensearch-api-specification) there have been numerous corrections and changes that resulted in breaking changes. Please refer to [UPGRADING.md](UPGRADING.md) for a complete list of these breakages and any relevant guidance for upgrading to this version of the client.
+- Changed the default high-level client serialization engine from the vendored Utf8Json to `System.Text.Json` ([#388](https://github.com/opensearch-project/opensearch-net/issues/388)). Call `.UseUtf8Json()` on `ConnectionSettings`, or set the `OSC_USE_UTF8JSON` environment variable, to roll back to the legacy engine.
 
 ### Changed
 - Changed the namespace client properties on `IOpenSearchClient` to return corresponding interfaces to better enable mocking & unit testing ([#646](https://github.com/opensearch-project/opensearch-net/pull/646))
@@ -17,6 +18,7 @@ Inspired from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Added System.Text.Json converters for core inference types and the Document domain as part of the ongoing Utf8Json to System.Text.Json migration; the default serialization engine is unchanged ([#388](https://github.com/opensearch-project/opensearch-net/issues/388))
 - Added System.Text.Json converters for the QueryDsl and Aggregations domains as part of the ongoing Utf8Json to System.Text.Json migration; the default serialization engine is unchanged ([#388](https://github.com/opensearch-project/opensearch-net/issues/388))
 - Added System.Text.Json converters for the Mapping, Analysis, Ingest, and Search domains as part of the ongoing Utf8Json to System.Text.Json migration; the default serialization engine is unchanged ([#388](https://github.com/opensearch-project/opensearch-net/issues/388))
+- Added System.Text.Json converters for the Indices, Snapshot, Cluster, and Nodes domains, completing the Utf8Json to System.Text.Json migration ([#388](https://github.com/opensearch-project/opensearch-net/issues/388))
 
 ### Removed
 - Removed support for the `net461` target ([#256](https://github.com/opensearch-project/opensearch-net/pull/256))
