@@ -31,8 +31,8 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 using static OpenSearch.Client.Infer;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {

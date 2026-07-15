@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
@@ -38,6 +39,7 @@ namespace OpenSearch.Client
 	/// <para />
 	/// Requires the repository-hdfs plugin to be installed on the cluster
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IHdfsRepository : IRepository<IHdfsRepositorySettings> { }
 
 	/// <inheritdoc />
@@ -53,6 +55,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Snapshot repository settings for <see cref="IHdfsRepository"/>
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IHdfsRepositorySettings : IRepositorySettings
 	{
 		/// <summary>
@@ -68,6 +71,7 @@ namespace OpenSearch.Client
 		/// affect index files that are already compressed by default. Defaults to <c>false</c>.
 		/// </summary>
 		[DataMember(Name ="compress")]
+		[JsonConverter(typeof(NullableStringBooleanConverter))]
 		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? Compress { get; set; }
 
@@ -94,6 +98,7 @@ namespace OpenSearch.Client
 		/// Whether to load the default Hadoop configuration (default) or not
 		/// </summary>
 		[DataMember(Name ="load_defaults")]
+		[JsonConverter(typeof(NullableStringBooleanConverter))]
 		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? LoadDefaults { get; set; }
 

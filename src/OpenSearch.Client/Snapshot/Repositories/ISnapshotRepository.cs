@@ -27,12 +27,14 @@
 */
 
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// A snapshot repository
 	/// </summary>
+	[InterfaceDataContract]
 	public interface ISnapshotRepository
 	{
 		[DataMember(Name ="type")]
@@ -42,6 +44,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A snapshot repository with settings
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IRepositoryWithSettings: ISnapshotRepository
 	{
 		/// <summary>
@@ -54,6 +57,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A snapshot repository with typed settings
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IRepository<TSettings> : IRepositoryWithSettings
 		where TSettings : class, IRepositorySettings
 	{

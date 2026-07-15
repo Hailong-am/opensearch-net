@@ -28,8 +28,9 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
+using OpenSearch.Net;
 
 namespace OpenSearch.Client
 {
@@ -65,6 +66,7 @@ namespace OpenSearch.Client
 			EmptyReadOnly<KeyedProcessorStats>.Collection;
 	}
 
+	[JsonConverter(typeof(KeyedProcessorStatsConverter))]
 	[JsonFormatter(typeof(KeyedProcessorStatsFormatter))]
 	public class KeyedProcessorStats
 	{
@@ -75,6 +77,25 @@ namespace OpenSearch.Client
 		public ProcessStats Statistics { get; set; }
 	}
 
+
+	public class ProcessorStats
+	{
+		/// <summary> The total number of document ingested during the lifetime of this node </summary>
+		[DataMember(Name = "count")]
+		public long Count { get; internal set; }
+
+		/// <summary> The total number of documents currently being ingested. </summary>
+		[DataMember(Name = "current")]
+		public long Current { get; internal set; }
+
+		/// <summary> The total number ingest preprocessing operations failed during the lifetime of this node </summary>
+		[DataMember(Name = "failed")]
+		public long Failed { get; internal set; }
+
+		/// <summary> The total time spent on ingest preprocessing documents during the lifetime of this node </summary>
+		[DataMember(Name = "time_in_millis")]
+		public long TimeInMilliseconds { get; internal set; }
+	}
 	internal class KeyedProcessorStatsFormatter : IJsonFormatter<KeyedProcessorStats>
 	{
 		public KeyedProcessorStats Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
@@ -109,22 +130,5 @@ namespace OpenSearch.Client
 		}
 	}
 
-	public class ProcessorStats
-	{
-		/// <summary> The total number of document ingested during the lifetime of this node </summary>
-		[DataMember(Name = "count")]
-		public long Count { get; internal set; }
 
-		/// <summary> The total number of documents currently being ingested. </summary>
-		[DataMember(Name = "current")]
-		public long Current { get; internal set; }
-
-		/// <summary> The total number ingest preprocessing operations failed during the lifetime of this node </summary>
-		[DataMember(Name = "failed")]
-		public long Failed { get; internal set; }
-
-		/// <summary> The total time spent on ingest preprocessing documents during the lifetime of this node </summary>
-		[DataMember(Name = "time_in_millis")]
-		public long TimeInMilliseconds { get; internal set; }
-	}
 }

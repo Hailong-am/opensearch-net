@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// The settings for an index
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(IndexSettings))]
 	[JsonFormatter(typeof(IndexSettingsFormatter))]
 	public interface IIndexSettings : IDynamicIndexSettings
 	{

@@ -7,10 +7,12 @@
 
 using System;
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client;
 
 [ReadAs(typeof(DataStreamTemplate))]
+[InterfaceDataContract]
 public interface IDataStreamTemplate
 {
 	[DataMember(Name = "timestamp_field")]
@@ -31,6 +33,7 @@ public class DataStreamTemplateDescriptor : DescriptorBase<DataStreamTemplateDes
 }
 
 [ReadAs(typeof(TimestampField))]
+[InterfaceDataContract]
 public interface ITimestampField
 {
 	[DataMember(Name = "name")]

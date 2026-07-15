@@ -28,8 +28,9 @@
 
 using System;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Extensions;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
+using OpenSearch.Net.Extensions;
 using OpenSearch.Net.Utf8Json.Internal;
 
 namespace OpenSearch.Client
@@ -39,6 +40,7 @@ namespace OpenSearch.Client
 	/// Source only snapshots contain stored fields and index metadata. They do not include index or doc values structures
 	/// and are not searchable when restored. After restoring a source-only snapshot, you must reindex the data into a new index.
 	/// </summary>
+	[JsonConverter(typeof(SourceOnlyRepositoryConverter))]
 	[JsonFormatter(typeof(SourceOnlyRepositoryFormatter))]
 	public interface ISourceOnlyRepository : IRepositoryWithSettings
 	{
@@ -272,4 +274,6 @@ namespace OpenSearch.Client
 			return new SourceOnlyRepository(delegateType, delegateSettings);
 		}
 	}
+
+
 }

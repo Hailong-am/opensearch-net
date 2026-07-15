@@ -12,6 +12,7 @@ using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client;
 
 [ReadAs(typeof(ComponentTemplate))]
+[InterfaceDataContract]
 public interface IComponentTemplate
 {
 	[DataMember(Name = "template")]

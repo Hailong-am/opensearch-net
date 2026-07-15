@@ -28,6 +28,7 @@
 
 using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
@@ -37,6 +38,7 @@ namespace OpenSearch.Client
 	/// The path specified in the location parameter should point to the same location in the shared
 	/// filesystem and be accessible on all data and cluster_manager nodes.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IFileSystemRepository : IRepository<IFileSystemRepositorySettings> { }
 
 	/// <inheritdoc />
@@ -52,6 +54,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Repository settings for <see cref="IFileSystemRepository"/>
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IFileSystemRepositorySettings : IRepositorySettings
 	{
 		/// <summary>
@@ -66,6 +69,7 @@ namespace OpenSearch.Client
 		/// Turns on compression of the snapshot files. Defaults to true.
 		/// </summary>
 		[DataMember(Name ="compress")]
+		[JsonConverter(typeof(NullableStringBooleanConverter))]
 		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? Compress { get; set; }
 

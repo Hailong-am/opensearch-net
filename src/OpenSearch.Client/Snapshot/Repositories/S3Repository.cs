@@ -28,6 +28,7 @@
 
 using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
@@ -37,6 +38,7 @@ namespace OpenSearch.Client
 	/// <para />
 	/// Requires the repository-s3 plugin to be installed on the cluster
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IS3Repository : IRepository<IS3RepositorySettings> { }
 
 	/// <inheritdoc />
@@ -54,6 +56,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Snapshot repository settings for <see cref="IS3Repository"/>
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IS3RepositorySettings : IRepositorySettings
 	{
 		/// <summary>
@@ -108,6 +111,7 @@ namespace OpenSearch.Client
 		/// Defaults to false.
 		/// </summary>
 		[DataMember(Name ="compress")]
+		[JsonConverter(typeof(NullableStringBooleanConverter))]
 		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? Compress { get; set; }
 
@@ -116,6 +120,7 @@ namespace OpenSearch.Client
 		/// Defaults to false.
 		/// </summary>
 		[DataMember(Name ="server_side_encryption")]
+		[JsonConverter(typeof(NullableStringBooleanConverter))]
 		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? ServerSideEncryption { get; set; }
 
@@ -132,6 +137,7 @@ namespace OpenSearch.Client
 		/// be automatically determined by the AWS Java SDK used internally by OpenSearch
 		/// </summary>
 		[DataMember(Name = "path_style_access")]
+		[JsonConverter(typeof(NullableStringBooleanConverter))]
 		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? PathStyleAccess { get; set; }
 
@@ -142,6 +148,7 @@ namespace OpenSearch.Client
 		/// encoding. Defaults to false.
 		/// </summary>
 		[DataMember(Name = "disable_chunked_encoding")]
+		[JsonConverter(typeof(NullableStringBooleanConverter))]
 		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? DisableChunkedEncoding { get; set; }
 
@@ -149,6 +156,7 @@ namespace OpenSearch.Client
 		/// Make the repository readonly. Defaults to false.
 		/// </summary>
 		[DataMember(Name = "readonly")]
+		[JsonConverter(typeof(NullableStringBooleanConverter))]
 		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? ReadOnly { get; set; }
 

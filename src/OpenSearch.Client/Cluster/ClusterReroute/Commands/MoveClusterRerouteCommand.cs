@@ -27,9 +27,11 @@
 */
 
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
+	[InterfaceDataContract]
 	public interface IMoveClusterRerouteCommand : IClusterRerouteCommand
 	{
 		[DataMember(Name ="from_node")]

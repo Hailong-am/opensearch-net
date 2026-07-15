@@ -27,9 +27,11 @@
 */
 
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
+	[InterfaceDataContract]
 	public interface IAllocateClusterRerouteCommand : IClusterRerouteCommand
 	{
 		[DataMember(Name ="index")]
@@ -42,14 +44,17 @@ namespace OpenSearch.Client
 		int? Shard { get; set; }
 	}
 
+	[InterfaceDataContract]
 	public interface IAllocateReplicaClusterRerouteCommand : IAllocateClusterRerouteCommand { }
 
+	[InterfaceDataContract]
 	public interface IAllocateEmptyPrimaryRerouteCommand : IAllocateClusterRerouteCommand
 	{
 		[DataMember(Name ="accept_data_loss")]
 		bool? AcceptDataLoss { get; set; }
 	}
 
+	[InterfaceDataContract]
 	public interface IAllocateStalePrimaryRerouteCommand : IAllocateClusterRerouteCommand
 	{
 		[DataMember(Name ="accept_data_loss")]
