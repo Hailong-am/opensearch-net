@@ -35,7 +35,6 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A similarity with Bayesian smoothing using Dirichlet priors.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface ILMDirichletSimilarity : ISimilarity
 	{
 		/// <summary>

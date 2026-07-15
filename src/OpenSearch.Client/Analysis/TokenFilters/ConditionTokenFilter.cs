@@ -29,7 +29,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -37,7 +36,6 @@ namespace OpenSearch.Client
 	/// The conditional token filter takes a predicate script and a list of subfilters, and
 	/// only applies the subfilters to the current token if it matches the predicate.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IConditionTokenFilter : ITokenFilter
 	{
 		/// <summary>

@@ -35,7 +35,6 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// An analyzer of type pattern that can flexibly separate text into terms via a regular expression.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IPatternAnalyzer : IAnalyzer
 	{
 		[DataMember(Name ="flags")]

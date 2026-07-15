@@ -28,7 +28,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -36,7 +35,6 @@ namespace OpenSearch.Client
 	/// The kuromoji_part_of_speech token filter removes tokens that match a set of part-of-speech tags.
 	/// Part of the `analysis-kuromoji` plugin:
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IKuromojiPartOfSpeechTokenFilter : ITokenFilter
 	{
 		/// <summary>

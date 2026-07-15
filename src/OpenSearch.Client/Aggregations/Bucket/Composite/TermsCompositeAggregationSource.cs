@@ -28,7 +28,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -36,7 +35,6 @@ namespace OpenSearch.Client
 	/// A values source that is equivalent to a simple terms aggregation.
 	/// The values are extracted from a field or a script exactly like the terms aggregation.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface ITermsCompositeAggregationSource : ICompositeAggregationSource
 	{
 		/// <summary>

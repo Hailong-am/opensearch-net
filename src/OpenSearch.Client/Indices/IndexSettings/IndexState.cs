@@ -27,12 +27,10 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[ReadAs(typeof(IndexState))]
-	[InterfaceDataContract]
 	public interface IIndexState
 	{
 		[DataMember(Name ="aliases")]

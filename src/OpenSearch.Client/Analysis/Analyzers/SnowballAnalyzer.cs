@@ -28,7 +28,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -39,7 +38,6 @@ namespace OpenSearch.Client
 	/// snowball.tartarus.org.
 	/// </para>
 	/// </summary>
-	[InterfaceDataContract]
 	public interface ISnowballAnalyzer : IAnalyzer
 	{
 		[DataMember(Name ="language")]

@@ -37,7 +37,6 @@ namespace OpenSearch.Client
 	/// An operation to define the calculation of
 	/// term vectors when using Multi termvectors API
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IMultiTermVectorOperation
 	{
 		/// <summary>

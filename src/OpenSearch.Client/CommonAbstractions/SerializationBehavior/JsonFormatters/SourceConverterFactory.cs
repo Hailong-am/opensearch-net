@@ -11,7 +11,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using OpenSearch.Net;
-using InterfaceDataContractAttribute = OpenSearch.Net.Utf8Json.InterfaceDataContractAttribute;
 
 namespace OpenSearch.Client
 {
@@ -110,7 +109,7 @@ namespace OpenSearch.Client
 				if (ifaceAssembly != null &&
 					(ifaceAssembly.StartsWith("OpenSearch.Net", StringComparison.Ordinal) ||
 					 ifaceAssembly.StartsWith("OpenSearch.Client", StringComparison.Ordinal)) &&
-					Attribute.IsDefined(iface, typeof(InterfaceDataContractAttribute)))
+					InterfaceDataContract.IsDefinedOn(iface))
 					return false;
 			}
 

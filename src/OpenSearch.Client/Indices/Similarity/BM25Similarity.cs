@@ -36,7 +36,6 @@ namespace OpenSearch.Client
 	/// and Mike Gatford. Okapi at TREC-3. In Proceedings of the Third Text Retrieval Conference (TREC 1994). Gaithersburg,
 	/// USA, November 1994.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IBM25Similarity : ISimilarity
 	{
 		/// <summary>

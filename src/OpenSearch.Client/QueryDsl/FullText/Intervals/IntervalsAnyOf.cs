@@ -29,7 +29,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -37,7 +36,6 @@ namespace OpenSearch.Client
 	/// A rule that emits intervals produced by any of its sub-rules.
 	/// </summary>
 	[ReadAs(typeof(IntervalsAnyOf))]
-	[InterfaceDataContract]
 	public interface IIntervalsAnyOf : IIntervals
 	{
 		/// <summary>

@@ -35,7 +35,6 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A tokenizer of type edgeNGram.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IEdgeNGramTokenizer : ITokenizer
 	{
 		/// <summary>

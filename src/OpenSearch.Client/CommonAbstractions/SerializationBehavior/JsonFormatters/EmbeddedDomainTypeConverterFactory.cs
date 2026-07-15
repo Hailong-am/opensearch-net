@@ -9,7 +9,6 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using OpenSearch.Net;
-using InterfaceDataContractAttribute = OpenSearch.Net.Utf8Json.InterfaceDataContractAttribute;
 
 namespace OpenSearch.Client
 {
@@ -49,7 +48,7 @@ namespace OpenSearch.Client
 				 assemblyName.StartsWith("OpenSearch.Client", StringComparison.Ordinal));
 
 			// Only OpenSearch framework types (or user types implementing a framework contract) qualify.
-			if (type.IsInterface && isFrameworkType && Attribute.IsDefined(type, typeof(InterfaceDataContractAttribute)))
+			if (type.IsInterface && isFrameworkType && InterfaceDataContract.IsDefinedOn(type))
 				return true;
 
 			foreach (var iface in type.GetInterfaces())
@@ -58,7 +57,7 @@ namespace OpenSearch.Client
 				if (ifaceAssembly != null &&
 					(ifaceAssembly.StartsWith("OpenSearch.Net", StringComparison.Ordinal) ||
 					 ifaceAssembly.StartsWith("OpenSearch.Client", StringComparison.Ordinal)) &&
-					Attribute.IsDefined(iface, typeof(InterfaceDataContractAttribute)))
+					InterfaceDataContract.IsDefinedOn(iface))
 					return true;
 			}
 

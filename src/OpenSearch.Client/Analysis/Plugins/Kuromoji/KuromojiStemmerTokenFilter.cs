@@ -36,7 +36,6 @@ namespace OpenSearch.Client
 	/// long sound character by removing this character (U+30FC). Only full-width katakana characters are supported.
 	/// Part of the `analysis-kuromoji` plugin:
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IKuromojiStemmerTokenFilter : ITokenFilter
 	{
 		/// <summary>

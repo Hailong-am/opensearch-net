@@ -35,7 +35,6 @@ namespace OpenSearch.Client
 	/// The kuromoji_iteration_mark normalizes Japanese horizontal iteration marks (odoriji) to their expanded form.
 	/// Part of the `analysis-kuromoji` plugin:
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IKuromojiIterationMarkCharFilter : ICharFilter
 	{
 		[DataMember(Name ="normalize_kana")]

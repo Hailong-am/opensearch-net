@@ -27,14 +27,12 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// Splits tokens into tokens and payload whenever a delimiter character is found.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IDelimitedPayloadTokenFilter : ITokenFilter
 	{
 		/// <summary>

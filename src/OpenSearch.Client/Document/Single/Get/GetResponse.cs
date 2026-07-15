@@ -31,7 +31,6 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[InterfaceDataContract]
 	public interface IGetResponse<out TDocument> : IResponse where TDocument : class
 	{
 		TDocument Source { get; }

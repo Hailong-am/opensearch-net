@@ -33,7 +33,6 @@ using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[ReadAs(typeof(MultiGetHit<>))]
-	[InterfaceDataContract]
 	public interface IMultiGetHit<out TDocument> where TDocument : class
 	{
 		Error Error { get; }

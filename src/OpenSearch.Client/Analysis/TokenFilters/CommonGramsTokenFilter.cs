@@ -37,7 +37,6 @@ namespace OpenSearch.Client
 	///  Token filter that generates bigrams for frequently occuring terms. Single terms are still indexed.
 	/// <para>Note, common_words or common_words_path field is required.</para>
 	/// </summary>
-	[InterfaceDataContract]
 	public interface ICommonGramsTokenFilter : ITokenFilter
 	{
 		/// <summary>

@@ -29,12 +29,10 @@
 using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[ReadAs(typeof(Term))]
-	[InterfaceDataContract]
 	public interface ITerm
 	{
 		Field Field { get; set; }

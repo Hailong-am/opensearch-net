@@ -35,7 +35,6 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// The pattern_capture token filter, unlike the pattern tokenizer, emits a token for every capture group in the regular expression.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IPatternCaptureTokenFilter : ITokenFilter
 	{
 		/// <summary>

@@ -27,14 +27,12 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// A values source that is equivalent to a simple Geo aggregation.
 	/// </summary>
-	[InterfaceDataContract]
 	public interface IGeoTileGridCompositeAggregationSource : ICompositeAggregationSource
 	{
 		/// <summary>
