@@ -113,11 +113,10 @@ namespace OpenSearch.Client
 		IOpenSearchSerializer SourceSerializer { get; }
 
 		/// <summary>
-		/// When <c>true</c>, the built-in high-level serializer uses the legacy vendored Utf8Json engine
-		/// (honoring <c>[JsonFormatter]</c> attributes) instead of the default <see cref="System.Text.Json"/>
-		/// engine (honoring <c>[JsonConverter]</c> attributes). This is provided as a rollback safety net for
-		/// the Utf8Json → System.Text.Json migration and defaults to <c>false</c> (System.Text.Json). It can
-		/// also be forced via the <c>OSC_USE_UTF8JSON</c> environment variable.
+		/// When <c>true</c> (the default), the built-in high-level serializer uses the legacy vendored Utf8Json
+		/// engine (honoring <c>[JsonFormatter]</c> attributes). When <c>false</c>, the System.Text.Json engine
+		/// is used (honoring <c>[JsonConverter]</c> attributes). Set to <c>false</c> via
+		/// <c>UseUtf8Json(false)</c> or the <c>OSC_USE_STJ</c> environment variable to opt into the new engine.
 		/// </summary>
 		bool UseUtf8Json { get; }
 	}

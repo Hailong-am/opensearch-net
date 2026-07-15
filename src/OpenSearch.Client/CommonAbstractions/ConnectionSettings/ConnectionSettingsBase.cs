@@ -115,10 +115,10 @@ namespace OpenSearch.Client
 		private Func<string, string> _defaultFieldNameInferrer;
 		private string _defaultIndex;
 
-		// Rollback safety net for the Utf8Json -> System.Text.Json migration. Defaults to STJ (false).
-		// Seeded from the OSC_USE_UTF8JSON environment variable so the legacy engine can be forced without
-		// code changes (e.g. in test harnesses); an explicit UseUtf8Json(...) fluent call overrides it.
-		private bool _useUtf8Json = ReadUseUtf8JsonEnvironmentDefault();
+		// Default serialization engine. Defaults to the legacy vendored Utf8Json engine (true) for backwards
+		// compatibility. Set to false (opt into System.Text.Json) via UseUtf8Json(false) or the
+		// OSC_USE_STJ environment variable.
+		private bool _useUtf8Json = ReadUtf8JsonDefault();
 
 		protected ConnectionSettingsBase(
 			IConnectionPool connectionPool,
@@ -186,21 +186,24 @@ namespace OpenSearch.Client
 		public TConnectionSettings DefaultDisableIdInference(bool disable = true) => Assign(disable, (a, v) => a._defaultDisableAllInference = v);
 
 		/// <summary>
-		/// Selects the legacy vendored Utf8Json serialization engine (honoring <c>[JsonFormatter]</c> attributes)
-		/// for the built-in high-level serializer instead of the default <see cref="System.Text.Json"/> engine.
+		/// Controls which serialization engine is used by the built-in high-level serializer.
+		/// When <c>true</c> (the default), the legacy vendored Utf8Json engine is used (honoring
+		/// <c>[JsonFormatter]</c> attributes). When <c>false</c>, the System.Text.Json engine is used
+		/// (honoring <c>[JsonConverter]</c> attributes).
 		/// <para></para>
-		/// This is a rollback safety net for the Utf8Json → System.Text.Json migration; leave it unset to use
-		/// System.Text.Json. It can also be forced globally via the <c>OSC_USE_UTF8JSON</c> environment variable.
+		/// The System.Text.Json engine can also be forced globally via the <c>OSC_USE_STJ</c> environment variable.
 		/// </summary>
 		public TConnectionSettings UseUtf8Json(bool use = true) => Assign(use, (a, v) => a._useUtf8Json = v);
 
-		private static bool ReadUseUtf8JsonEnvironmentDefault()
+		private static bool ReadUtf8JsonDefault()
 		{
-			var value = Environment.GetEnvironmentVariable("OSC_USE_UTF8JSON");
-			if (string.IsNullOrEmpty(value)) return false;
-			return value == "1"
+			// If OSC_USE_STJ is set, opt into System.Text.Json (UseUtf8Json = false).
+			var value = Environment.GetEnvironmentVariable("OSC_USE_STJ");
+			if (string.IsNullOrEmpty(value)) return true; // default: Utf8Json
+			var useSij = value == "1"
 				|| string.Equals(value, "true", StringComparison.OrdinalIgnoreCase)
 				|| string.Equals(value, "yes", StringComparison.OrdinalIgnoreCase);
+			return !useSij;
 		}
 
 		private void MapIdPropertyFor<TDocument>(Expression<Func<TDocument, object>> objectPath)
