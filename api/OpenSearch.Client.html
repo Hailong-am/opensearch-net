@@ -958,6 +958,20 @@ for cases where a simple custom tokenization is desired, and the overhead of use
       <section></section>
       <h4><a class="xref" href="OpenSearch.Client.Collector.html">Collector</a></h4>
       <section></section>
+      <h4><a class="xref" href="OpenSearch.Client.CombinedFieldsQuery.html">CombinedFieldsQuery</a></h4>
+      <section><p>The combined_fields query supports searching multiple text fields as if their contents had been indexed
+into one combined field. The query analyzes the provided text before performing a search, and it scores
+documents using a term-centric approach that treats the matched fields as a single field.</p>
+<p></p>
+<p>All queried fields must have the same search analyzer. Only <code>text</code> fields are supported.</p>
+</section>
+      <h4><a class="xref" href="OpenSearch.Client.CombinedFieldsQueryDescriptor-1.html">CombinedFieldsQueryDescriptor&lt;T&gt;</a></h4>
+      <section><p>The combined_fields query supports searching multiple text fields as if their contents had been indexed
+into one combined field. The query analyzes the provided text before performing a search, and it scores
+documents using a term-centric approach that treats the matched fields as a single field.</p>
+<p></p>
+<p>All queried fields must have the same search analyzer. Only <code>text</code> fields are supported.</p>
+</section>
       <h4><a class="xref" href="OpenSearch.Client.CommonGramsTokenFilter.html">CommonGramsTokenFilter</a></h4>
       <section></section>
       <h4><a class="xref" href="OpenSearch.Client.CommonGramsTokenFilterDescriptor.html">CommonGramsTokenFilterDescriptor</a></h4>
@@ -5361,6 +5375,13 @@ for cases where a simple custom tokenization is desired, and the overhead of use
       <section></section>
       <h4><a class="xref" href="OpenSearch.Client.IClusterStatsRequest.html">IClusterStatsRequest</a></h4>
       <section></section>
+      <h4><a class="xref" href="OpenSearch.Client.ICombinedFieldsQuery.html">ICombinedFieldsQuery</a></h4>
+      <section><p>The combined_fields query supports searching multiple text fields as if their contents had been indexed
+into one combined field. The query analyzes the provided text before performing a search, and it scores
+documents using a term-centric approach that treats the matched fields as a single field.</p>
+<p></p>
+<p>All queried fields must have the same search analyzer. Only <code>text</code> fields are supported.</p>
+</section>
       <h4><a class="xref" href="OpenSearch.Client.ICommonGramsTokenFilter.html">ICommonGramsTokenFilter</a></h4>
       <section><p>Token filter that generates bigrams for frequently occuring terms. Single terms are still indexed.</p>
 <p>Note, common_words or common_words_path field is required.</p>

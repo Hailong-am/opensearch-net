@@ -145,7 +145,8 @@ that gets serialized as new [] { lon, lat, [z] }</p>
   <h6><strong>Assembly</strong>: OpenSearch.Client.dll</h6>
   <h5 id="OpenSearch_Client_GeoCoordinate_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class GeoCoordinate : GeoLocation, IEquatable&lt;GeoLocation&gt;, IFormattable</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(GeoCoordinateConverter))]
+public class GeoCoordinate : GeoLocation, IEquatable&lt;GeoLocation&gt;, IFormattable</code></pre>
   </div>
   <h3 id="constructors">Constructors
 </h3>
@@ -154,7 +155,7 @@ that gets serialized as new [] { lon, lat, [z] }</p>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_GeoCoordinate__ctor_System_Double_System_Double_.md&amp;value=---%0Auid%3A%20OpenSearch.Client.GeoCoordinate.%23ctor(System.Double%2CSystem.Double)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/QueryDsl/Geo/GeoLocation.cs/#L153">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/QueryDsl/Geo/GeoLocation.cs/#L155">View Source</a>
   </span>
   <a id="OpenSearch_Client_GeoCoordinate__ctor_" data-uid="OpenSearch.Client.GeoCoordinate.#ctor*"></a>
   <h4 id="OpenSearch_Client_GeoCoordinate__ctor_System_Double_System_Double_" data-uid="OpenSearch.Client.GeoCoordinate.#ctor(System.Double,System.Double)">GeoCoordinate(double, double)</h4>
@@ -192,7 +193,7 @@ that gets serialized as new [] { lon, lat, [z] }</p>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_GeoCoordinate__ctor_System_Double_System_Double_System_Double_.md&amp;value=---%0Auid%3A%20OpenSearch.Client.GeoCoordinate.%23ctor(System.Double%2CSystem.Double%2CSystem.Double)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/QueryDsl/Geo/GeoLocation.cs/#L158">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/QueryDsl/Geo/GeoLocation.cs/#L160">View Source</a>
   </span>
   <a id="OpenSearch_Client_GeoCoordinate__ctor_" data-uid="OpenSearch.Client.GeoCoordinate.#ctor*"></a>
   <h4 id="OpenSearch_Client_GeoCoordinate__ctor_System_Double_System_Double_System_Double_" data-uid="OpenSearch.Client.GeoCoordinate.#ctor(System.Double,System.Double,System.Double)">GeoCoordinate(double, double, double)</h4>
@@ -237,7 +238,7 @@ that gets serialized as new [] { lon, lat, [z] }</p>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_GeoCoordinate_Z.md&amp;value=---%0Auid%3A%20OpenSearch.Client.GeoCoordinate.Z%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/QueryDsl/Geo/GeoLocation.cs/#L164">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/QueryDsl/Geo/GeoLocation.cs/#L166">View Source</a>
   </span>
   <a id="OpenSearch_Client_GeoCoordinate_Z_" data-uid="OpenSearch.Client.GeoCoordinate.Z*"></a>
   <h4 id="OpenSearch_Client_GeoCoordinate_Z" data-uid="OpenSearch.Client.GeoCoordinate.Z">Z</h4>
@@ -270,7 +271,7 @@ that gets serialized as new [] { lon, lat, [z] }</p>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_GeoCoordinate_op_Implicit_System_Double____OpenSearch_Client_GeoCoordinate.md&amp;value=---%0Auid%3A%20OpenSearch.Client.GeoCoordinate.op_Implicit(System.Double%5B%5D)~OpenSearch.Client.GeoCoordinate%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/QueryDsl/Geo/GeoLocation.cs/#L172">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/QueryDsl/Geo/GeoLocation.cs/#L174">View Source</a>
   </span>
   <a id="OpenSearch_Client_GeoCoordinate_op_Implicit_" data-uid="OpenSearch.Client.GeoCoordinate.op_Implicit*"></a>
   <h4 id="OpenSearch_Client_GeoCoordinate_op_Implicit_System_Double____OpenSearch_Client_GeoCoordinate" data-uid="OpenSearch.Client.GeoCoordinate.op_Implicit(System.Double[])~OpenSearch.Client.GeoCoordinate">implicit operator GeoCoordinate(double[])</h4>
@@ -339,7 +340,7 @@ Returns null if coordinates are null
                     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_GeoCoordinate.md&amp;value=---%0Auid%3A%20OpenSearch.Client.GeoCoordinate%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/QueryDsl/Geo/GeoLocation.cs/#L147" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/QueryDsl/Geo/GeoLocation.cs/#L148" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

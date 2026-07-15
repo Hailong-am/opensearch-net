@@ -115,7 +115,8 @@ search’s should filter to add boosted relevance scores to the bool query’s s
   <h6><strong>Assembly</strong>: OpenSearch.Client.dll</h6>
   <h5 id="OpenSearch_Client_IDistanceFeatureQuery_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IDistanceFeatureQuery : IFieldNameQuery, IQuery</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(DistanceFeatureQueryConverter))]
+public interface IDistanceFeatureQuery : IFieldNameQuery, IQuery</code></pre>
   </div>
   <h3 id="properties">Properties
 </h3>
@@ -124,7 +125,7 @@ search’s should filter to add boosted relevance scores to the bool query’s s
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IDistanceFeatureQuery_Origin.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IDistanceFeatureQuery.Origin%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/QueryDsl/Specialized/DistanceFeature/DistanceFeatureQuery.cs/#L50">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/QueryDsl/Specialized/DistanceFeature/DistanceFeatureQuery.cs/#L52">View Source</a>
   </span>
   <a id="OpenSearch_Client_IDistanceFeatureQuery_Origin_" data-uid="OpenSearch.Client.IDistanceFeatureQuery.Origin*"></a>
   <h4 id="OpenSearch_Client_IDistanceFeatureQuery_Origin" data-uid="OpenSearch.Client.IDistanceFeatureQuery.Origin">Origin</h4>
@@ -158,7 +159,7 @@ Union&lt;GeoCoordinate, DateMath&gt; Origin { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IDistanceFeatureQuery_Pivot.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IDistanceFeatureQuery.Pivot%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/QueryDsl/Specialized/DistanceFeature/DistanceFeatureQuery.cs/#L58">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/QueryDsl/Specialized/DistanceFeature/DistanceFeatureQuery.cs/#L60">View Source</a>
   </span>
   <a id="OpenSearch_Client_IDistanceFeatureQuery_Pivot_" data-uid="OpenSearch.Client.IDistanceFeatureQuery.Pivot*"></a>
   <h4 id="OpenSearch_Client_IDistanceFeatureQuery_Pivot" data-uid="OpenSearch.Client.IDistanceFeatureQuery.Pivot">Pivot</h4>
@@ -203,7 +204,7 @@ Union&lt;Distance, Time&gt; Pivot { get; set; }</code></pre>
                     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IDistanceFeatureQuery.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IDistanceFeatureQuery%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/QueryDsl/Specialized/DistanceFeature/DistanceFeatureQuery.cs/#L41" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/QueryDsl/Specialized/DistanceFeature/DistanceFeatureQuery.cs/#L42" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

@@ -4704,6 +4704,34 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/temp/docfxapi/OpenSearch.Client.CombinedFieldsQuery.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OpenSearch.Client.CombinedFieldsQuery.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OpenSearch.Client.CombinedFieldsQuery",
+      "Summary": "<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Client.CombinedFieldsQuery.yml\" sourcestartlinenumber=\"1\">The combined_fields query supports searching multiple text fields as if their contents had been indexed\ninto one combined field. The query analyzes the provided text before performing a search, and it scores\ndocuments using a term-centric approach that treats the matched fields as a single field.</p>\n<p></p>\n<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Client.CombinedFieldsQuery.yml\" sourcestartlinenumber=\"7\">All queried fields must have the same search analyzer. Only <code>text</code> fields are supported.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/temp/docfxapi/OpenSearch.Client.CombinedFieldsQueryDescriptor-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OpenSearch.Client.CombinedFieldsQueryDescriptor-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OpenSearch.Client.CombinedFieldsQueryDescriptor<T>",
+      "Summary": "<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Client.CombinedFieldsQueryDescriptor-1.yml\" sourcestartlinenumber=\"1\">The combined_fields query supports searching multiple text fields as if their contents had been indexed\ninto one combined field. The query analyzes the provided text before performing a search, and it scores\ndocuments using a term-centric approach that treats the matched fields as a single field.</p>\n<p></p>\n<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Client.CombinedFieldsQueryDescriptor-1.yml\" sourcestartlinenumber=\"7\">All queried fields must have the same search analyzer. Only <code>text</code> fields are supported.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/temp/docfxapi/OpenSearch.Client.CommonGramsTokenFilter.yml",
       "output": {
         ".html": {
@@ -13787,6 +13815,20 @@
       "IsMRef": true,
       "Title": "OpenSearch.Client.IClusterStatsRequest",
       "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/temp/docfxapi/OpenSearch.Client.ICombinedFieldsQuery.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OpenSearch.Client.ICombinedFieldsQuery.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OpenSearch.Client.ICombinedFieldsQuery",
+      "Summary": "<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Client.ICombinedFieldsQuery.yml\" sourcestartlinenumber=\"1\">The combined_fields query supports searching multiple text fields as if their contents had been indexed\ninto one combined field. The query analyzes the provided text before performing a search, and it scores\ndocuments using a term-centric approach that treats the matched fields as a single field.</p>\n<p></p>\n<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Client.ICombinedFieldsQuery.yml\" sourcestartlinenumber=\"7\">All queried fields must have the same search analyzer. Only <code>text</code> fields are supported.</p>\n"
     },
     {
       "type": "ManagedReference",
