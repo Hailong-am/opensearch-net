@@ -192,6 +192,10 @@ namespace OpenSearch.Client
 			options.Converters.Insert(0, new QueryContainerCollectionConverter());
 			options.Converters.Insert(0, new TermsQueryConverter(settings));
 			options.Converters.Insert(0, new RangeQueryConverter(settings));
+			options.Converters.Insert(0, new BoolQueryConverter());
+			options.Converters.Insert(0, new ShapeQueryConverter());
+			options.Converters.Insert(0, new SpanGapQueryConverter());
+			options.Converters.Insert(0, new MultiTermQueryRewriteConverter());
 
 			// Field-name query wrapping (term, match, prefix, wildcard, fuzzy, regexp, span_term, etc.).
 			// Adds the { "<resolved-field>": { ...body... } } wrapping around concrete field-name queries
@@ -216,14 +220,36 @@ namespace OpenSearch.Client
 
 			// Aggregation converters
 			options.Converters.Insert(0, new FilterAggregationConverter());
+			options.Converters.Insert(0, new CompositeAggregationSourceConverter());
+			options.Converters.Insert(0, new MovingAverageAggregationConverter());
+			options.Converters.Insert(0, new PercentilesAggregationConverter());
+			options.Converters.Insert(0, new PercentileRanksAggregationConverter());
+			options.Converters.Insert(0, new TermsExcludeConverter());
+			options.Converters.Insert(0, new TermsIncludeConverter());
+			options.Converters.Insert(0, new BucketsPathConverter());
+			options.Converters.Insert(0, new IncludeExcludeConverter());
+			options.Converters.Insert(0, new SortOrderConverter<TermsOrder>());
+			options.Converters.Insert(0, new SortOrderConverter<HistogramOrder>());
 			options.Converters.Insert(0, new AggregationContainerConverter());
 			options.Converters.Insert(0, new AggregationContainerInterfaceConverter());
 			options.Converters.Insert(0, new AggregationDictionaryConverter());
 			options.Converters.Insert(0, new AggregateDictionaryResponseConverter());
 			options.Converters.Insert(0, new AggregateConverter());
 
+			// Analysis converters
+			options.Converters.Insert(0, new AnalyzerConverter());
+			options.Converters.Insert(0, new CharFilterConverter());
+			options.Converters.Insert(0, new NormalizerConverter());
+			options.Converters.Insert(0, new TokenFilterConverter());
+			options.Converters.Insert(0, new TokenizerConverter());
+
 			// Mapping converters
 			options.Converters.Insert(0, new PropertyConverter());
+			options.Converters.Insert(0, new FieldMappingConverter());
+			options.Converters.Insert(0, new ISuggestContextConverter());
+			options.Converters.Insert(0, new KeyedProcessorStatsConverter());
+			options.Converters.Insert(0, new FieldsConverter());
+			options.Converters.Insert(0, new UpdateIndexSettingsRequestConverter());
 
 			// Dynamic templates container (array-of-single-key-objects wire format).
 			// Must precede IsADictionaryConverterFactory, which would otherwise serialize it
@@ -248,6 +274,26 @@ namespace OpenSearch.Client
 			// Index settings converters (must precede IsADictionaryConverterFactory)
 			options.Converters.Insert(0, new IndexSettingsConverter());
 			options.Converters.Insert(0, new DynamicIndexSettingsConverter());
+
+			// CommonOptions converters (fuzziness, time, date math, distance)
+			options.Converters.Insert(0, new ContextConverter());
+			options.Converters.Insert(0, new ReindexRoutingConverter());
+			options.Converters.Insert(0, new TrackTotalHitsConverter());
+			options.Converters.Insert(0, new AutoExpandReplicasConverter());
+			options.Converters.Insert(0, new FuzzinessConverter());
+			options.Converters.Insert(0, new TimeConverter());
+			options.Converters.Insert(0, new DateMathConverter());
+			options.Converters.Insert(0, new DateMathTimeConverter());
+			options.Converters.Insert(0, new DistanceConverter());
+
+			// Alias / cluster reroute converters
+			options.Converters.Insert(0, new AliasActionConverter());
+			options.Converters.Insert(0, new ClusterRerouteCommandConverter());
+
+			// Snapshot repository converters
+			options.Converters.Insert(0, new CreateRepositoryConverter());
+			options.Converters.Insert(0, new GetRepositoryResponseConverter());
+			options.Converters.Insert(0, new SourceOnlyRepositoryConverter());
 
 			return options;
 		}

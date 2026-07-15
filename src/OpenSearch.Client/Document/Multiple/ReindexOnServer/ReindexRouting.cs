@@ -33,7 +33,6 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonConverter(typeof(ReindexRoutingConverter))]
 	[JsonFormatter(typeof(ReindexRoutingFormatter))]
 	public class ReindexRouting
 	{

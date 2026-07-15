@@ -26,13 +26,10 @@
 *  under the License.
 */
 
-using System.Text.Json.Serialization;
-
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// A document field mapping in OpenSearch
 	/// </summary>
-	[JsonConverter(typeof(FieldMappingConverter))]
 	public interface IFieldMapping { }
 }

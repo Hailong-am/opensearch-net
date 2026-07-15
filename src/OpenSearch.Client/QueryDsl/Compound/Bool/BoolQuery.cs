@@ -30,13 +30,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
 	[ReadAs(typeof(BoolQuery))]
-	[JsonConverter(typeof(BoolQueryConverter))]
 	public interface IBoolQuery : IQuery
 	{
 		/// <summary>

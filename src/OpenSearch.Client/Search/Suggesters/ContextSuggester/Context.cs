@@ -34,7 +34,6 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonConverter(typeof(ContextConverter))]
 	[JsonFormatter(typeof(ContextFormatter))]
 	public class Context : Union<string, GeoLocation>
 	{

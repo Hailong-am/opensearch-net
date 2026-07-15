@@ -34,7 +34,6 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonConverter(typeof(BucketsPathConverter))]
 	[JsonFormatter(typeof(BucketsPathFormatter))]
 	public interface IBucketsPath { }
 

@@ -33,7 +33,6 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonConverter(typeof(AutoExpandReplicasConverter))]
 	[JsonFormatter(typeof(AutoExpandReplicasFormatter))]
 	public class AutoExpandReplicas
 	{
