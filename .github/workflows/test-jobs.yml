@@ -11,9 +11,15 @@ permissions:
 
 jobs:
   unit-tests:
-    name: Unit
+    name: Unit (${{ matrix.engine }})
     runs-on: ubuntu-latest
-    
+    strategy:
+      fail-fast: false
+      matrix:
+        engine:
+          - utf8json
+          - stj
+
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -28,6 +34,8 @@ jobs:
             ${{ runner.os }}-nuget-
       - run: ./build.sh test --report
         name: Test
+        env:
+          OSC_USE_STJ: ${{ matrix.engine == 'stj' && 'true' || 'false' }}
       - name: Test Results
         if: always()
         uses: mikepenz/action-junit-report@150e2f992e4fad1379da2056d1d1c279f520e058 # v3
@@ -36,12 +44,12 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           fail_on_failure: true
           require_tests: true
-          check_name: Unit Test Results
+          check_name: Unit Test Results (${{ matrix.engine }})
       - name: Upload test report
         if: failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: unit-test-report
+          name: unit-${{ matrix.engine }}-test-report
           path: build/output/*
 
 

@@ -8,7 +8,7 @@ env:
 
 jobs:
   integration-opensearch:
-    name: Integration OpenSearch
+    name: Integration OpenSearch (${{ matrix.version }})${{ matrix.engine == 'stj' && ' [STJ]' || '' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -28,6 +28,12 @@ jobs:
           - 1.3.14
           - 1.2.4
           - 1.1.0
+        engine:
+          - utf8json
+        include:
+          # Spot-check STJ on the latest stable version only
+          - version: 3.6.0
+            engine: stj
 
     steps:
       - name: Checkout Client
@@ -51,17 +57,19 @@ jobs:
         working-directory: client
         env:
           VERSION: ${{ matrix.version }}
+          OSC_USE_STJ: ${{ matrix.engine == 'stj' && 'true' || 'false' }}
 
       # Run neural query integration tests separately as they use a significant amount of memory on their own
       - run: "./build.sh integrate ${{ matrix.version }} neuralquery random:test_only_one --report"
         name: Neural Query Integration Tests
         working-directory: client
+        if: matrix.engine == 'utf8json'
 
       - name: Upload test report
         if: failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: report-${{ matrix.version }}
+          name: report-${{ matrix.version }}-${{ matrix.engine }}
           path: client/build/output/*
 
   integration-opensearch-unreleased:
