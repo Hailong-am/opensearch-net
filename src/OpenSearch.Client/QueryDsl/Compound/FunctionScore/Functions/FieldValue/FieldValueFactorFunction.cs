@@ -35,6 +35,7 @@ using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(FieldValueFactorFunction))]
 	public interface IFieldValueFactorFunction : IScoreFunction
 	{
 		[DataMember(Name ="factor")]

@@ -15,6 +15,7 @@ namespace OpenSearch.Client;
 /// An approximate k-NN query.
 /// </summary>
 [InterfaceDataContract]
+[ReadAs(typeof(KnnQuery))]
 [JsonFormatter(typeof(FieldNameQueryFormatter<KnnQuery, IKnnQuery>))]
 public interface IKnnQuery : IFieldNameQuery
 {

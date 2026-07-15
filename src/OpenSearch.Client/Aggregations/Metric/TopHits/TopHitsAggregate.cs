@@ -28,17 +28,28 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using OpenSearch.Net;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	public class TopHitsAggregate : MetricAggregateBase
 	{
+		private readonly JsonSerializerOptions _options;
+		// Populated only on the legacy Utf8Json path (see the resolver-based ctor).
 		private readonly IJsonFormatterResolver _formatterResolver;
 		private readonly IList<LazyDocument> _hits;
 
 		public TopHitsAggregate() { }
 
+		internal TopHitsAggregate(IList<LazyDocument> hits, JsonSerializerOptions options)
+		{
+			_hits = hits;
+			_options = options;
+		}
+
+		// Resolver-based overload used by the restored Utf8Json AggregateFormatter.
 		internal TopHitsAggregate(IList<LazyDocument> hits, IJsonFormatterResolver formatterResolver)
 		{
 			_hits = hits;
@@ -52,12 +63,24 @@ namespace OpenSearch.Client
 		private IEnumerable<IHit<TDocument>> ConvertHits<TDocument>()
 			where TDocument : class
 		{
-			var formatter = _formatterResolver.GetFormatter<IHit<TDocument>>();
-			return _hits.Select(h =>
+			if (_hits == null)
+				return Enumerable.Empty<IHit<TDocument>>();
+
+			if (_formatterResolver != null)
 			{
-				var reader = new JsonReader(h.Bytes);
-				return formatter.Deserialize(ref reader, _formatterResolver);
-			});
+				var formatter = _formatterResolver.GetFormatter<IHit<TDocument>>();
+				return _hits.Select(h =>
+				{
+					var reader = new JsonReader(h.Bytes);
+					return formatter.Deserialize(ref reader, _formatterResolver);
+				});
+			}
+
+			if (_options == null)
+				return Enumerable.Empty<IHit<TDocument>>();
+
+			return _hits.Select(h =>
+				System.Text.Json.JsonSerializer.Deserialize<IHit<TDocument>>(h.Bytes, _options));
 		}
 
 		public IReadOnlyCollection<IHit<TDocument>> Hits<TDocument>()

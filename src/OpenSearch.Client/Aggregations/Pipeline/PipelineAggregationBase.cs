@@ -29,9 +29,11 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
+	[InterfaceDataContract]
 	public interface IPipelineAggregation : IAggregation
 	{
 		[DataMember(Name ="buckets_path")]

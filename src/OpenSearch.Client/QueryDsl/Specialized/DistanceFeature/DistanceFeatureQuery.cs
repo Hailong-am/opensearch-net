@@ -27,9 +27,10 @@
 */
 
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
+
 using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net.Utf8Json.Internal;
-
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -38,8 +39,9 @@ namespace OpenSearch.Client
 	/// You can use the distance_feature query to find the nearest neighbors to a location. You can also use the query in a bool
 	/// search’s should filter to add boosted relevance scores to the bool query’s scores.
 	/// </summary>
-	[JsonFormatter(typeof(DistanceFeatureQueryFormatter))]
+	[JsonConverter(typeof(DistanceFeatureQueryConverter))]
 	[InterfaceDataContract]
+	[JsonFormatter(typeof(DistanceFeatureQueryFormatter))]
 	public interface IDistanceFeatureQuery : IFieldNameQuery
 	{
 		/// <summary>
@@ -192,4 +194,6 @@ namespace OpenSearch.Client
 			return query;
 		}
 	}
+
+
 }

@@ -14,6 +14,7 @@ namespace OpenSearch.Client;
 /// A neural query.
 /// </summary>
 [InterfaceDataContract]
+[ReadAs(typeof(NeuralQuery))]
 [JsonFormatter(typeof(FieldNameQueryFormatter<NeuralQuery, INeuralQuery>))]
 public interface INeuralQuery : IFieldNameQuery
 {
