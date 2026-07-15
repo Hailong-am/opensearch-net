@@ -37,6 +37,7 @@ namespace OpenSearch.Client
 	/// to boost documents in queries with a rank_feature query.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(RankFeatureProperty))]
 	public interface IRankFeatureProperty : IProperty
 	{
 		/// <summary>

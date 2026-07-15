@@ -40,6 +40,7 @@ namespace OpenSearch.Client
 	/// and infix completion (i.e. matching terms at any position within the input) are supported.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(SearchAsYouTypeProperty))]
 	public interface ISearchAsYouTypeProperty : ICoreProperty
 	{
 		/// <summary>

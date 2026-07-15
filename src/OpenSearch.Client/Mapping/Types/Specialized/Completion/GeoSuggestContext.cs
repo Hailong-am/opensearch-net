@@ -29,19 +29,22 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(GeoSuggestContext))]
 	public interface IGeoSuggestContext : ISuggestContext
 	{
 		/// <summary>
 		/// The precision of the geohash to encode the query geo point.
 		/// Only the first value will be serialized.
 		/// </summary>
-		[JsonFormatter(typeof(SerializeAsSingleFormatter<string>))]
 		[DataMember(Name = "precision")]
+		[JsonConverter(typeof(SingleOrEnumerableStringConverter))]
+		[JsonFormatter(typeof(SerializeAsSingleFormatter<string>))]
 		IEnumerable<string> Precision { get; set; }
 	}
 

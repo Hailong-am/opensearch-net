@@ -27,10 +27,12 @@
 */
 
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[ReadAs(typeof(SizeField))]
+	[InterfaceDataContract]
 	public interface ISizeField : IFieldMapping
 	{
 		[DataMember(Name ="enabled")]

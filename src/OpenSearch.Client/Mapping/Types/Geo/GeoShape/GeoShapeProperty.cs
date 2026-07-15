@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// Maps a property as a geo_shape field
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(GeoShapeProperty))]
 	public interface IGeoShapeProperty : IDocValuesProperty
 	{
 		/// <summary>

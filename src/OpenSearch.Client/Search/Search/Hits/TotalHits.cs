@@ -27,9 +27,10 @@
 */
 
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
+using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net;
 using OpenSearch.Net.Extensions;
-using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net.Utf8Json.Formatters;
 
 namespace OpenSearch.Client
@@ -42,6 +43,7 @@ namespace OpenSearch.Client
 	/// "there are more than 1000 hits", OpenSearch has options to stop counting as soon
 	/// as a threshold has been reached in order to improve query times.
 	/// </summary>
+	[JsonConverter(typeof(TotalHitsConverter))]
 	[JsonFormatter(typeof(TotalHitsFormatter))]
 	public class TotalHits
 	{
@@ -126,4 +128,6 @@ namespace OpenSearch.Client
 				writer.WriteInt64(value.Value);
 		}
 	}
+
+
 }

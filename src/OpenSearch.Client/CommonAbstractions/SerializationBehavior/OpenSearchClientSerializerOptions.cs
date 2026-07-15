@@ -116,6 +116,10 @@ namespace OpenSearch.Client
 			// read wholesale into a DynamicDictionary). Replaces the Utf8Json DynamicResponseFormatter<T>.
 			options.Converters.Insert(0, new DynamicResponseConverterFactory(settings));
 
+			// indices_boost dictionary converter (array-of-single-key-objects wire format).
+			// Must precede the generic dictionary handling.
+			options.Converters.Insert(0, new IndicesBoostConverterFactory(settings));
+
 			// Proxy request converter (Index/Create requests whose body is the source document written
 			// via IProxyRequest.WriteJson through the SourceSerializer). Inserted above the source/dictionary
 			// catch-alls so proxy requests never fall through to the interface-contract object handling.
@@ -123,6 +127,11 @@ namespace OpenSearch.Client
 
 			// --- 4. ReadAs converters (interface → implementation mapping) ---
 			options.Converters.Insert(0, new ReadAsConverterFactory());
+
+			// SourceFilter (_source) converter — must precede ReadAsConverterFactory so the
+			// string/array/object shorthand forms deserialize correctly (ReadAs would otherwise
+			// claim ISourceFilter and fail on the non-object shorthand forms).
+			options.Converters.Insert(0, new SourceFilterConverter());
 
 			// --- 1. Explicit singleton converters (highest precedence among domain converters) ---
 
@@ -173,6 +182,10 @@ namespace OpenSearch.Client
 			// Indices (a Union<AllIndicesMarker, ManyIndices>) and emit a nested object.
 			options.Converters.Insert(0, new IndicesConverterFactory(settings));
 
+			// Multi-search NDJSON request converters (header line + body line per operation)
+			options.Converters.Insert(0, new MultiSearchConverterFactory(settings));
+			options.Converters.Insert(0, new MultiSearchTemplateConverterFactory(settings));
+
 			// Query DSL converters
 			options.Converters.Insert(0, new QueryContainerConverter());
 			options.Converters.Insert(0, new QueryContainerConcretConverter());
@@ -207,6 +220,29 @@ namespace OpenSearch.Client
 			options.Converters.Insert(0, new AggregationDictionaryConverter());
 			options.Converters.Insert(0, new AggregateDictionaryResponseConverter());
 			options.Converters.Insert(0, new AggregateConverter());
+
+			// Mapping converters
+			options.Converters.Insert(0, new PropertyConverter());
+
+			// Dynamic templates container (array-of-single-key-objects wire format).
+			// Must precede IsADictionaryConverterFactory, which would otherwise serialize it
+			// as a plain JSON object.
+			options.Converters.Insert(0, new DynamicTemplatesConverter());
+
+			// Sort converter (ISort → { "field": { ...body... } } dispatch)
+			options.Converters.Insert(0, new SortConverter(settings));
+
+			// Ingest pipeline converters
+			options.Converters.Insert(0, new ProcessorConverter());
+
+			// Search response converters
+			options.Converters.Insert(0, new TotalHitsConverter());
+			options.Converters.Insert(0, new InnerHitsMetadataConverter());
+			options.Converters.Insert(0, new InnerHitsResultConverter());
+			options.Converters.Insert(0, new HitConverterFactory());
+			options.Converters.Insert(0, new HitsMetadataConverterFactory());
+			options.Converters.Insert(0, new SuggestDictionaryConverterFactory());
+			options.Converters.Insert(0, new SearchResponseConverterFactory());
 
 			return options;
 		}

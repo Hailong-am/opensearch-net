@@ -35,6 +35,7 @@ using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(GrokProcessor))]
 	public interface IGrokProcessor : IProcessor
 	{
 		/// <summary>

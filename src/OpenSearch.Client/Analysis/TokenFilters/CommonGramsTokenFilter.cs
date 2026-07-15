@@ -28,6 +28,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
@@ -36,12 +37,14 @@ namespace OpenSearch.Client
 	///  Token filter that generates bigrams for frequently occuring terms. Single terms are still indexed.
 	/// <para>Note, common_words or common_words_path field is required.</para>
 	/// </summary>
+	[InterfaceDataContract]
 	public interface ICommonGramsTokenFilter : ITokenFilter
 	{
 		/// <summary>
 		/// A list of common words to use.
 		/// </summary>
 		[DataMember(Name ="common_words")]
+		[JsonConverter(typeof(SingleOrManyStringConverter))]
 		[JsonFormatter(typeof(SingleOrEnumerableFormatter<string>))]
 		IEnumerable<string> CommonWords { get; set; }
 

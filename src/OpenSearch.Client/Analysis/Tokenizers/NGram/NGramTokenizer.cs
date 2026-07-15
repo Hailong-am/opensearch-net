@@ -35,6 +35,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A tokenizer of type nGram.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface INGramTokenizer : ITokenizer
 	{
 		/// <summary>

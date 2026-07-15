@@ -34,6 +34,7 @@ using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(NetworkCommunityIdProcessor))]
 	public interface INetworkCommunityIdProcessor : IProcessor
 	{
 		[DataMember(Name = "destination_ip")]

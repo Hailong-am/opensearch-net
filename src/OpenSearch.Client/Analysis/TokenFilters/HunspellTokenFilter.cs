@@ -35,6 +35,7 @@ namespace OpenSearch.Client
 	///  Basic support for hunspell stemming.
 	/// <para> Hunspell dictionaries will be picked up from a dedicated hunspell directory on the filesystem.</para>
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IHunspellTokenFilter : ITokenFilter
 	{
 		/// <summary>

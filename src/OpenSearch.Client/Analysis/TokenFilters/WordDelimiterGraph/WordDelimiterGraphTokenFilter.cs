@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// Named word_delimiter, it Splits words into subwords and performs optional transformations on subword groups.
 	/// Unlike the word_delimiter this token filter named word_delimiter_graph correctly handles multi terms expansion at query time.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IWordDelimiterGraphTokenFilter : ITokenFilter
 	{
 		/// <summary>

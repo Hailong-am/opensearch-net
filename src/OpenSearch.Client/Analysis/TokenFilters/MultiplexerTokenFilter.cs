@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// A token filter of type multiplexer will emit multiple tokens at the same position, each version of the token having
 	/// been run through a different filter. Identical output tokens at the same position will be removed.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IMultiplexerTokenFilter : ITokenFilter
 	{
 		[DataMember(Name ="filters")]

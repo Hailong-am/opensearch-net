@@ -33,6 +33,7 @@ namespace OpenSearch.Client
 {
 	/// <summary> Executes another pipeline.</summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(PipelineProcessor))]
 	public interface IPipelineProcessor : IProcessor
 	{
 		/// <summary>The name of the pipeline to execute. </summary>

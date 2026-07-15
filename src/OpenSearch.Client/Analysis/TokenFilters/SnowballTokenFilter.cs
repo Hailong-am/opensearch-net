@@ -27,12 +27,14 @@
 */
 
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary>
 	/// A filter that stems words using a Snowball-generated stemmer.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface ISnowballTokenFilter : ITokenFilter
 	{
 		[DataMember(Name ="language")]

@@ -38,6 +38,7 @@ namespace OpenSearch.Client
 	/// Processor to automatically parse messages (or specific event fields) which are of the key=value variety.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(KeyValueProcessor))]
 	public interface IKeyValueProcessor : IProcessor
 	{
 		/// <summary> List of keys to exclude from document </summary>

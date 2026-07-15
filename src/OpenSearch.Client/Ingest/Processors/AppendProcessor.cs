@@ -37,6 +37,7 @@ using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(AppendProcessor))]
 	public interface IAppendProcessor : IProcessor
 	{
 		[DataMember(Name ="field")]

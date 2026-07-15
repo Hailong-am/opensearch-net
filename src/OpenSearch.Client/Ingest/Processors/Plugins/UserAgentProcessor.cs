@@ -44,6 +44,7 @@ namespace OpenSearch.Client
 	/// Requires the UserAgent Processor Plugin to be installed on the cluster.
 	/// </remarks>
 	[InterfaceDataContract]
+	[ReadAs(typeof(UserAgentProcessor))]
 	public interface IUserAgentProcessor : IProcessor
 	{
 		[DataMember(Name ="field")]
