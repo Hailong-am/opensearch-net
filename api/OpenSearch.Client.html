@@ -4644,7 +4644,10 @@ shard is split into two or more primary shards in the new index.</p>
       <h4><a class="xref" href="OpenSearch.Client.StringFielddataDescriptor.html">StringFielddataDescriptor</a></h4>
       <section></section>
       <h4><a class="xref" href="OpenSearch.Client.StringTimeSpanAttribute.html">StringTimeSpanAttribute</a></h4>
-      <section></section>
+      <section><p>Marks a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a> (or <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.nullable-1">Nullable&lt;T&gt;</a>) property to serialize as its
+string form (e.g. <code>&quot;10.10:38:32&quot;</code>) rather than the default ticks number. Inherits
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverterattribute">JsonConverterAttribute</a> so it is honored through the attribute/contract channel.</p>
+</section>
       <h4><a class="xref" href="OpenSearch.Client.StupidBackoffSmoothingModel.html">StupidBackoffSmoothingModel</a></h4>
       <section></section>
       <h4><a class="xref" href="OpenSearch.Client.StupidBackoffSmoothingModelDescriptor.html">StupidBackoffSmoothingModelDescriptor</a></h4>
@@ -7075,6 +7078,13 @@ uap-java with an Apache 2.0 license.</p>
       <section></section>
       <h4><a class="xref" href="OpenSearch.Client.IVariableWidthHistogramAggregation.html">IVariableWidthHistogramAggregation</a></h4>
       <section></section>
+      <h4><a class="xref" href="OpenSearch.Client.IVerbatimDictionaryKeys.html">IVerbatimDictionaryKeys</a></h4>
+      <section><p>Marker for <a class="xref" href="OpenSearch.Client.IIsADictionary.html">IIsADictionary</a> types whose string keys are user-provided names
+(e.g. suggester names) that must be serialized verbatim, without being run through the
+<code>DefaultFieldNameInferrer</code>. Mirrors the historical Utf8Json <code>VerbatimDictionaryKeysFormatter</code>.
+Only affects plain <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> keys; typed keys (Field/PropertyName/IndexName/RelationName)
+are always resolved by the <code>Inferrer</code>.</p>
+</section>
       <h4><a class="xref" href="OpenSearch.Client.IVerifyRepositoryRequest.html">IVerifyRepositoryRequest</a></h4>
       <section></section>
       <h4><a class="xref" href="OpenSearch.Client.IWeightFunction.html">IWeightFunction</a></h4>

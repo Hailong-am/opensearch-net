@@ -9,7 +9,7 @@
       <meta name="viewport" content="width=device-width">
       <meta name="title" content="Class StringTimeSpanAttribute | OpenSearch.Net ">
     
-    
+    <meta name="description" content="Marks a  (or ) property to serialize as its string form (e.g. &amp;quot;10.10:38:32&amp;quot;) rather than the default ticks number. Inherits  so it is honored through the attribute/contract channel.">
       <link rel="shortcut icon" href="../favicon.ico">
       <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
@@ -81,16 +81,24 @@
 
 
   <h1 id="OpenSearch_Client_StringTimeSpanAttribute" data-uid="OpenSearch.Client.StringTimeSpanAttribute" class="text-break">Class StringTimeSpanAttribute</h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Marks a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a> (or <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.nullable-1">Nullable&lt;T&gt;</a>) property to serialize as its
+string form (e.g. <code>&quot;10.10:38:32&quot;</code>) rather than the default ticks number. Inherits
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverterattribute">JsonConverterAttribute</a> so it is honored through the attribute/contract channel.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.attribute">Attribute</a></div>
-    <div class="level2"><span class="xref">StringTimeSpanAttribute</span></div>
+    <div class="level2"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonattribute">JsonAttribute</a></div>
+    <div class="level3"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverterattribute">JsonConverterAttribute</a></div>
+    <div class="level4"><span class="xref">StringTimeSpanAttribute</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverterattribute.convertertype">JsonConverterAttribute.ConverterType</a>
+    </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.attribute.equals">Attribute.Equals(object)</a>
     </div>
@@ -223,8 +231,62 @@
   <h5 id="OpenSearch_Client_StringTimeSpanAttribute_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[AttributeUsage(AttributeTargets.Property)]
-public class StringTimeSpanAttribute : Attribute</code></pre>
+public class StringTimeSpanAttribute : JsonConverterAttribute</code></pre>
   </div>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_StringTimeSpanAttribute_CreateConverter_System_Type_.md&amp;value=---%0Auid%3A%20OpenSearch.Client.StringTimeSpanAttribute.CreateConverter(System.Type)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/CommonAbstractions/SerializationBehavior/Attributes/StringTimeSpanAttribute.cs/#L44">View Source</a>
+  </span>
+  <a id="OpenSearch_Client_StringTimeSpanAttribute_CreateConverter_" data-uid="OpenSearch.Client.StringTimeSpanAttribute.CreateConverter*"></a>
+  <h4 id="OpenSearch_Client_StringTimeSpanAttribute_CreateConverter_System_Type_" data-uid="OpenSearch.Client.StringTimeSpanAttribute.CreateConverter(System.Type)">CreateConverter(Type)</h4>
+  <div class="markdown level1 summary"><p>When overridden in a derived class and <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverterattribute.convertertype">ConverterType</a> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>, allows the derived class to create a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter">JsonConverter</a> in order to pass additional state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override JsonConverter CreateConverter(Type typeToConvert)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><span class="parametername">typeToConvert</span></td>
+        <td><p>The type of the converter.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter">JsonConverter</a></td>
+        <td><p>The custom converter.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverterattribute.createconverter">JsonConverterAttribute.CreateConverter(Type)</a></div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
       <a class="xref" href="OpenSearch.Client.SuffixExtensions.html#OpenSearch_Client_SuffixExtensions_Suffix_System_Object_System_String_">SuffixExtensions.Suffix(object, string)</a>
@@ -241,7 +303,7 @@ public class StringTimeSpanAttribute : Attribute</code></pre>
                     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_StringTimeSpanAttribute.md&amp;value=---%0Auid%3A%20OpenSearch.Client.StringTimeSpanAttribute%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/CommonAbstractions/SerializationBehavior/Attributes/StringTimeSpanAttribute.cs/#L33" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/CommonAbstractions/SerializationBehavior/Attributes/StringTimeSpanAttribute.cs/#L41" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

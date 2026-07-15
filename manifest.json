@@ -22344,6 +22344,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/temp/docfxapi/OpenSearch.Client.IVerbatimDictionaryKeys.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OpenSearch.Client.IVerbatimDictionaryKeys.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OpenSearch.Client.IVerbatimDictionaryKeys",
+      "Summary": "<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Client.IVerbatimDictionaryKeys.yml\" sourcestartlinenumber=\"1\">Marker for <xref href=\"OpenSearch.Client.IIsADictionary\" data-throw-if-not-resolved=\"false\"></xref> types whose string keys are user-provided names\n(e.g. suggester names) that must be serialized verbatim, without being run through the\n<code>DefaultFieldNameInferrer</code>. Mirrors the historical Utf8Json <code>VerbatimDictionaryKeysFormatter</code>.\nOnly affects plain <xref href=\"System.String\" data-throw-if-not-resolved=\"false\"></xref> keys; typed keys (Field/PropertyName/IndexName/RelationName)\nare always resolved by the <code>Inferrer</code>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/temp/docfxapi/OpenSearch.Client.IVerifyRepositoryRequest.yml",
       "output": {
         ".html": {
@@ -36522,7 +36536,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "OpenSearch.Client.StringTimeSpanAttribute",
-      "Summary": null
+      "Summary": "<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Client.StringTimeSpanAttribute.yml\" sourcestartlinenumber=\"1\">Marks a <xref href=\"System.TimeSpan\" data-throw-if-not-resolved=\"false\"></xref> (or <xref href=\"System.Nullable%601\" data-throw-if-not-resolved=\"false\"></xref>) property to serialize as its\nstring form (e.g. <code>&quot;10.10:38:32&quot;</code>) rather than the default ticks number. Inherits\n<xref href=\"System.Text.Json.Serialization.JsonConverterAttribute\" data-throw-if-not-resolved=\"false\"></xref> so it is honored through the attribute/contract channel.</p>\n"
     },
     {
       "type": "ManagedReference",
