@@ -98,6 +98,7 @@
     <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2">KeyValuePair</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="OpenSearch.Client.ISuggestBucket.html">ISuggestBucket</a>&gt;&gt;</div>
     <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a></div>
     <div><a class="xref" href="OpenSearch.Client.IIsADictionary.html">IIsADictionary</a></div>
+    <div><a class="xref" href="OpenSearch.Client.IVerbatimDictionaryKeys.html">IVerbatimDictionaryKeys</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -139,7 +140,7 @@
   <h6><strong>Assembly</strong>: OpenSearch.Client.dll</h6>
   <h5 id="OpenSearch_Client_SuggestContainer_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class SuggestContainer : IsADictionaryBase&lt;string, ISuggestBucket&gt;, ISuggestContainer, IIsADictionary&lt;string, ISuggestBucket&gt;, IDictionary&lt;string, ISuggestBucket&gt;, ICollection&lt;KeyValuePair&lt;string, ISuggestBucket&gt;&gt;, IEnumerable&lt;KeyValuePair&lt;string, ISuggestBucket&gt;&gt;, IEnumerable, IIsADictionary</code></pre>
+    <pre><code class="lang-csharp hljs">public class SuggestContainer : IsADictionaryBase&lt;string, ISuggestBucket&gt;, ISuggestContainer, IIsADictionary&lt;string, ISuggestBucket&gt;, IDictionary&lt;string, ISuggestBucket&gt;, ICollection&lt;KeyValuePair&lt;string, ISuggestBucket&gt;&gt;, IEnumerable&lt;KeyValuePair&lt;string, ISuggestBucket&gt;&gt;, IEnumerable, IIsADictionary, IVerbatimDictionaryKeys</code></pre>
   </div>
   <h3 id="constructors">Constructors
 </h3>
@@ -282,6 +283,9 @@
   </div>
   <div>
       <a class="xref" href="OpenSearch.Client.IIsADictionary.html">IIsADictionary</a>
+  </div>
+  <div>
+      <a class="xref" href="OpenSearch.Client.IVerbatimDictionaryKeys.html">IVerbatimDictionaryKeys</a>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>

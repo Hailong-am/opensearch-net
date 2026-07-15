@@ -88,7 +88,8 @@
   <h6><strong>Assembly</strong>: OpenSearch.Client.dll</h6>
   <h5 id="OpenSearch_Client_IProperty_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IProperty : IFieldMapping</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(PropertyConverter))]
+public interface IProperty : IFieldMapping</code></pre>
   </div>
   <h3 id="properties">Properties
 </h3>
@@ -97,7 +98,7 @@
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IProperty_LocalMetadata.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IProperty.LocalMetadata%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/Types/PropertyBase.cs/#L48">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/Types/PropertyBase.cs/#L50">View Source</a>
   </span>
   <a id="OpenSearch_Client_IProperty_LocalMetadata_" data-uid="OpenSearch.Client.IProperty.LocalMetadata*"></a>
   <h4 id="OpenSearch_Client_IProperty_LocalMetadata" data-uid="OpenSearch.Client.IProperty.LocalMetadata">LocalMetadata</h4>
@@ -129,7 +130,7 @@ IDictionary&lt;string, object&gt; LocalMetadata { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IProperty_Meta.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IProperty.Meta%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/Types/PropertyBase.cs/#L60">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/Types/PropertyBase.cs/#L62">View Source</a>
   </span>
   <a id="OpenSearch_Client_IProperty_Meta_" data-uid="OpenSearch.Client.IProperty.Meta*"></a>
   <h4 id="OpenSearch_Client_IProperty_Meta" data-uid="OpenSearch.Client.IProperty.Meta">Meta</h4>
@@ -167,7 +168,7 @@ IDictionary&lt;string, string&gt; Meta { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IProperty_Name.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IProperty.Name%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/Types/PropertyBase.cs/#L66">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/Types/PropertyBase.cs/#L68">View Source</a>
   </span>
   <a id="OpenSearch_Client_IProperty_Name_" data-uid="OpenSearch.Client.IProperty.Name*"></a>
   <h4 id="OpenSearch_Client_IProperty_Name" data-uid="OpenSearch.Client.IProperty.Name">Name</h4>
@@ -199,7 +200,7 @@ PropertyName Name { get; set; }</code></pre>
     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IProperty_Type.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IProperty.Type%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/Types/PropertyBase.cs/#L72">View Source</a>
+    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/Types/PropertyBase.cs/#L74">View Source</a>
   </span>
   <a id="OpenSearch_Client_IProperty_Type_" data-uid="OpenSearch.Client.IProperty.Type*"></a>
   <h4 id="OpenSearch_Client_IProperty_Type" data-uid="OpenSearch.Client.IProperty.Type">Type</h4>
@@ -242,7 +243,7 @@ string Type { get; set; }</code></pre>
                     <a href="https://github.com/opensearch-project/opensearch-net/new/main/apiSpec/new?filename=OpenSearch_Client_IProperty.md&amp;value=---%0Auid%3A%20OpenSearch.Client.IProperty%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/Types/PropertyBase.cs/#L41" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Hailong-am/opensearch-net/blob/main/src/OpenSearch.Client/Mapping/Types/PropertyBase.cs/#L42" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
