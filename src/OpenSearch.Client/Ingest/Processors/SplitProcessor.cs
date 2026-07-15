@@ -37,6 +37,7 @@ namespace OpenSearch.Client
 	/// Splits a field into an array using a separator character. Only works on string fields
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(SplitProcessor))]
 	public interface ISplitProcessor : IProcessor
 	{
 		/// <summary>

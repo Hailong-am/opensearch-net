@@ -28,10 +28,12 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary> The nori_part_of_speech token filter removes tokens that match a set of part-of-speech tags. </summary>
+	[InterfaceDataContract]
 	public interface INoriPartOfSpeechTokenFilter : ITokenFilter
 	{
 		/// <summary> An array of part-of-speech tags that should be removed. </summary>

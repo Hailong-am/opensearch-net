@@ -37,6 +37,7 @@ namespace OpenSearch.Client
 	/// Converts a string to its lowercase equivalent.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(LowercaseProcessor))]
 	public interface ILowercaseProcessor : IProcessor
 	{
 		/// <summary>

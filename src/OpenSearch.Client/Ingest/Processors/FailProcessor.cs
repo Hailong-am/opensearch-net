@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// fail and want to relay a specific message to the requester.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(FailProcessor))]
 	public interface IFailProcessor : IProcessor
 	{
 		/// <summary>

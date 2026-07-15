@@ -28,6 +28,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
@@ -41,12 +42,14 @@ namespace OpenSearch.Client
 	/// <para>OpenSearch does not ship with built-in normalizers so far, so the only way to create one is through composing a custom one</para>
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(CustomNormalizer))]
 	public interface ICustomNormalizer : INormalizer
 	{
 		/// <summary>
 		/// Char filters to normalize the keyword
 		/// </summary>
 		[DataMember(Name ="char_filter")]
+		[JsonConverter(typeof(SingleOrManyStringConverter))]
 		[JsonFormatter(typeof(SingleOrEnumerableFormatter<string>))]
 		IEnumerable<string> CharFilter { get; set; }
 
@@ -54,6 +57,7 @@ namespace OpenSearch.Client
 		/// An optional list of logical / registered name of token filters.
 		/// </summary>
 		[DataMember(Name ="filter")]
+		[JsonConverter(typeof(SingleOrManyStringConverter))]
 		[JsonFormatter(typeof(SingleOrEnumerableFormatter<string>))]
 		IEnumerable<string> Filter { get; set; }
 	}

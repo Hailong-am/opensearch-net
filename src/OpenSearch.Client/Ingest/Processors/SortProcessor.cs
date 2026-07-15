@@ -40,6 +40,7 @@ namespace OpenSearch.Client
 	///  of strings and numbers will be sorted lexicographically.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(SortProcessor))]
 	public interface ISortProcessor : IProcessor
 	{
 		/// <summary>

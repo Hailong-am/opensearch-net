@@ -78,6 +78,7 @@ public class KnnMethod : IKnnMethod
 }
 
 [InterfaceDataContract]
+[ReadAs(typeof(KnnMethodParameters))]
 [JsonFormatter(typeof(VerbatimDictionaryKeysFormatter<KnnMethodParameters, IKnnMethodParameters, string, object>))]
 public interface IKnnMethodParameters : IIsADictionary<string, object> { }
 

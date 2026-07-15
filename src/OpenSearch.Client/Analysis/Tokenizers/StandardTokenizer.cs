@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// documents.
 	/// <para>The tokenizer implements the Unicode Text Segmentation algorithm, as specified in Unicode Standard Annex #29.</para>
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IStandardTokenizer : ITokenizer
 	{
 		/// <summary>

@@ -34,6 +34,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// Limits the number of tokens that are indexed per document and field.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface ILimitTokenCountTokenFilter : ITokenFilter
 	{
 		/// <summary>

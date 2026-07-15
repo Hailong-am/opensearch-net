@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 {
 	/// <summary> Allows you to sort based on a proximity to one or more <see cref="GeoLocation" /> </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(GeoDistanceSort))]
 	public interface IGeoDistanceSort : ISort
 	{
 		/// <summary>

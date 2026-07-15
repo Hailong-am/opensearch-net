@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 		CounterClockWise
 	}
 
+
 	internal class ShapeOrientationFormatter : IJsonFormatter<ShapeOrientation>
 	{
 		public void Serialize(ref JsonWriter writer, ShapeOrientation value, IJsonFormatterResolver formatterResolver)
@@ -118,4 +119,6 @@ namespace OpenSearch.Client
 			}
 		}
 	}
+
+
 }

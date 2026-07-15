@@ -27,10 +27,12 @@
 */
 
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[ReadAs(typeof(RoutingField))]
+	[InterfaceDataContract]
 	public interface IRoutingField : IFieldMapping
 	{
 		[DataMember(Name ="required")]

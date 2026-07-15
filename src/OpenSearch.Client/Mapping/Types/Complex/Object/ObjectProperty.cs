@@ -37,6 +37,7 @@ namespace OpenSearch.Client
 	/// A mapping for an inner object
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(ObjectProperty))]
 	public interface IObjectProperty : ICoreProperty
 	{
 		/// <summary>

@@ -32,9 +32,11 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
+	[System.Text.Json.Serialization.JsonConverter(typeof(DynamicTemplatesConverter))]
 	[JsonFormatter(typeof(DynamicTemplatesInterfaceFormatter))]
 	public interface IDynamicTemplateContainer : IIsADictionary<string, IDynamicTemplate> { }
 
+	[System.Text.Json.Serialization.JsonConverter(typeof(DynamicTemplatesConverter))]
 	[JsonFormatter(typeof(DynamicTemplatesFormatter))]
 	public class DynamicTemplateContainer : IsADictionaryBase<string, IDynamicTemplate>, IDynamicTemplateContainer
 	{

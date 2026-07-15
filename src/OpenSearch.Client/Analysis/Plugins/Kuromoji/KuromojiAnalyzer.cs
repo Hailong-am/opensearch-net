@@ -27,6 +27,7 @@
 */
 
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -34,6 +35,7 @@ namespace OpenSearch.Client
 	/// An analyzer tailored for japanese that is bootstrapped with defaults.
 	/// Part of the `analysis-kuromoji` plugin:
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IKuromojiAnalyzer : IAnalyzer
 	{
 		[DataMember(Name ="mode")]

@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// The fingerprint analyzer implements a fingerprinting algorithm which
 	/// is used by the OpenRefine project to assist in clustering.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IFingerprintAnalyzer : IAnalyzer
 	{
 		/// <summary>

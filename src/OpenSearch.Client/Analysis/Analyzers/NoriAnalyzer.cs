@@ -28,6 +28,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -39,6 +40,7 @@ namespace OpenSearch.Client
 	/// <para> - nori_number token filter</para>
 	/// <para> - lowercase token filter</para>
 	/// </summary>
+	[InterfaceDataContract]
 	public interface INoriAnalyzer : IAnalyzer
 	{
 		/// <inheritdoc cref="INoriTokenizer.DecompoundMode" />

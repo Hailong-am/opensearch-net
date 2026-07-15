@@ -34,6 +34,7 @@ namespace OpenSearch.Client
 	/// A range of double-precision 64-bit IEEE 754 floating point values.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(DoubleRangeProperty))]
 	public interface IDoubleRangeProperty : IRangeProperty { }
 
 	/// <inheritdoc cref="IDoubleRangeProperty"/>

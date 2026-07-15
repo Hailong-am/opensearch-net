@@ -34,6 +34,7 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A tokenizer of type whitespace that divides text at whitespace.
 	/// </summary>
+	[InterfaceDataContract]
 	public interface IWhitespaceTokenizer : ITokenizer
 	{
 		/// <summary>

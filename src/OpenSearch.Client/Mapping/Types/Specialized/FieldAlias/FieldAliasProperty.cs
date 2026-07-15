@@ -39,6 +39,7 @@ namespace OpenSearch.Client
 	/// of the target field in search requests, and selected other APIs like field capabilities.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(FieldAliasProperty))]
 	public interface IFieldAliasProperty : IProperty
 	{
 		/// <summary> The full path to alias </summary>

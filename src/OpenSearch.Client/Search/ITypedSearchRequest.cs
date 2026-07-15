@@ -27,6 +27,7 @@
 */
 
 using System;
+using System.Runtime.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
@@ -35,6 +36,12 @@ namespace OpenSearch.Client
 	[InterfaceDataContract]
 	public interface ITypedSearchRequest
 	{
+		/// <summary>
+		/// The CLR type that hits should be deserialized into. This is a client-side routing marker
+		/// only and must never be serialized into the request body — <see cref="System.Type"/> is not
+		/// serializable by System.Text.Json.
+		/// </summary>
+		[IgnoreDataMember]
 		Type ClrType { get; }
 	}
 }

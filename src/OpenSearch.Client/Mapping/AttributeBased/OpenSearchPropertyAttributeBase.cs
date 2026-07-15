@@ -37,7 +37,7 @@ namespace OpenSearch.Client
 {
 	[AttributeUsage(AttributeTargets.Property)]
 	[DataContract]
-	public abstract class OpenSearchPropertyAttributeBase : Attribute, IProperty, IPropertyMapping, IJsonProperty
+	public abstract class OpenSearchPropertyAttributeBase : Attribute, IProperty, IPropertyMapping
 	{
 		protected OpenSearchPropertyAttributeBase(FieldType type) => Self.Type = type.GetStringValue();
 
