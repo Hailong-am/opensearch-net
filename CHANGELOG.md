@@ -16,6 +16,7 @@ Inspired from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Added System.Text.Json serialization infrastructure to OpenSearch.Net as part of the ongoing Utf8Json to System.Text.Json migration; the default serialization engine is unchanged ([#388](https://github.com/opensearch-project/opensearch-net/issues/388))
 - Added System.Text.Json converters for core inference types and the Document domain as part of the ongoing Utf8Json to System.Text.Json migration; the default serialization engine is unchanged ([#388](https://github.com/opensearch-project/opensearch-net/issues/388))
 - Added System.Text.Json converters for the QueryDsl and Aggregations domains as part of the ongoing Utf8Json to System.Text.Json migration; the default serialization engine is unchanged ([#388](https://github.com/opensearch-project/opensearch-net/issues/388))
+- Added System.Text.Json converters for the Mapping, Analysis, Ingest, and Search domains as part of the ongoing Utf8Json to System.Text.Json migration; the default serialization engine is unchanged ([#388](https://github.com/opensearch-project/opensearch-net/issues/388))
 
 ### Removed
 - Removed support for the `net461` target ([#256](https://github.com/opensearch-project/opensearch-net/pull/256))
