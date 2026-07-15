@@ -27,7 +27,6 @@
 */
 
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 using System.Runtime.Serialization;
 
 

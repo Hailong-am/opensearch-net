@@ -27,7 +27,6 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 // ReSharper disable InconsistentNaming
 
 namespace OpenSearch.Client

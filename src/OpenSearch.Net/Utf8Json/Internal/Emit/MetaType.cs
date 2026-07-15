@@ -101,7 +101,10 @@ namespace OpenSearch.Net.Utf8Json.Internal.Emit
 		{
 			var isClass = type.IsClass || type.IsInterface || type.IsAbstract;
 			var dataContractPresent = type.GetCustomAttribute<DataContractAttribute>(true) != null ||
-									  type.GetCustomAttribute<InterfaceDataContractAttribute>(true) != null;
+									  type.GetCustomAttribute<InterfaceDataContractAttribute>(true) != null ||
+									  // Also accept the client-namespace InterfaceDataContractAttribute (same semantics,
+									  // no OpenSearch.Net.Utf8Json dependency for OpenSearch.Client interfaces).
+									  type.GetCustomAttributes(true).Any(a => a.GetType().FullName == "OpenSearch.Client.InterfaceDataContractAttribute");
 
 			Type = type;
 
