@@ -32,6 +32,7 @@ using OpenSearch.Net.Utf8Json;
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(InlineScript))]
 	public interface IInlineScript : IScript
 	{
 		[DataMember(Name ="source")]

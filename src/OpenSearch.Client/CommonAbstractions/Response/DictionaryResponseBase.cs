@@ -51,11 +51,11 @@ namespace OpenSearch.Client
 
 	internal class ResponseFormatterHelpers
 	{
-		internal static readonly AutomataDictionary ServerErrorFields = new AutomataDictionary
-		{
-			{ "error", 0 },
-			{ "status", 1 }
-		};
+        internal static readonly AutomataDictionary ServerErrorFields = new AutomataDictionary
+        {
+            { "error", 0 },
+            { "status", 1 }
+        };
 	}
 
 	internal class DictionaryResponseFormatter<TResponse, TKey, TValue> : IJsonFormatter<TResponse>
