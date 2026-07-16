@@ -26,7 +26,6 @@
 *  under the License.
 */
 
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -34,6 +33,7 @@ namespace OpenSearch.Client
 	/// A range of ip values supporting either IPv4 or IPv6 (or mixed) addresses.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(IpRangeProperty))]
 	public interface IIpRangeProperty : IRangeProperty { }
 
 	/// <inheritdoc cref="IIpRangeProperty"/>

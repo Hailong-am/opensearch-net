@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client;
 
@@ -21,7 +20,7 @@ namespace OpenSearch.Client;
 public interface IHybridQuery : IQuery
 {
 	[DataMember(Name = "pagination_depth")]
-    int? PaginationDepth { get; set; }
+	int? PaginationDepth { get; set; }
 
     [DataMember(Name = "queries")]
     IEnumerable<QueryContainer> Queries { get; set; }

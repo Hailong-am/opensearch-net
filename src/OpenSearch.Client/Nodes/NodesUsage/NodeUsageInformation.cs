@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
@@ -45,10 +46,12 @@ namespace OpenSearch.Client
 		public IReadOnlyDictionary<string, int> RestActions { get; internal set; }
 
 		[DataMember(Name ="since")]
+		[JsonConverter(typeof(EpochMillisecondsDateTimeOffsetConverter))]
 		[JsonFormatter(typeof(DateTimeOffsetEpochMillisecondsFormatter))]
 		public DateTimeOffset Since { get; internal set; }
 
 		[DataMember(Name ="timestamp")]
+		[JsonConverter(typeof(EpochMillisecondsDateTimeOffsetConverter))]
 		[JsonFormatter(typeof(DateTimeOffsetEpochMillisecondsFormatter))]
 		public DateTimeOffset Timestamp { get; internal set; }
 	}

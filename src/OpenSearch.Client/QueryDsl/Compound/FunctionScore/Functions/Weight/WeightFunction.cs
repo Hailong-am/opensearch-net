@@ -26,11 +26,11 @@
 *  under the License.
 */
 
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(WeightFunction))]
 	public interface IWeightFunction : IScoreFunction { }
 
 	public class WeightFunction : FunctionScoreFunctionBase, IWeightFunction { }

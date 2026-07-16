@@ -72,7 +72,7 @@ namespace OpenSearch.Client
 			while (reader.ReadIsInObject(ref count))
 			{
 				var property = reader.ReadPropertyNameSegmentRaw();
-				if (ResponseFormatterHelpers.ServerErrorFields.TryGetValue(property, out var errorValue))
+				if (ResponseFormatterHelpers.ServerErrorFieldsAutomata.TryGetValue(property, out var errorValue))
 				{
 					switch (errorValue)
 					{

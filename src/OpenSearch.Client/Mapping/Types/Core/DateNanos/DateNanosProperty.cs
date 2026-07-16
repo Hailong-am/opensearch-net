@@ -29,7 +29,6 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -39,6 +38,7 @@ namespace OpenSearch.Client
 	/// dates from roughly 1970 to 2262.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(DateNanosProperty))]
 	public interface IDateNanosProperty : IDocValuesProperty
 	{
 		/// <summary>

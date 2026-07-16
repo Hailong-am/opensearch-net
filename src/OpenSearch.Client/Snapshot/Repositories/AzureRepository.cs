@@ -28,6 +28,7 @@
 
 using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
@@ -75,6 +76,7 @@ namespace OpenSearch.Client
 		/// affect index files that are already compressed by default. Defaults to <c>false</c>.
 		/// </summary>
 		[DataMember(Name ="compress")]
+		[JsonConverter(typeof(NullableStringBooleanConverter))]
 		[JsonFormatter(typeof(NullableStringBooleanFormatter))]
 		bool? Compress { get; set; }
 

@@ -29,7 +29,6 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -37,6 +36,7 @@ namespace OpenSearch.Client
 	/// The date datatype maps a field as a date in OpenSearch.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(DateProperty))]
 	public interface IDateProperty : IDocValuesProperty
 	{
 		/// <summary>

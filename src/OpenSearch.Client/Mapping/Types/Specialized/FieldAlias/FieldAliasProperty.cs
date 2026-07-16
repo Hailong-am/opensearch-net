@@ -30,7 +30,6 @@ using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -39,6 +38,7 @@ namespace OpenSearch.Client
 	/// of the target field in search requests, and selected other APIs like field capabilities.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(FieldAliasProperty))]
 	public interface IFieldAliasProperty : IProperty
 	{
 		/// <summary> The full path to alias </summary>

@@ -28,8 +28,9 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using OpenSearch.Net;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
+using OpenSearch.Net;
 
 namespace OpenSearch.Client
 {
@@ -58,6 +59,7 @@ namespace OpenSearch.Client
 		public NodeIngestStats Ingest { get; internal set; }
 
 		[DataMember(Name = "ip")]
+		[JsonConverter(typeof(SingleOrManyStringConverter))]
 		[JsonFormatter(typeof(SingleOrEnumerableFormatter<string>))]
 		public IEnumerable<string> Ip { get; internal set; }
 

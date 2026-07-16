@@ -28,6 +28,7 @@
 
 using System;
 using System.Text;
+using System.Text.RegularExpressions;
 using OpenSearch.OpenSearch.Xunit.XunitPlumbing;
 using FluentAssertions;
 using OpenSearch.Client;
@@ -56,7 +57,9 @@ namespace Tests.Reproduce
 			var response = action();
 
 			var json = Encoding.UTF8.GetString(response.ApiCall.RequestBodyInBytes);
-			json.Should().Contain("\"percentage\":{}");
+			// TestClient.DefaultInMemoryClient enables PrettyJson, so allow whitespace between the
+			// property name and value regardless of which serialization engine is active.
+			Regex.IsMatch(json, "\"percentage\"\\s*:\\s*{\\s*}").Should().BeTrue();
 		}
 	}
 }

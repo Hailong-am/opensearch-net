@@ -29,7 +29,6 @@
 using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -38,6 +37,7 @@ namespace OpenSearch.Client
 	/// If the field is not a string, the processor will throw an exception.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(GsubProcessor))]
 	public interface IGsubProcessor : IProcessor
 	{
 		/// <summary>

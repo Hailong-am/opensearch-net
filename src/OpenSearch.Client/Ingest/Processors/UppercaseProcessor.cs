@@ -29,7 +29,6 @@
 using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -37,6 +36,7 @@ namespace OpenSearch.Client
 	/// Converts a string to its uppercase equivalent.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(UppercaseProcessor))]
 	public interface IUppercaseProcessor : IProcessor
 	{
 		/// <summary>

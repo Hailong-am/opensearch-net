@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using OpenSearch.Net.Extensions;
 using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net.Utf8Json.Internal;
@@ -38,6 +39,7 @@ using OpenSearch.Net.Utf8Json.Internal;
 namespace OpenSearch.Net
 {
 	[JsonFormatter(typeof(ErrorCauseFormatter))]
+	[JsonConverter(typeof(ErrorCauseConverter))]
 	[DataContract]
 	public class ErrorCause
 	{

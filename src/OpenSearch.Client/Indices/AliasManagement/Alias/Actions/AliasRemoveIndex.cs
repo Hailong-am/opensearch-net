@@ -28,11 +28,11 @@
 
 using System;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(AliasRemoveIndexAction))]
 	public interface IAliasRemoveIndexAction : IAliasAction
 	{
 		[DataMember(Name ="remove_index")]

@@ -30,6 +30,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using OpenSearch.Net.Extensions;
 using OpenSearch.Net.Utf8Json;
@@ -41,6 +43,62 @@ namespace OpenSearch.Client
 		Union<DateTime, string> Anchor { get; }
 		IList<Tuple<DateMathOperation, DateMathTime>> Ranges { get; }
 		DateMathTimeUnit? Round { get; }
+	}
+
+	/// <summary>
+	/// Serializes <see cref="DateMath"/> (and subclasses) as its string form and parses it back from a
+	/// string. A factory so it matches the abstract base and any concrete subtype (e.g.
+	/// <see cref="DateMathExpression"/>), since STJ resolves converters by the value's runtime type.
+	/// Declared via <c>[JsonConverter]</c> on the base type. Replaces the Utf8Json <c>DateMathFormatter</c>.
+	/// </summary>
+	internal sealed class DateMathConverter : JsonConverterFactory
+	{
+		public override bool CanConvert(Type typeToConvert) => typeof(DateMath).IsAssignableFrom(typeToConvert);
+
+		public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+		{
+			var converterType = typeof(DateMathConverterImpl<>).MakeGenericType(typeToConvert);
+			return (JsonConverter)Activator.CreateInstance(converterType);
+		}
+	}
+
+	internal sealed class DateMathConverterImpl<T> : JsonConverter<T> where T : DateMath
+	{
+		public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			if (reader.TokenType != JsonTokenType.String)
+			{
+				reader.Skip();
+				return null;
+			}
+
+			var value = reader.GetString();
+			if (value == null)
+				return null;
+
+			// Mirror the Utf8Json DateMathExpressionFormatter: when the value has no date-math
+			// separator and parses as a DateTime, anchor on the DateTime (Union TFirst) so a
+			// round-tripped plain date exposes its Anchor as a DateTime rather than a string.
+			if (!ContainsDateMathSeparator(value)
+				&& System.DateTime.TryParse(value, System.Globalization.CultureInfo.InvariantCulture,
+					System.Globalization.DateTimeStyles.RoundtripKind, out var dateTime))
+				return (T)(DateMath)new DateMathExpression(dateTime);
+
+			return (T)DateMath.FromString(value);
+		}
+
+		private static bool ContainsDateMathSeparator(string value) =>
+			value.Contains("||") || value.EndsWith("|") || value.IndexOf('/') >= 0
+			// a '+' or '-' after the first char indicates a range (avoid matching a leading sign / date '-')
+			|| value.IndexOf('+') > 0;
+
+		public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
+		{
+			if (value == null)
+				writer.WriteNullValue();
+			else
+				writer.WriteStringValue(value.ToString());
+		}
 	}
 
 	[JsonFormatter(typeof(DateMathFormatter))]

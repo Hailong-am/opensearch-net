@@ -47,6 +47,8 @@ namespace OpenSearch.Client
 	/// <inheritdoc cref="ITermsCompositeAggregationSource" />
 	public class TermsCompositeAggregationSource : CompositeAggregationSourceBase, ITermsCompositeAggregationSource
 	{
+		internal TermsCompositeAggregationSource() { }
+
 		public TermsCompositeAggregationSource(string name) : base(name) { }
 
 		/// <inheritdoc />

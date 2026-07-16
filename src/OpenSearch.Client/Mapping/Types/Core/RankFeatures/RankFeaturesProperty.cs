@@ -27,7 +27,6 @@
 */
 
 using System.Diagnostics;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -37,6 +36,7 @@ namespace OpenSearch.Client
 	/// wouldn't be reasonable to add one field to the mappings for each of them.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(RankFeaturesProperty))]
 	public interface IRankFeaturesProperty : IProperty
 	{
 	}

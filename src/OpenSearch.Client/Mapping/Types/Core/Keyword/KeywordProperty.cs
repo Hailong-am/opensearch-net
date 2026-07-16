@@ -28,7 +28,6 @@
 
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -39,6 +38,7 @@ namespace OpenSearch.Client
 	/// Keyword fields are only searchable by their exact value.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(KeywordProperty))]
 	public interface IKeywordProperty : IDocValuesProperty
 	{
 		[DataMember(Name ="boost")]

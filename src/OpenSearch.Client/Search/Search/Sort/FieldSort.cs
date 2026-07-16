@@ -32,11 +32,11 @@ using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(FieldSort))]
 	public interface IFieldSort : ISort
 	{
 		[DataMember(Name ="ignore_unmapped")]

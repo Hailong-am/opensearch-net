@@ -29,7 +29,6 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -38,6 +37,7 @@ namespace OpenSearch.Client
 	/// Not all methods are valid for all types.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(GenericProperty))]
 	public interface IGenericProperty : IDocValuesProperty
 	{
 		[DataMember(Name ="analyzer")]

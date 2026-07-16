@@ -115,6 +115,11 @@ namespace OpenSearch.Client
 		private Func<string, string> _defaultFieldNameInferrer;
 		private string _defaultIndex;
 
+		// Default serialization engine. Defaults to the legacy vendored Utf8Json engine (true) for backwards
+		// compatibility. Set to false (opt into System.Text.Json) via UseUtf8Json(false) or the
+		// OSC_USE_STJ environment variable.
+		private bool _useUtf8Json = ReadUtf8JsonDefault();
+
 		protected ConnectionSettingsBase(
 			IConnectionPool connectionPool,
 			IConnection connection,
@@ -123,8 +128,7 @@ namespace OpenSearch.Client
 		)
 			: base(connectionPool, connection, null)
 		{
-			var formatterResolver = new OpenSearchClientFormatterResolver(this);
-			var defaultSerializer = new DefaultHighLevelSerializer(formatterResolver);
+			var defaultSerializer = new DefaultHighLevelSerializer(this);
 			var sourceSerializer = sourceSerializerFactory?.Invoke(defaultSerializer, this) ?? defaultSerializer;
 			var serializerAsMappingProvider = sourceSerializer as IPropertyMappingProvider;
 
@@ -153,6 +157,7 @@ namespace OpenSearch.Client
 		FluentDictionary<MemberInfo, IPropertyMapping> IConnectionSettingsValues.PropertyMappings => _propertyMappings;
 		FluentDictionary<Type, string> IConnectionSettingsValues.RouteProperties => _routeProperties;
 		IOpenSearchSerializer IConnectionSettingsValues.SourceSerializer => _sourceSerializer;
+		bool IConnectionSettingsValues.UseUtf8Json => _useUtf8Json;
 
 		/// <summary>
 		/// The default index to use for a request when no index has been explicitly specified
@@ -179,6 +184,27 @@ namespace OpenSearch.Client
 		/// <see cref="DefaultDisableIdInference"/>
 		/// </summary>
 		public TConnectionSettings DefaultDisableIdInference(bool disable = true) => Assign(disable, (a, v) => a._defaultDisableAllInference = v);
+
+		/// <summary>
+		/// Controls which serialization engine is used by the built-in high-level serializer.
+		/// When <c>true</c> (the default), the legacy vendored Utf8Json engine is used (honoring
+		/// <c>[JsonFormatter]</c> attributes). When <c>false</c>, the System.Text.Json engine is used
+		/// (honoring <c>[JsonConverter]</c> attributes).
+		/// <para></para>
+		/// The System.Text.Json engine can also be forced globally via the <c>OSC_USE_STJ</c> environment variable.
+		/// </summary>
+		public TConnectionSettings UseUtf8Json(bool use = true) => Assign(use, (a, v) => a._useUtf8Json = v);
+
+		private static bool ReadUtf8JsonDefault()
+		{
+			// If OSC_USE_STJ is set, opt into System.Text.Json (UseUtf8Json = false).
+			var value = Environment.GetEnvironmentVariable("OSC_USE_STJ");
+			if (string.IsNullOrEmpty(value)) return true; // default: Utf8Json
+			var useSij = value == "1"
+				|| string.Equals(value, "true", StringComparison.OrdinalIgnoreCase)
+				|| string.Equals(value, "yes", StringComparison.OrdinalIgnoreCase);
+			return !useSij;
+		}
 
 		private void MapIdPropertyFor<TDocument>(Expression<Func<TDocument, object>> objectPath)
 		{

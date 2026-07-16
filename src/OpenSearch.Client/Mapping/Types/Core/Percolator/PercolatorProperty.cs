@@ -27,7 +27,6 @@
 */
 
 using System.Diagnostics;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -36,6 +35,7 @@ namespace OpenSearch.Client
 	/// <see cref="IPercolateQuery"/> can use it to match provided documents.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(PercolatorProperty))]
 	public interface IPercolatorProperty : IProperty { }
 
 	/// <inheritdoc cref="IPercolatorProperty"/>

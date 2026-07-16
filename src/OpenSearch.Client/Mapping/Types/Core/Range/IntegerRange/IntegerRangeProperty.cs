@@ -26,7 +26,6 @@
 *  under the License.
 */
 
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -34,6 +33,7 @@ namespace OpenSearch.Client
 	/// A range of signed 32-bit integers with a minimum value of -231 and maximum of 231-1.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(IntegerRangeProperty))]
 	public interface IIntegerRangeProperty : IRangeProperty { }
 
 	/// <inheritdoc cref="IIntegerRangeProperty"/>
