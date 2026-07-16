@@ -63,7 +63,6 @@ namespace OpenSearch.Client
 		}
 	}
 
-	[JsonConverter(typeof(DistanceConverter))]
 	[JsonFormatter(typeof(DistanceFormatter))]
 	public class Distance
 	{

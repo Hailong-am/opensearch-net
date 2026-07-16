@@ -328,8 +328,52 @@ namespace OpenSearch.Client
 				if (prop.CustomConverter != null)
 					continue;
 
+				// Honor a [JsonConverter] declared on the contract-interface property when the concrete
+				// type implements it implicitly (a public property STJ surfaces by default). The attribute
+				// lives on the interface member, so STJ's default resolution never applies it here — e.g.
+				// ICustomNormalizer.Filter's [JsonConverter(SingleOrManyStringConverter)], which reads the
+				// single-string-or-array "filter" wire shape into IEnumerable<string>.
+				var interfaceConverter = GetInterfacePropertyConverter(contractInterfaces, prop);
+				if (interfaceConverter != null)
+				{
+					prop.CustomConverter = interfaceConverter;
+					continue;
+				}
+
 				PinConverterIfNeeded(prop, prop.PropertyType, typeInfo.Options);
 			}
+		}
+
+		/// <summary>
+		/// Resolves a <see cref="JsonConverter"/> from a <see cref="JsonConverterAttribute"/> declared on the
+		/// matching contract-interface property for a default-surfaced (implicitly implemented) member.
+		/// Returns <c>null</c> when no interface property carries the attribute.
+		/// </summary>
+		private static JsonConverter GetInterfacePropertyConverter(List<Type> contractInterfaces, JsonPropertyInfo prop)
+		{
+			if (prop.AttributeProvider is not PropertyInfo pi)
+				return null;
+
+			foreach (var iface in contractInterfaces)
+			{
+				var ifaceProp = iface.GetProperty(pi.Name);
+				var converterAttr = ifaceProp?.GetCustomAttribute<JsonConverterAttribute>();
+				if (converterAttr == null)
+					continue;
+
+				try
+				{
+					return converterAttr.ConverterType != null
+						? (JsonConverter)Activator.CreateInstance(converterAttr.ConverterType)
+						: converterAttr.CreateConverter(ifaceProp.PropertyType);
+				}
+				catch
+				{
+					return null;
+				}
+			}
+
+			return null;
 		}
 
 		/// <summary>

@@ -35,7 +35,6 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
-	[JsonConverter(typeof(IncludeExcludeConverter))]
 	[JsonFormatter(typeof(IncludeExcludeFormatter))]
 	public class IncludeExclude
 	{

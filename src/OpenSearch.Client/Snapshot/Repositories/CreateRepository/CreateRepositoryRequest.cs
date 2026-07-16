@@ -27,7 +27,6 @@
 */
 
 using System;
-using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
@@ -36,7 +35,6 @@ namespace OpenSearch.Client
 	/// Creates a snapshot repository
 	/// </summary>
 	[MapsApi("snapshot.create_repository.json")]
-	[JsonConverter(typeof(CreateRepositoryConverter))]
 	[JsonFormatter(typeof(CreateRepositoryFormatter))]
 	public partial interface ICreateRepositoryRequest
 	{

@@ -101,7 +101,6 @@ namespace OpenSearch.Client
 		}
 	}
 
-	[JsonConverter(typeof(DateMathConverter))]
 	[JsonFormatter(typeof(DateMathFormatter))]
 	public abstract class DateMath : IDateMath
 	{

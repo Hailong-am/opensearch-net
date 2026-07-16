@@ -85,7 +85,6 @@ namespace OpenSearch.Client
 		}
 	}
 
-	[JsonConverter(typeof(SortOrderConverter<HistogramOrder>))]
 	[JsonFormatter(typeof(SortOrderFormatter<HistogramOrder>))]
 	public class HistogramOrder : ISortOrder
 	{

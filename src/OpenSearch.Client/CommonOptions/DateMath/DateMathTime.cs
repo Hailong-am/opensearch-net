@@ -68,7 +68,6 @@ namespace OpenSearch.Client
 	/// <summary>
 	/// A time representation for use within <see cref="DateMath" /> expressions.
 	/// </summary>
-	[JsonConverter(typeof(DateMathTimeConverter))]
 	[JsonFormatter(typeof(DateMathTimeFormatter))]
 	public class DateMathTime : IComparable<DateMathTime>, IEquatable<DateMathTime>
 	{

@@ -26,13 +26,11 @@
 *  under the License.
 */
 
-using System.Text.Json.Serialization;
 using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net;
 
 namespace OpenSearch.Client
 {
-	[JsonConverter(typeof(SortOrderConverter<TermsOrder>))]
 	[JsonFormatter(typeof(SortOrderFormatter<TermsOrder>))]
 	public class TermsOrder : ISortOrder
 	{

@@ -13,7 +13,6 @@ using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client;
 
-[JsonConverter(typeof(TrackTotalHitsConverter))]
 [JsonFormatter(typeof(TrackTotalHitsFormatter))]
 public class TrackTotalHits : Union<bool, long>
 {
