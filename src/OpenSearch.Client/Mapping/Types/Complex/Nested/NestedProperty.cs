@@ -28,7 +28,6 @@
 
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -38,6 +37,7 @@ namespace OpenSearch.Client
 	/// and aggregations.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(NestedProperty))]
 	public interface INestedProperty : IObjectProperty
 	{
 		/// <summary>

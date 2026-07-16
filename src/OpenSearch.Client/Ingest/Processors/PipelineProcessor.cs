@@ -27,12 +27,12 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary> Executes another pipeline.</summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(PipelineProcessor))]
 	public interface IPipelineProcessor : IProcessor
 	{
 		/// <summary>The name of the pipeline to execute. </summary>

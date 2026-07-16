@@ -28,10 +28,10 @@
 
 using System;
 using System.Runtime.Serialization;
+
+
 using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net.Utf8Json.Internal;
-
-
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -308,4 +308,6 @@ namespace OpenSearch.Client
 			}
 		}
 	}
+
+
 }

@@ -29,7 +29,6 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -37,6 +36,7 @@ namespace OpenSearch.Client
 	/// An ip field can index/store either IPv4 or IPv6 addresses.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(IpProperty))]
 	public interface IIpProperty : IDocValuesProperty
 	{
 		[DataMember(Name ="index")]

@@ -31,7 +31,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -41,6 +40,7 @@ namespace OpenSearch.Client
 	/// by using the date math index name support.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(DateIndexNameProcessor))]
 	public interface IDateIndexNameProcessor : IProcessor
 	{
 		/// <summary>

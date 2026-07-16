@@ -38,6 +38,7 @@ namespace OpenSearch.Client
 	/// If the field already exists, its value will be replaced with the provided one.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(SetProcessor))]
 	public interface ISetProcessor : IProcessor
 	{
 		/// <summary>

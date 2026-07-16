@@ -29,7 +29,6 @@
 using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -38,6 +37,7 @@ namespace OpenSearch.Client
 	/// Any empty field in CSV will be skipped.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(CsvProcessor))]
 	public interface ICsvProcessor : IProcessor
 	{
 		/// <summary>

@@ -27,9 +27,10 @@
 */
 
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
+using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net;
 using OpenSearch.Net.Extensions;
-using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net.Utf8Json.Formatters;
 
 namespace OpenSearch.Client
@@ -126,4 +127,6 @@ namespace OpenSearch.Client
 				writer.WriteInt64(value.Value);
 		}
 	}
+
+
 }

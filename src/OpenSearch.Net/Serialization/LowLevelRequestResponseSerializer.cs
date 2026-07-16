@@ -31,6 +31,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenSearch.Net.Utf8Json;
+using JsonSerializerOptions = System.Text.Json.JsonSerializerOptions;
 
 namespace OpenSearch.Net
 {
@@ -62,6 +63,12 @@ namespace OpenSearch.Net
 		{
 			formatterResolver = OpenSearchNetFormatterResolver.Instance;
 			return true;
+		}
+
+		bool IInternalSerializer.TryGetJsonSerializerOptions(out JsonSerializerOptions options)
+		{
+			options = null;
+			return false;
 		}
 	}
 }

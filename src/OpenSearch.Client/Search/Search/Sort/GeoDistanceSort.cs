@@ -30,12 +30,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	/// <summary> Allows you to sort based on a proximity to one or more <see cref="GeoLocation" /> </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(GeoDistanceSort))]
 	public interface IGeoDistanceSort : ISort
 	{
 		/// <summary>

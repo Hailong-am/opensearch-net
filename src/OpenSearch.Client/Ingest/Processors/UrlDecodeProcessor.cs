@@ -29,7 +29,6 @@
 using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -37,6 +36,7 @@ namespace OpenSearch.Client
 	/// URL-decodes a string
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(UrlDecodeProcessor))]
 	public interface IUrlDecodeProcessor : IProcessor
 	{
 		/// <summary>

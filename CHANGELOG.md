@@ -3,8 +3,10 @@ Inspired from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 ### ⚠️ Breaking Changes ⚠️
+- The default serialization engine remains the vendored Utf8Json; System.Text.Json is available as an opt-in via `.UseUtf8Json(false)` on `ConnectionSettings` or the `OSC_USE_STJ=true` environment variable ([#388](https://github.com/opensearch-project/opensearch-net/issues/388)).
 ### Changed
 ### Added
+- Added a System.Text.Json serialization engine for the high-level client as an opt-in alternative to the vendored Utf8Json engine; the default engine is unchanged ([#388](https://github.com/opensearch-project/opensearch-net/issues/388)).
 ### Removed
 ### Fixed
 ### Dependencies

@@ -30,7 +30,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -43,6 +42,7 @@ namespace OpenSearch.Client
 	/// Requires the Ingest Attachment Processor Plugin to be installed on the cluster.
 	/// </remarks>
 	[InterfaceDataContract]
+	[ReadAs(typeof(AttachmentProcessor))]
 	public interface IAttachmentProcessor : IProcessor
 	{
 		/// <summary> The field to get the base64 encoded field from.</summary>

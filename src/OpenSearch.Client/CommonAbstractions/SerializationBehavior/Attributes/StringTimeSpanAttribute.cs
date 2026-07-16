@@ -27,9 +27,27 @@
 */
 
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using OpenSearch.Net;
 
 namespace OpenSearch.Client
 {
+	/// <summary>
+	/// Marks a <see cref="TimeSpan"/> (or <see cref="Nullable{TimeSpan}"/>) property to serialize as its
+	/// string form (e.g. <c>"10.10:38:32"</c>) rather than the default ticks number. Inherits
+	/// <see cref="JsonConverterAttribute"/> so it is honored through the attribute/contract channel.
+	/// </summary>
 	[AttributeUsage(AttributeTargets.Property)]
-	public class StringTimeSpanAttribute : Attribute { }
+	public class StringTimeSpanAttribute : JsonConverterAttribute
+	{
+		public override JsonConverter CreateConverter(Type typeToConvert)
+		{
+			if (typeToConvert == typeof(TimeSpan))
+				return new TimeSpanStringConverter();
+			if (typeToConvert == typeof(TimeSpan?))
+				return new NullableTimeSpanStringConverter();
+			return null;
+		}
+	}
 }

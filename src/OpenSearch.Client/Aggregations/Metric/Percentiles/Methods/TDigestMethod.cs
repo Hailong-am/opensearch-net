@@ -27,11 +27,11 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(TDigestMethod))]
 	public interface ITDigestMethod : IPercentilesMethod
 	{
 		[DataMember(Name ="compression")]

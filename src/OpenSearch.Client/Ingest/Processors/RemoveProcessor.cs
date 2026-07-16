@@ -28,7 +28,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -36,6 +35,7 @@ namespace OpenSearch.Client
 	/// Removes existing fields. If one field doesn't exist, an exception will be thrown.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(RemoveProcessor))]
 	public interface IRemoveProcessor : IProcessor
 	{
 		/// <summary>

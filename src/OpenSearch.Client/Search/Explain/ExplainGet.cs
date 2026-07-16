@@ -42,6 +42,7 @@ namespace OpenSearch.Client
 		bool Found { get; }
 
 		[DataMember(Name = "_source")]
+		[SourceSerialization]
 		[JsonFormatter(typeof(SourceFormatter<>))]
 		TDocument Source { get; }
 	}

@@ -30,11 +30,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using OpenSearch.Net.Extensions;
+
 using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net.Utf8Json.Internal;
-
 namespace OpenSearch.Client
 {
+	[System.Text.Json.Serialization.JsonConverter(typeof(GeoShapeConverter))]
 	[JsonFormatter(typeof(GeoShapeFormatter))]
 	public interface IGeoShape
 	{
@@ -78,6 +79,7 @@ namespace OpenSearch.Client
 
 		internal GeoFormat Format { get; set; }
 	}
+
 
 	internal class GeoShapeFormatter<TShape> : IJsonFormatter<TShape>
 		where TShape : IGeoShape
@@ -344,4 +346,6 @@ namespace OpenSearch.Client
 			return coordinates;
 		}
 	}
+
+
 }

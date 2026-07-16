@@ -30,7 +30,6 @@ using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -40,6 +39,7 @@ namespace OpenSearch.Client
 	///  of strings and numbers will be sorted lexicographically.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(SortProcessor))]
 	public interface ISortProcessor : IProcessor
 	{
 		/// <summary>

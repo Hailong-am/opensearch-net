@@ -26,10 +26,10 @@
 *  under the License.
 */
 
+
+
 using OpenSearch.Net.Utf8Json;
 using OpenSearch.Net.Utf8Json.Internal;
-
-
 namespace OpenSearch.Client
 {
 	/// <summary>
@@ -124,4 +124,6 @@ namespace OpenSearch.Client
 			return formatter.Deserialize(ref reader, formatterResolver);
 		}
 	}
+
+
 }

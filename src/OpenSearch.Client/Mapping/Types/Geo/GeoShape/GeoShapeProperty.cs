@@ -28,7 +28,6 @@
 
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -36,6 +35,7 @@ namespace OpenSearch.Client
 	/// Maps a property as a geo_shape field
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(GeoShapeProperty))]
 	public interface IGeoShapeProperty : IDocValuesProperty
 	{
 		/// <summary>

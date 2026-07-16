@@ -130,7 +130,13 @@ namespace OpenSearch.Client
 		public static bool operator true(QueryContainer a) => false;
 
 		// ReSharper disable once UnusedMember.Global
-		internal bool ShouldSerialize(IJsonFormatterResolver formatterResolver) => IsWritable;
+		internal bool ShouldSerialize() => IsWritable;
+
+		// Utf8Json discovers a type-level ShouldSerialize hook by looking for a method taking a single
+		// IJsonFormatterResolver parameter (see ReflectionExtensions.GetShouldSerializeMethod). Provide that
+		// overload so a conditionless QueryContainer (e.g. an empty bool query) is omitted on the Utf8Json
+		// path rather than emitted as an empty object.
+		internal bool ShouldSerialize(OpenSearch.Net.Utf8Json.IJsonFormatterResolver formatterResolver) => IsWritable;
 
 		/// <summary>
 		/// Assigns a name to the contained query.

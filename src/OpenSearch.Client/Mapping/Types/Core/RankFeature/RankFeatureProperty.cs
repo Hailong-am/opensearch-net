@@ -28,7 +28,6 @@
 
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -37,6 +36,7 @@ namespace OpenSearch.Client
 	/// to boost documents in queries with a rank_feature query.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(RankFeatureProperty))]
 	public interface IRankFeatureProperty : IProperty
 	{
 		/// <summary>

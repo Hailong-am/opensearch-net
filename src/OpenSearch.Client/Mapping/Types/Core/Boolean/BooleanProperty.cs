@@ -29,7 +29,6 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -37,6 +36,7 @@ namespace OpenSearch.Client
 	/// The boolean fields accepts true and false values
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(BooleanProperty))]
 	public interface IBooleanProperty : IDocValuesProperty
 	{
 		[DataMember(Name = "boost")]

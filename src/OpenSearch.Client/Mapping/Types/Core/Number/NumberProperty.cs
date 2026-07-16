@@ -30,7 +30,6 @@ using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using OpenSearch.Net;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -38,6 +37,7 @@ namespace OpenSearch.Client
 	/// A numeric mapping that defaults to <c>float</c>.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(NumberProperty))]
 	public interface INumberProperty : IDocValuesProperty
 	{
 		[DataMember(Name = "coerce")]

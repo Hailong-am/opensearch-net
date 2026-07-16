@@ -30,7 +30,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -44,6 +43,7 @@ namespace OpenSearch.Client
 	/// Requires the UserAgent Processor Plugin to be installed on the cluster.
 	/// </remarks>
 	[InterfaceDataContract]
+	[ReadAs(typeof(UserAgentProcessor))]
 	public interface IUserAgentProcessor : IProcessor
 	{
 		[DataMember(Name ="field")]

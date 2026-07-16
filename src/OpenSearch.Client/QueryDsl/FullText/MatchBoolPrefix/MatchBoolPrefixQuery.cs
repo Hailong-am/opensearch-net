@@ -36,6 +36,7 @@ namespace OpenSearch.Client
 	/// Each term except the last is used in a term query. The last term is used in a prefix query.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(MatchBoolPrefixQuery))]
 	[JsonFormatter(typeof(FieldNameQueryFormatter<MatchBoolPrefixQuery, IMatchBoolPrefixQuery>))]
 	public interface IMatchBoolPrefixQuery : IFieldNameQuery
 	{

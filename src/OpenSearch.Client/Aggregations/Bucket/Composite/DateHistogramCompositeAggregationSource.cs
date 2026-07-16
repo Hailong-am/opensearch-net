@@ -68,6 +68,8 @@ namespace OpenSearch.Client
 	/// <inheritdoc cref="IDateHistogramCompositeAggregationSource" />
 	public class DateHistogramCompositeAggregationSource : CompositeAggregationSourceBase, IDateHistogramCompositeAggregationSource
 	{
+		internal DateHistogramCompositeAggregationSource() { }
+
 		public DateHistogramCompositeAggregationSource(string name) : base(name) { }
 
 		/// <inheritdoc />

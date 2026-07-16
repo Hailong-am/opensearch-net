@@ -29,7 +29,6 @@
 using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -37,6 +36,7 @@ namespace OpenSearch.Client
 	/// Splits a field into an array using a separator character. Only works on string fields
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(SplitProcessor))]
 	public interface ISplitProcessor : IProcessor
 	{
 		/// <summary>

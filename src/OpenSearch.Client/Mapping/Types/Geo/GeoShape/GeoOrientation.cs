@@ -26,15 +26,22 @@
 *  under the License.
 */
 
+using System.Runtime.Serialization;
+using OpenSearch.Net;
 using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
+	[StringEnum]
 	public enum GeoOrientation
 	{
+		[EnumMember(Value = "cw")]
 		ClockWise,
+
+		[EnumMember(Value = "ccw")]
 		CounterClockWise
 	}
+
 
 	internal class GeoOrientationFormatter : IJsonFormatter<GeoOrientation>
 	{
@@ -118,4 +125,6 @@ namespace OpenSearch.Client
 			}
 		}
 	}
+
+
 }

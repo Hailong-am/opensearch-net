@@ -97,11 +97,26 @@ namespace OpenSearch.Net.Utf8Json.Internal.Emit
 			return interfaceProperty != null ? interfaceProperty.GetCustomAttribute<TAttribute>(inherit) : null;
 		}
 
+		// Recognizes an interface-data-contract marker by the attribute's simple name, so both the legacy
+		// Utf8Json InterfaceDataContractAttribute and the OpenSearch.Client-native replacement (which shares
+		// the same simple name but lives in the OpenSearch.Client namespace) are honored. This lets high-level
+		// domain types drop the Utf8Json dependency while the default Utf8Json engine still resolves their
+		// interface contract.
+		private static bool HasInterfaceDataContract(Type type)
+		{
+			foreach (var attr in type.GetCustomAttributes(inherit: true))
+			{
+				if (attr.GetType().Name == nameof(InterfaceDataContractAttribute))
+					return true;
+			}
+			return false;
+		}
+
 		public MetaType(Type type, Func<string, string> nameMutator, Func<MemberInfo, JsonProperty> propertyMapper, bool allowPrivate)
 		{
 			var isClass = type.IsClass || type.IsInterface || type.IsAbstract;
 			var dataContractPresent = type.GetCustomAttribute<DataContractAttribute>(true) != null ||
-									  type.GetCustomAttribute<InterfaceDataContractAttribute>(true) != null;
+									  HasInterfaceDataContract(type);
 
 			Type = type;
 

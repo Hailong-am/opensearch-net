@@ -27,11 +27,11 @@
 */
 
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(IndexedScript))]
 	public interface IIndexedScript : IScript
 	{
 		[DataMember(Name ="id")]

@@ -27,6 +27,7 @@
 */
 
 using System.IO;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenSearch.Net;
@@ -37,44 +38,44 @@ namespace OpenSearch.Client
 	{
 		public static SourceRequestResponseBuilder<TDocument> Instance { get; } = new SourceRequestResponseBuilder<TDocument>();
 
-		public override object DeserializeResponse(IOpenSearchSerializer builtInSerializer, IApiCallDetails response, Stream stream)
-		{
-			if (response.Success)
-			{
-				if (builtInSerializer is IInternalSerializer internalSerializer &&
-					internalSerializer.TryGetJsonFormatter(out var formatter))
-				{
-					var sourceSerializer = formatter.GetConnectionSettings().SourceSerializer;
-					return new SourceResponse<TDocument> { Body = sourceSerializer.Deserialize<TDocument>(stream) };
-				}
+		public override object DeserializeResponse(IOpenSearchSerializer builtInSerializer, IApiCallDetails response, Stream stream) =>
+			response.Success
+				? new SourceResponse<TDocument> { Body = ResolveSourceSerializer(builtInSerializer).Deserialize<TDocument>(stream) }
+				: new SourceResponse<TDocument>();
 
-				return new SourceResponse<TDocument> { Body = builtInSerializer.Deserialize<TDocument>(stream) };
+		public override async Task<object> DeserializeResponseAsync(IOpenSearchSerializer builtInSerializer, IApiCallDetails response, Stream stream, CancellationToken ctx = default) =>
+			response.Success
+				? new SourceResponse<TDocument>
+				{
+					Body = await ResolveSourceSerializer(builtInSerializer).DeserializeAsync<TDocument>(stream, ctx).ConfigureAwait(false)
+				}
+				: new SourceResponse<TDocument>();
+
+		// A _source response body IS the raw user document, so it must be deserialized by the configured
+		// SourceSerializer — when a distinct source serializer is set (e.g. the JSON.NET serializer under
+		// source_serializer=true) the built-in high-level serializer would not honor the source serializer's
+		// converters. Resolve the SourceSerializer from whichever engine backs the built-in serializer: on
+		// Utf8Json via the formatter resolver's connection settings, on STJ via the registered
+		// SourceConverterFactory's bound settings. Falls back to the built-in serializer when unavailable —
+		// that path already routes a bare document root through the inference-aware terminal source options.
+		private static IOpenSearchSerializer ResolveSourceSerializer(IOpenSearchSerializer builtInSerializer)
+		{
+			if (builtInSerializer is not IInternalSerializer internalSerializer)
+				return builtInSerializer;
+
+			if (internalSerializer.TryGetJsonFormatter(out var formatter))
+				return formatter.GetConnectionSettings().SourceSerializer;
+
+			if (internalSerializer.TryGetJsonSerializerOptions(out var options))
+			{
+				foreach (var converter in options.Converters)
+				{
+					if (converter is SourceConverterFactory factory)
+						return factory.Settings.SourceSerializer;
+				}
 			}
 
-			return new SourceResponse<TDocument>();
-		}
-
-		public override async Task<object> DeserializeResponseAsync(IOpenSearchSerializer builtInSerializer, IApiCallDetails response, Stream stream, CancellationToken ctx = default)
-		{
-			if (response.Success)
-			{
-				if (builtInSerializer is IInternalSerializer internalSerializer &&
-					internalSerializer.TryGetJsonFormatter(out var formatter))
-				{
-					var sourceSerializer = formatter.GetConnectionSettings().SourceSerializer;
-					return new SourceResponse<TDocument>
-					{
-						Body = await sourceSerializer.DeserializeAsync<TDocument>(stream, ctx).ConfigureAwait(false)
-					};
-				}
-
-				return new SourceResponse<TDocument>
-				{
-					Body = await builtInSerializer.DeserializeAsync<TDocument>(stream, ctx).ConfigureAwait(false)
-				};
-			}
-
-			return new SourceResponse<TDocument>();
+			return builtInSerializer;
 		}
 	}
 }

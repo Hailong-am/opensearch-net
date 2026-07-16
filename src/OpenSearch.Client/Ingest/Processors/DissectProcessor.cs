@@ -29,7 +29,6 @@
 using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -39,6 +38,7 @@ namespace OpenSearch.Client
 	/// This allows dissect’s syntax to be simple and, for some cases faster, than the Grok Processor.
 	/// </summary>
 	[InterfaceDataContract]
+	[ReadAs(typeof(DissectProcessor))]
 	public interface IDissectProcessor : IProcessor
 	{
 		/// <summary> The field to dissect </summary>

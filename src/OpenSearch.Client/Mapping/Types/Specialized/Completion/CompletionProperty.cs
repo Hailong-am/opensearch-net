@@ -30,11 +30,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
 	[InterfaceDataContract]
+	[ReadAs(typeof(CompletionProperty))]
 	public interface ICompletionProperty : IDocValuesProperty
 	{
 		[DataMember(Name ="analyzer")]

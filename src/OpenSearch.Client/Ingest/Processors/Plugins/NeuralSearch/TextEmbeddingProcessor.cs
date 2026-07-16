@@ -5,7 +5,6 @@
 * compatible open source license.
 */
 
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client;
 
@@ -13,6 +12,7 @@ namespace OpenSearch.Client;
 /// The <c>text_embedding</c> processor is used to generate vector embeddings from text fields for <a href="https://opensearch.org/docs/latest/search-plugins/semantic-search/">semantic search</a>.
 /// </summary>
 [InterfaceDataContract]
+[ReadAs(typeof(TextEmbeddingProcessor))]
 public interface ITextEmbeddingProcessor : IInferenceProcessor
 {
 }

@@ -30,7 +30,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using OpenSearch.Net.Utf8Json;
 
 namespace OpenSearch.Client
 {
@@ -44,6 +43,7 @@ namespace OpenSearch.Client
 	/// Requires the Ingest Geoip Processor Plugin to be installed on the cluster.
 	/// </remarks>
 	[InterfaceDataContract]
+	[ReadAs(typeof(GeoIpProcessor))]
 	public interface IGeoIpProcessor : IProcessor
 	{
 		[DataMember(Name ="database_file")]
