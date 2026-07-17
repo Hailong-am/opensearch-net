@@ -47,12 +47,23 @@ namespace OpenSearch.Client
 		// vendored Utf8Json engine using this resolver and the System.Text.Json options are never built.
 		private readonly IJsonFormatterResolver _formatterResolver;
 
+		// Cached at class load time so all instances in a process see the same answer.
+		private static readonly bool UseUtf8JsonDefault = ReadUtf8JsonDefault();
+
+		private static bool ReadUtf8JsonDefault()
+		{
+			// OSC_USE_STJ=1|true|yes opts into System.Text.Json. Default is the legacy Utf8Json engine.
+			var value = Environment.GetEnvironmentVariable("OSC_USE_STJ");
+			if (string.IsNullOrEmpty(value)) return true;
+			return !(value == "1"
+				|| string.Equals(value, "true", StringComparison.OrdinalIgnoreCase)
+				|| string.Equals(value, "yes", StringComparison.OrdinalIgnoreCase));
+		}
+
 		public DefaultHighLevelSerializer(IConnectionSettingsValues settings)
 		{
 			_settings = settings;
-			// Select the engine once, at construction, from the resolved setting (which already folds in the
-			// OSC_USE_UTF8JSON environment default). STJ is the default; Utf8Json is the rollback path.
-			if (settings != null && settings.UseUtf8Json)
+			if (UseUtf8JsonDefault)
 				_formatterResolver = new OpenSearchClientFormatterResolver(settings);
 			else
 				_serializerOptions = new OpenSearchClientSerializerOptions(settings);
