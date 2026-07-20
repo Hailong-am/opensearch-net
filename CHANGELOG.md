@@ -7,6 +7,7 @@ Inspired from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Added
 ### Removed
 ### Fixed
+- Fixed `MaxTimeoutReached`, `MaxRetriesReached`, and `FailedOverAllNodes` audit events having `Ended` stuck at `default(DateTime)` due to undisposed `Auditable` instances in `RequestPipeline.CreateClientException` ([#998](https://github.com/opensearch-project/opensearch-net/issues/998))
 ### Dependencies
 
 ## [2.0.0]
