@@ -52,12 +52,13 @@ namespace OpenSearch.Client
 
 		private static bool ReadUtf8JsonDefault()
 		{
-			// OSC_USE_STJ=1|true|yes opts into System.Text.Json. Default is the legacy Utf8Json engine.
-			var value = Environment.GetEnvironmentVariable("OSC_USE_STJ");
-			if (string.IsNullOrEmpty(value)) return true;
-			return !(value == "1"
+			// OSC_USE_UTF8JSON=1|true|yes opts back into the legacy Utf8Json engine.
+			// Default is System.Text.Json. Utf8Json will be removed in 3.0.0.
+			var value = Environment.GetEnvironmentVariable("OSC_USE_UTF8JSON");
+			if (string.IsNullOrEmpty(value)) return false; // default: STJ
+			return value == "1"
 				|| string.Equals(value, "true", StringComparison.OrdinalIgnoreCase)
-				|| string.Equals(value, "yes", StringComparison.OrdinalIgnoreCase));
+				|| string.Equals(value, "yes", StringComparison.OrdinalIgnoreCase);
 		}
 
 		public DefaultHighLevelSerializer(IConnectionSettingsValues settings)

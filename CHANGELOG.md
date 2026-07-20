@@ -3,10 +3,12 @@ Inspired from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 ### ⚠️ Breaking Changes ⚠️
-- The default serialization engine remains the vendored Utf8Json; System.Text.Json is available as an opt-in via `.UseUtf8Json(false)` on `ConnectionSettings` or the `OSC_USE_STJ=true` environment variable ([#388](https://github.com/opensearch-project/opensearch-net/issues/388)).
 ### Changed
+- Changed the default serialization engine from the vendored Utf8Json to System.Text.Json. The legacy Utf8Json engine can be re-enabled via the `OSC_USE_UTF8JSON=true` environment variable. Utf8Json support will be removed in 3.0.0 ([#388](https://github.com/opensearch-project/opensearch-net/issues/388)).
+- Changed the `OSC_USE_STJ` environment variable to `OSC_USE_UTF8JSON` (inverted semantics: set to `true` to opt back into the legacy engine) ([#996](https://github.com/opensearch-project/opensearch-net/pull/996)).
+- Changed integration test CI to run full version matrix under both STJ (default) and Utf8Json engines ([#996](https://github.com/opensearch-project/opensearch-net/pull/996)).
 ### Added
-- Added a System.Text.Json serialization engine for the high-level client as an opt-in alternative to the vendored Utf8Json engine; the default engine is unchanged ([#388](https://github.com/opensearch-project/opensearch-net/issues/388)).
+- Added a complete System.Text.Json serialization engine for both the high-level and low-level clients covering QueryDsl, Aggregations, Mapping, Analysis, Ingest, Search, Indices, and more ([#388](https://github.com/opensearch-project/opensearch-net/issues/388)).
 ### Removed
 ### Fixed
 ### Dependencies

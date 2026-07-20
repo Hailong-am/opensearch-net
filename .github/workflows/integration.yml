@@ -11,7 +11,7 @@ env:
 
 jobs:
   integration-opensearch:
-    name: Integration OpenSearch (${{ matrix.version }})${{ matrix.engine == 'stj' && ' [STJ]' || '' }}
+    name: Integration OpenSearch (${{ matrix.version }})${{ matrix.engine == 'utf8json' && ' [Utf8Json]' || '' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -32,13 +32,10 @@ jobs:
           - 1.2.4
           - 1.1.0
         engine:
+          - stj
           - utf8json
-        include:
-          # Spot-check STJ on the latest stable version only
-          - version: 3.6.0
-            engine: stj
     env:
-      OSC_USE_STJ: ${{ matrix.engine == 'stj' && 'true' || 'false' }}
+      OSC_USE_UTF8JSON: ${{ matrix.engine == 'utf8json' && 'true' || '' }}
 
     steps:
       - name: Checkout Client
