@@ -115,9 +115,9 @@ namespace OpenSearch.Client
 		private Func<string, string> _defaultFieldNameInferrer;
 		private string _defaultIndex;
 
-		// Default serialization engine. Defaults to the legacy vendored Utf8Json engine (true) for backwards
-		// compatibility. Set to false (opt into System.Text.Json) via UseUtf8Json(false) or the
-		// OSC_USE_STJ environment variable.
+		// Default serialization engine. Defaults to System.Text.Json (false).
+		// Set to true to opt back into the legacy vendored Utf8Json engine via UseUtf8Json(true)
+		// or the OSC_USE_UTF8JSON environment variable. Utf8Json will be removed in 3.0.0.
 		private bool _useUtf8Json = ReadUtf8JsonDefault();
 
 		protected ConnectionSettingsBase(
@@ -187,23 +187,24 @@ namespace OpenSearch.Client
 
 		/// <summary>
 		/// Controls which serialization engine is used by the built-in high-level serializer.
-		/// When <c>true</c> (the default), the legacy vendored Utf8Json engine is used (honoring
-		/// <c>[JsonFormatter]</c> attributes). When <c>false</c>, the System.Text.Json engine is used
-		/// (honoring <c>[JsonConverter]</c> attributes).
+		/// When <c>true</c>, the legacy vendored Utf8Json engine is used (honoring
+		/// <c>[JsonFormatter]</c> attributes). When <c>false</c> (the default), the System.Text.Json
+		/// engine is used (honoring <c>[JsonConverter]</c> attributes).
 		/// <para></para>
-		/// The System.Text.Json engine can also be forced globally via the <c>OSC_USE_STJ</c> environment variable.
+		/// The legacy Utf8Json engine can also be forced globally via the <c>OSC_USE_UTF8JSON</c>
+		/// environment variable. Utf8Json support will be removed in 3.0.0.
 		/// </summary>
 		public TConnectionSettings UseUtf8Json(bool use = true) => Assign(use, (a, v) => a._useUtf8Json = v);
 
 		private static bool ReadUtf8JsonDefault()
 		{
-			// If OSC_USE_STJ is set, opt into System.Text.Json (UseUtf8Json = false).
-			var value = Environment.GetEnvironmentVariable("OSC_USE_STJ");
-			if (string.IsNullOrEmpty(value)) return true; // default: Utf8Json
-			var useSij = value == "1"
+			// OSC_USE_UTF8JSON=true opts back into the legacy Utf8Json engine.
+			// Default is System.Text.Json (UseUtf8Json = false).
+			var value = Environment.GetEnvironmentVariable("OSC_USE_UTF8JSON");
+			if (string.IsNullOrEmpty(value)) return false; // default: STJ
+			return value == "1"
 				|| string.Equals(value, "true", StringComparison.OrdinalIgnoreCase)
 				|| string.Equals(value, "yes", StringComparison.OrdinalIgnoreCase);
-			return !useSij;
 		}
 
 		private void MapIdPropertyFor<TDocument>(Expression<Func<TDocument, object>> objectPath)
