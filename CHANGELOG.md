@@ -26,6 +26,7 @@ Inspired from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Added support for Hybrid query ([#917](https://github.com/opensearch-project/opensearch-net/pull/917))
 - Added support for `combined_fields` query ([#956](https://github.com/opensearch-project/opensearch-net/issues/956))
 - Added support for `MaxDistance` and `MinScore` to `KnnQuery` ([#917](https://github.com/opensearch-project/opensearch-net/pull/917))
+- Added support for overriding the SigV4 signing host via the `Host` header, allowing requests to be dispatched to a different host/port than they are signed for (e.g. SSH local port forwarding or connecting directly to a tunnel), see [#978](https://github.com/opensearch-project/opensearch-net/issues/978)
 - Added 3.x support ([#974](https://github.com/opensearch-project/opensearch-net/pull/974))
 
 ### Removed
