@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using OpenSearch.Client;
@@ -58,11 +59,31 @@ namespace Tests.QueryDsl.Specialized.Knn
 
 		protected override QueryContainer QueryInitializer => new KnnQuery
 		{
-			Boost = 1.1, Field = Infer.Field<Project>(f => f.Vector), Vector = new[] { 1.5f, -2.6f }, K = 30
+			Boost = 1.1,
+			Field = Infer.Field<Project>(f => f.Vector),
+			Vector = new[] { 1.5f, -2.6f },
+			K = 30,
+			MethodParameters = new Dictionary<string, object> { { "ef_search", 100 } },
+			Rescore = new KnnQueryRescoreContext { OversampleFactor = 1.5f },
+			ExpandNestedDocs = true
 		};
 
 		protected override object QueryJson =>
-			new { knn = new { vector = new { boost = 1.1, vector = new[] { 1.5f, -2.6f }, k = 30 } } };
+			new
+			{
+				knn = new
+				{
+					vector = new
+					{
+						boost = 1.1,
+						vector = new[] { 1.5f, -2.6f },
+						k = 30,
+						method_parameters = new { ef_search = 100 },
+						rescore = new { oversample_factor = 1.5f },
+						expand_nested_docs = true
+					}
+				}
+			};
 
 		protected override QueryContainer QueryFluent(QueryContainerDescriptor<Project> q) => q
 			.Knn(knn => knn
@@ -70,6 +91,9 @@ namespace Tests.QueryDsl.Specialized.Knn
 				.Field(f => f.Vector)
 				.Vector(1.5f, -2.6f)
 				.K(30)
+				.MethodParameters(mp => mp.Add("ef_search", 100))
+				.Rescore(r => r.OversampleFactor(1.5f))
+				.ExpandNestedDocs()
 			);
 	}
 

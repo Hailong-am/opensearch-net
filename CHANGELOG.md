@@ -6,6 +6,7 @@ Inspired from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Changed
 ### Added
 - Added support for `wildcard` field type ([#1004](https://github.com/opensearch-project/opensearch-net/pull/1004))
+- Added support for `method_parameters`, `rescore`, and `expand_nested_docs` on `KnnQuery`
 ### Removed
 ### Fixed
 - Fixed `MaxTimeoutReached`, `MaxRetriesReached`, and `FailedOverAllNodes` audit events having `Ended` stuck at `default(DateTime)` due to undisposed `Auditable` instances in `RequestPipeline.CreateClientException` ([#998](https://github.com/opensearch-project/opensearch-net/issues/998))
