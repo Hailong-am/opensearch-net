@@ -158,8 +158,8 @@ public class KnnQueryDescriptor<T>
 		Assign(selector, (a, v) => a.MethodParameters = v?.Invoke(new FluentDictionary<string, object>()));
 
 	/// <inheritdoc cref="IKnnQuery.Rescore" />
-	public KnnQueryDescriptor<T> Rescore(bool enable) =>
-		Assign(enable, (a, v) => a.Rescore = v);
+	public KnnQueryDescriptor<T> Rescore(bool? enable = true) =>
+		Assign(enable, (a, v) => a.Rescore = v.HasValue ? new Union<bool, KnnQueryRescoreContext>(v.Value) : null);
 
 	/// <inheritdoc cref="IKnnQuery.Rescore" />
 	public KnnQueryDescriptor<T> Rescore(Func<KnnQueryRescoreContextDescriptor, IKnnQueryRescoreContext> selector) =>
