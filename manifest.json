@@ -17388,6 +17388,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/temp/docfxapi/OpenSearch.Client.IKnnQueryRescoreContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OpenSearch.Client.IKnnQueryRescoreContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OpenSearch.Client.IKnnQueryRescoreContext",
+      "Summary": "<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Client.IKnnQueryRescoreContext.yml\" sourcestartlinenumber=\"1\">Configures rescoring of approximate k-NN search results using full-precision vectors.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/temp/docfxapi/OpenSearch.Client.IKnnVectorProperty.yml",
       "output": {
         ".html": {
@@ -22386,20 +22400,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "obj/temp/docfxapi/OpenSearch.Client.IVerbatimDictionaryKeys.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/OpenSearch.Client.IVerbatimDictionaryKeys.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "OpenSearch.Client.IVerbatimDictionaryKeys",
-      "Summary": "<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Client.IVerbatimDictionaryKeys.yml\" sourcestartlinenumber=\"1\">Marker for <xref href=\"OpenSearch.Client.IIsADictionary\" data-throw-if-not-resolved=\"false\"></xref> types whose string keys are user-provided names\n(e.g. suggester names) that must be serialized verbatim, without being run through the\n<code>DefaultFieldNameInferrer</code>. Mirrors the historical Utf8Json <code>VerbatimDictionaryKeysFormatter</code>.\nOnly affects plain <xref href=\"System.String\" data-throw-if-not-resolved=\"false\"></xref> keys; typed keys (Field/PropertyName/IndexName/RelationName)\nare always resolved by the <code>Inferrer</code>.</p>\n"
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "obj/temp/docfxapi/OpenSearch.Client.IVerifyRepositoryRequest.yml",
       "output": {
         ".html": {
@@ -22481,6 +22481,20 @@
       "IsMRef": true,
       "Title": "OpenSearch.Client.IWhitespaceTokenizer",
       "Summary": "<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Client.IWhitespaceTokenizer.yml\" sourcestartlinenumber=\"1\">A tokenizer of type whitespace that divides text at whitespace.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/temp/docfxapi/OpenSearch.Client.IWildcardProperty.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OpenSearch.Client.IWildcardProperty.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OpenSearch.Client.IWildcardProperty",
+      "Summary": "<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Client.IWildcardProperty.yml\" sourcestartlinenumber=\"1\">A wildcard field stores values optimised for wildcard grep-like queries.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -25057,6 +25071,34 @@
       "IsMRef": true,
       "Title": "OpenSearch.Client.KnnQueryDescriptor<T>",
       "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/temp/docfxapi/OpenSearch.Client.KnnQueryRescoreContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OpenSearch.Client.KnnQueryRescoreContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OpenSearch.Client.KnnQueryRescoreContext",
+      "Summary": "<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Client.KnnQueryRescoreContext.yml\" sourcestartlinenumber=\"1\">Configures rescoring of approximate k-NN search results using full-precision vectors.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/temp/docfxapi/OpenSearch.Client.KnnQueryRescoreContextDescriptor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OpenSearch.Client.KnnQueryRescoreContextDescriptor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OpenSearch.Client.KnnQueryRescoreContextDescriptor",
+      "Summary": "<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Client.KnnQueryRescoreContextDescriptor.yml\" sourcestartlinenumber=\"1\">A descriptor for configuring k-NN query rescoring.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -36578,7 +36620,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "OpenSearch.Client.StringTimeSpanAttribute",
-      "Summary": "<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Client.StringTimeSpanAttribute.yml\" sourcestartlinenumber=\"1\">Marks a <xref href=\"System.TimeSpan\" data-throw-if-not-resolved=\"false\"></xref> (or <xref href=\"System.Nullable%601\" data-throw-if-not-resolved=\"false\"></xref>) property to serialize as its\nstring form (e.g. <code>&quot;10.10:38:32&quot;</code>) rather than the default ticks number. Inherits\n<xref href=\"System.Text.Json.Serialization.JsonConverterAttribute\" data-throw-if-not-resolved=\"false\"></xref> so it is honored through the attribute/contract channel.</p>\n"
+      "Summary": null
     },
     {
       "type": "ManagedReference",
@@ -39155,6 +39197,48 @@
       "IsMRef": true,
       "Title": "OpenSearch.Client.WhitespaceTokenizerDescriptor",
       "Summary": "<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Client.WhitespaceTokenizerDescriptor.yml\" sourcestartlinenumber=\"1\">A tokenizer of type whitespace that divides text at whitespace.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/temp/docfxapi/OpenSearch.Client.WildcardAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OpenSearch.Client.WildcardAttribute.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OpenSearch.Client.WildcardAttribute",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/temp/docfxapi/OpenSearch.Client.WildcardProperty.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OpenSearch.Client.WildcardProperty.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OpenSearch.Client.WildcardProperty",
+      "Summary": "<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Client.WildcardProperty.yml\" sourcestartlinenumber=\"1\">A wildcard field stores values optimised for wildcard grep-like queries.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/temp/docfxapi/OpenSearch.Client.WildcardPropertyDescriptor-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OpenSearch.Client.WildcardPropertyDescriptor-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OpenSearch.Client.WildcardPropertyDescriptor<T>",
+      "Summary": "<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Client.WildcardPropertyDescriptor-1.yml\" sourcestartlinenumber=\"1\">A wildcard field stores values optimised for wildcard grep-like queries.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -48982,7 +49066,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "OpenSearch.Net.StringEnumAttribute",
-      "Summary": "<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Net.StringEnumAttribute.yml\" sourcestartlinenumber=\"1\">Marks an enum (or a property) as serializing to its <xref href=\"System.Runtime.Serialization.EnumMemberAttribute\" data-throw-if-not-resolved=\"false\"></xref>\nstring form. By inheriting <xref href=\"System.Text.Json.Serialization.JsonConverterAttribute\" data-throw-if-not-resolved=\"false\"></xref>, the enum-member converter is attached via\nthe System.Text.Json attribute/contract channel, so it is honored in every nesting context — including\ncollection elements and union members — where an options-registered converter factory would be skipped.</p>\n"
+      "Summary": null
     },
     {
       "type": "ManagedReference",
