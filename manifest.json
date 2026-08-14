@@ -39984,6 +39984,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/temp/docfxapi/OpenSearch.Net.Diagnostics.OpenSearchClientActivitySource.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OpenSearch.Net.Diagnostics.OpenSearchClientActivitySource.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OpenSearch.Net.Diagnostics.OpenSearchClientActivitySource",
+      "Summary": "<p sourcefile=\"obj/temp/docfxapi/OpenSearch.Net.Diagnostics.OpenSearchClientActivitySource.yml\" sourcestartlinenumber=\"1\">Holds the <xref href=\"OpenSearch.Net.Diagnostics.OpenSearchClientActivitySource.ActivitySource\" data-throw-if-not-resolved=\"false\"></xref> used to emit OpenTelemetry spans for requests to OpenSearch,\nalong with helpers to keep instrumentation cheap when nobody is listening.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/temp/docfxapi/OpenSearch.Net.Diagnostics.RequestPipelineDiagnosticObserver.yml",
       "output": {
         ".html": {
