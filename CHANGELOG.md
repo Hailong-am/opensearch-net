@@ -19,6 +19,7 @@ Inspired from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Fixed flaky `MovingAverageHoltWintersUsageTests` integration test which asserted moving-average values are non-negative; Holt-Winters forecasts can legitimately be negative, so the assertion now only checks the values deserialize to finite numbers ([#1000](https://github.com/opensearch-project/opensearch-net/issues/1000))
 - Fixed `DeleteByQueryResponse.IsValid` and `UpdateByQueryResponse.IsValid` returning `true` on transport-level failures (no HTTP response) by restoring the `ApiCall.Success` check that the overrides had dropped ([#997](https://github.com/opensearch-project/opensearch-net/issues/997))
 ### Dependencies
+- Bump `YamlDotNet` from 16.3.0 to 18.1.0 ([#22](https://github.com/Hailong-am/opensearch-net/pull/22))
 
 ## [2.0.0]
 
