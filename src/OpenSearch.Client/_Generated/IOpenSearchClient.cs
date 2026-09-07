@@ -54,7 +54,9 @@ using OpenSearch.Client.Specification.DanglingIndicesApi;
 using OpenSearch.Client.Specification.HttpApi;
 using OpenSearch.Client.Specification.IndicesApi;
 using OpenSearch.Client.Specification.IngestApi;
+using OpenSearch.Client.Specification.MlApi;
 using OpenSearch.Client.Specification.NodesApi;
+using OpenSearch.Client.Specification.SearchPipelineApi;
 using OpenSearch.Client.Specification.SnapshotApi;
 using OpenSearch.Client.Specification.TasksApi;
 
@@ -80,11 +82,17 @@ namespace OpenSearch.Client
         /// <summary>Ingest APIs</summary>
         IIngestNamespace Ingest { get; }
 
+        /// <summary>Ml APIs</summary>
+        IMlNamespace Ml { get; }
+
         /// <summary>Nodes APIs</summary>
         INodesNamespace Nodes { get; }
 
         /// <summary>Http APIs</summary>
         IHttpNamespace Http { get; }
+
+        /// <summary>Search Pipeline APIs</summary>
+        ISearchPipelineNamespace SearchPipeline { get; }
 
         /// <summary>Snapshot APIs</summary>
         ISnapshotNamespace Snapshot { get; }
@@ -122,6 +130,44 @@ namespace OpenSearch.Client
         /// <a href="https://opensearch.org/docs/latest/api-reference/document-apis/bulk/">https://opensearch.org/docs/latest/api-reference/document-apis/bulk/</a>
         /// </summary>
         Task<BulkResponse> BulkAsync(IBulkRequest request, CancellationToken ct = default);
+
+        /// <summary>
+        /// <c>PUT</c> request to the <c>bulk_stream</c> API, read more about this API online:
+        /// <para></para>
+        /// <a href="https://opensearch.org/docs/latest/api-reference/document-apis/bulk-streaming/">https://opensearch.org/docs/latest/api-reference/document-apis/bulk-streaming/</a>
+        /// </summary>
+        /// <remarks>Supported by OpenSearch servers of version 2.17.0 or greater.</remarks>
+        BulkStreamResponse BulkStream(Func<BulkStreamDescriptor, IBulkStreamRequest> selector);
+
+        /// <summary>
+        /// <c>PUT</c> request to the <c>bulk_stream</c> API, read more about this API online:
+        /// <para></para>
+        /// <a href="https://opensearch.org/docs/latest/api-reference/document-apis/bulk-streaming/">https://opensearch.org/docs/latest/api-reference/document-apis/bulk-streaming/</a>
+        /// </summary>
+        /// <remarks>Supported by OpenSearch servers of version 2.17.0 or greater.</remarks>
+        Task<BulkStreamResponse> BulkStreamAsync(
+            Func<BulkStreamDescriptor, IBulkStreamRequest> selector,
+            CancellationToken ct = default
+        );
+
+        /// <summary>
+        /// <c>PUT</c> request to the <c>bulk_stream</c> API, read more about this API online:
+        /// <para></para>
+        /// <a href="https://opensearch.org/docs/latest/api-reference/document-apis/bulk-streaming/">https://opensearch.org/docs/latest/api-reference/document-apis/bulk-streaming/</a>
+        /// </summary>
+        /// <remarks>Supported by OpenSearch servers of version 2.17.0 or greater.</remarks>
+        BulkStreamResponse BulkStream(IBulkStreamRequest request);
+
+        /// <summary>
+        /// <c>PUT</c> request to the <c>bulk_stream</c> API, read more about this API online:
+        /// <para></para>
+        /// <a href="https://opensearch.org/docs/latest/api-reference/document-apis/bulk-streaming/">https://opensearch.org/docs/latest/api-reference/document-apis/bulk-streaming/</a>
+        /// </summary>
+        /// <remarks>Supported by OpenSearch servers of version 2.17.0 or greater.</remarks>
+        Task<BulkStreamResponse> BulkStreamAsync(
+            IBulkStreamRequest request,
+            CancellationToken ct = default
+        );
 
         /// <summary>
         /// <c>DELETE</c> request to the <c>clear_scroll</c> API, read more about this API online:
