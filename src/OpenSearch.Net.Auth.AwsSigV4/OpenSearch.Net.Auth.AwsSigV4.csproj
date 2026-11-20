@@ -21,6 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AWSSDK.Core" />
+    <PackageReference Include="System.IO.Hashing" VersionOverride="11.0.0" ExcludeAssets="build;buildTransitive" />
   </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Tests.Auth.AwsSigV4" Key="$(ExposedPublicKey)" />
